@@ -1,6 +1,6 @@
 ﻿namespace NetworkSocketServer.Network.Tcp.KeepAlive
 {
-    public class SocketKeepAliveOptions
+    public class SocketFaultToleranceOptions
     {
         public int KeepAliveTime { get; set; }
 

@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using NetworkSocketServer.Network.TransportHandler;
 
 namespace NetworkSocketServer.Network
 {
@@ -8,7 +9,7 @@ namespace NetworkSocketServer.Network
 
         bool IsHaveNewConnection();
 
-        Task AcceptConnection(INetworkServiceHandle serviceHandle);
+        Task AcceptConnection(ITransportHandler transportHandler);
 
         void Close();
     }

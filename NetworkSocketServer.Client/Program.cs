@@ -1,12 +1,14 @@
 ﻿using System;
 
-namespace NetworkSocketServer.Client
+namespace SPOLKS.Client
 {
     class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var clientId = Guid.NewGuid().ToString();
+
+            new Client(clientId).Run();
         }
     }
 }

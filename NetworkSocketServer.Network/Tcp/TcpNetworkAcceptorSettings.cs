@@ -2,7 +2,7 @@
 
 namespace NetworkSocketServer.Network.Tcp
 {
-    internal class TcpNetworkAcceptorSettings
+    public class TcpNetworkAcceptorSettings
     {
         public IPAddress ListenIpAddress { get; set; }
 

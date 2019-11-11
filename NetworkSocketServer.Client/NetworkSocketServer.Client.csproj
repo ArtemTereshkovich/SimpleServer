@@ -1,12 +1,21 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
-  <ItemGroup>
-    <ProjectReference Include="..\NetworkSocketsServer.Shared\NetworkSocketsServer.Shared.csproj" />
-  </ItemGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Command\Exceptions\" />
+    <Folder Include="Command\Implementations\" />
+    <Folder Include="Command\Interfaces\" />
+    <Folder Include="Command\Utils\" />
+    <Folder Include="Connection\" />
+    <Folder Include="Resources\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NetworkSocketServer.Shared\NetworkSocketServer.Messages.csproj" />
+  </ItemGroup>
 
 </Project>

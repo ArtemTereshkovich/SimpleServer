@@ -1,36 +1,65 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
-using NetworkSocketsServer.Shared;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
+using NetworkSocketServer.Network.Host;
+using NetworkSocketServer.Network.Tcp;
+using NetworkSocketServer.Network.Tcp.KeepAlive;
 
 namespace NetworkSocketServer.Server
 {
     class Program
     {
-        static async Task Main(string[] args)
+        static void Main(string[] args)
         {
-            var settings = 
-                new TcpNetworkAcceptorSettings
-                {
-                    ListenIpAddress = IPAddress.Parse("192.168.100.10"),
-                    ListenPort = 4987,
-                    ListenMaxBacklogConnection = 3,
-                };
+            var host = new SimpleHostBuilder(
+                    new EndPointServiceHandler(),
+                    4)
+                .WithTcpFaultToleranceAcceptor(
+                    new TcpNetworkAcceptorSettings
+                    {
+                        ListenIpAddress = GetAddress(),
+                        ListenMaxBacklogConnection = 1,
+                        ListenPort = 13000,
+                    },
+                    new SocketFaultToleranceOptions
+                    {
+                        KeepAliveInterval = 30,
+                        KeepAliveTime = 10,
+                    }).Build();
 
-            var acceptor = new TcpKeepAliveNetworkAcceptor(settings);
+            host.StartHost();
+        }
 
-            acceptor.StartListen();
+        private static IPAddress GetAddress()
+        {
+            var firstUpInterface = NetworkInterface.GetAllNetworkInterfaces()
+                .FirstOrDefault(IsAddressSuitable);
 
-            while (true)
+            if (firstUpInterface != null)
             {
-                if (acceptor.IsHaveNewConnection())
-                {
-                    var connection = await acceptor.AcceptConnection();
-                    Console.WriteLine("Socket connected");
-                }
+                IPInterfaceProperties props = firstUpInterface.GetIPProperties();
+                // get first IPV4 address assigned to this interface
+                IPAddress firstIpV4Address = props.UnicastAddresses
+                    .Where(c => c.Address.AddressFamily == AddressFamily.InterNetwork)
+                    .Select(c => c.Address)
+                    .FirstOrDefault();
 
-                await Task.Delay(1500);
+                if (firstIpV4Address != null)
+                {
+                    Console.WriteLine(firstIpV4Address.ToString());
+                    return firstIpV4Address;
+                }
             }
+
+            throw new InvalidOperationException("There are no InterNetwork addresses set");
+        }
+
+        private static bool IsAddressSuitable(NetworkInterface networkInterface)
+        {
+            return networkInterface.NetworkInterfaceType != NetworkInterfaceType.Loopback &&
+                   networkInterface.OperationalStatus == OperationalStatus.Up;
         }
     }
 }
