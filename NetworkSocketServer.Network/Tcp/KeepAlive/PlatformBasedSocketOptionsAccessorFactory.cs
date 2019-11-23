@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using NetworkSocketServer.Network.SocketOptionsAccessor;
 
 namespace NetworkSocketServer.Network.Tcp.KeepAlive
 {

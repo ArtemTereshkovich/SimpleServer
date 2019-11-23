@@ -1,8 +1,6 @@
-﻿using System;
-using System.Linq.Expressions;
-using System.Net.Sockets;
+﻿using System.Net.Sockets;
 using System.Threading.Tasks;
-using NetworkSocketServer.Network.Tcp.KeepAlive;
+using NetworkSocketServer.Network.SocketOptionsAccessor;
 using NetworkSocketServer.Network.TransportHandler;
 
 namespace NetworkSocketServer.Network.Tcp
@@ -29,8 +27,6 @@ namespace NetworkSocketServer.Network.Tcp
 
         public async Task AcceptConnection(ITransportHandler networkTransportHandler)
         {
-            try
-            {
                 var acceptedSocket = await _acceptorListener.AcceptSocketAsync();
 
                 _socketOptionsAccessorFactory
@@ -38,11 +34,6 @@ namespace NetworkSocketServer.Network.Tcp
                     .SetOptions(acceptedSocket);
 
                 networkTransportHandler.Activate(acceptedSocket);
-            }
-            catch (Exception exception)
-            {
-                throw;
-            }
         }
 
         public bool IsHaveNewConnection()

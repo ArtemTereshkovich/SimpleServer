@@ -1,28 +1,22 @@
-﻿using System.Collections.Generic;
-using System.Threading;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using NetworkSocketServer.Network.ThreadSet;
 using NetworkSocketServer.Network.TransportHandler;
 
 namespace NetworkSocketServer.Network.ConnectionDispatcher
 {
-    internal class MultiThreadNetworkAcceptorDispatcher : INetworkAcceptorSubscriber, IConnectionDispatcher
+    internal class SingleThreadAcceptorDispatcher : IConnectionDispatcher
     {
-        private readonly IThreadSet _threadSet;
         private readonly INetworkServiceHandler _serviceHandler;
         private readonly ITransportHandlerFactory _transportHandlerFactory;
         private readonly IList<INetworkAcceptor> _acceptors;
-        private readonly Thread _workThread;
 
-        public MultiThreadNetworkAcceptorDispatcher(
-            IThreadSet threadSet,
+        public SingleThreadAcceptorDispatcher(
             INetworkServiceHandler serviceHandler,
             ITransportHandlerFactory transportHandlerFactory)
         {
-            _threadSet = threadSet;
             _serviceHandler = serviceHandler;
             _transportHandlerFactory = transportHandlerFactory;
-            _workThread = new Thread(InternalStart);
             _acceptors = new List<INetworkAcceptor>();
         }
 
@@ -33,10 +27,10 @@ namespace NetworkSocketServer.Network.ConnectionDispatcher
 
         public void StartListen()
         {
-            _workThread.Start();
+            InternalStart().Wait();
         }
 
-        private void InternalStart()
+        private async Task InternalStart()
         {
             while (true)
             {
@@ -44,22 +38,17 @@ namespace NetworkSocketServer.Network.ConnectionDispatcher
                 {
                     if (!acceptor.IsHaveNewConnection()) continue;
 
-                    _threadSet.Execute(_serviceHandler,AcceptTransportHandler(acceptor));
+                        var transportHandler = _transportHandlerFactory.CreateTransportHandler();
+                        await acceptor.AcceptConnection(transportHandler);
+
+                        await _serviceHandler.HandleNewConnection(transportHandler);
                 }
             }
         }
 
-        private async Task<ITransportHandler> AcceptTransportHandler(INetworkAcceptor acceptor)
-        {
-            var transportHandler = _transportHandlerFactory.CreateTransportHandler();
-            await acceptor.AcceptConnection(transportHandler);
-
-            return transportHandler;
-        }
-
         public void StopListen()
         {
-            _workThread.Abort();
+            throw new NotSupportedException();
         }
     }
 }

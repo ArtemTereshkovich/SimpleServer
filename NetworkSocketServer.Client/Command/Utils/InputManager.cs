@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
-using SPOLKS.Client.Command.Interfaces;
+using NetworkSocketServer.Client.Command.Interfaces;
 
-namespace SPOLKS.Client.Command.Utils
+namespace NetworkSocketServer.Client.Command.Utils
 {
     public class InputManager
     {

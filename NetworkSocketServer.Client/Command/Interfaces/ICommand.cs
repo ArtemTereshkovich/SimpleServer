@@ -1,6 +1,4 @@
-﻿using NetworkSocketServer.Client;
-
-namespace SPOLKS.Client.Command.Interfaces
+﻿namespace NetworkSocketServer.Client.Command.Interfaces
 {
     public interface ICommand
     {

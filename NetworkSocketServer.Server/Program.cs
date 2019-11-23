@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using NetworkSocketServer.Network.Host;
 using NetworkSocketServer.Network.Tcp;
 using NetworkSocketServer.Network.Tcp.KeepAlive;
+using NetworkSocketServer.Network.TransportHandler;
 
 namespace NetworkSocketServer.Server
 {
@@ -13,23 +14,35 @@ namespace NetworkSocketServer.Server
     {
         static void Main(string[] args)
         {
-            var host = new SimpleHostBuilder(
-                    new EndPointServiceHandler(),
-                    4)
+            var address = GetAddress();
+            
+            Console.WriteLine(address.ToString());
+
+            var host = new NetworkHostBuilder(new EndPointServiceHandler())
                 .WithTcpFaultToleranceAcceptor(
                     new TcpNetworkAcceptorSettings
                     {
-                        ListenIpAddress = GetAddress(),
+                        ListenIpAddress = address,
                         ListenMaxBacklogConnection = 1,
-                        ListenPort = 13000,
+
+                        ListenPort = 1337,
                     },
                     new SocketFaultToleranceOptions
                     {
-                        KeepAliveInterval = 30,
-                        KeepAliveTime = 10,
-                    }).Build();
+                        KeepAliveInterval = 10000,
+                        KeepAliveTime = 1000,
+                    })
+                .WithDirectRetryTransportHandler(
+                    new TransportHandlerRetryOptions
+                    {
+                        RetryCount = 10,
+                        RetryInterval = TimeSpan.FromSeconds(10),
+                    })
+                .Build();
 
             host.StartHost();
+
+            host.StopHost();
         }
 
         private static IPAddress GetAddress()
@@ -40,7 +53,6 @@ namespace NetworkSocketServer.Server
             if (firstUpInterface != null)
             {
                 IPInterfaceProperties props = firstUpInterface.GetIPProperties();
-                // get first IPV4 address assigned to this interface
                 IPAddress firstIpV4Address = props.UnicastAddresses
                     .Where(c => c.Address.AddressFamily == AddressFamily.InterNetwork)
                     .Select(c => c.Address)
@@ -48,7 +60,6 @@ namespace NetworkSocketServer.Server
 
                 if (firstIpV4Address != null)
                 {
-                    Console.WriteLine(firstIpV4Address.ToString());
                     return firstIpV4Address;
                 }
             }

@@ -1,10 +1,9 @@
-﻿using System.Threading.Tasks;
-using NetworkSocketServer.Network.TransportHandler;
+﻿using System;
 
 namespace NetworkSocketServer.Network.ThreadSet
 {
     internal interface IThreadSet
     {
-        void Execute(INetworkServiceHandler serviceHandler, Task<ITransportHandler> transportHandler);
+        void Execute(Action<INetworkAcceptor> action, INetworkAcceptor acceptor);
     }
 }

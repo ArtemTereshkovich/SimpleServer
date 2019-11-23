@@ -1,9 +1,9 @@
-﻿using SPOLKS.Client.Command.Interfaces;
-using System.Linq;
+﻿using System.Linq;
 using NetworkSocketServer.Client.Command.Exceptions;
+using NetworkSocketServer.Client.Command.Interfaces;
 using SPOLKS.Client.Command.Implementations;
 
-namespace SPOLKS.Client.Command
+namespace NetworkSocketServer.Client.Command.Implementations
 {
     public class CommandParser : ICommandParser
     {

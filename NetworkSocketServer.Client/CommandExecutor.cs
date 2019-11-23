@@ -2,8 +2,9 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using NetworkSocketServer.Client.Command.Implementations;
+using NetworkSocketServer.Commands;
 using NetworkSocketServer.Messages;
-using SPOLKS.Client.Command;
 using SPOLKS.Client.Command.Implementations;
 
 namespace NetworkSocketServer.Client
@@ -33,14 +34,14 @@ namespace NetworkSocketServer.Client
                 return;
             }
 
-            var request = new TextMessage()
+            var request = new TextCommand()
             {
-                MessageType = MessageType.EchoRequest,
+                CommandType = CommandType.EchoRequest,
                 Text = command.Message
             };
 
             Connection.Send(request);
-            var response = Connection.Receive().Deserialize<TextMessage>();
+            var response = Connection.Receive().Deserialize<TextCommand>();
 
             Console.WriteLine(response.Text);
         }
@@ -53,13 +54,13 @@ namespace NetworkSocketServer.Client
                 return;
             }
 
-            var request = new Message()
+            var request = new Messages.Command()
             {
-                MessageType = MessageType.TimeRequest
+                CommandType = CommandType.TimeRequest
             };
 
             Connection.Send(request);
-            var response = Connection.Receive().Deserialize<TextMessage>();
+            var response = Connection.Receive().Deserialize<TextCommand>();
 
             Console.WriteLine(response.Text);
         }
@@ -82,9 +83,9 @@ namespace NetworkSocketServer.Client
                 return;
             }
 
-            var message = new FileInfoMessage()
+            var message = new FileInfoCommand()
             {
-                MessageType = MessageType.UploadFileRequest,
+                CommandType = CommandType.UploadFileRequest,
                 ClientId = ClientId,
                 FileName = command.FileName,
                 Size = fileInfo.Length,
@@ -92,7 +93,7 @@ namespace NetworkSocketServer.Client
             };
 
             Connection.Send(message);
-            var serverFileInfoResponse = Connection.Receive().Deserialize<FileInfoMessage>();
+            var serverFileInfoResponse = Connection.Receive().Deserialize<FileInfoCommand>();
           
 
             var bytes = File.ReadAllBytes(localFileName).Skip((int) serverFileInfoResponse.Size).ToArray();
@@ -102,7 +103,7 @@ namespace NetworkSocketServer.Client
 
             Connection.Send(bytes);
 
-            Connection.Receive().Deserialize<Message>();
+            Connection.Receive().Deserialize<Messages.Command>();
             stopwatch.Stop();
 
             Console.WriteLine($"File uploaded successfully! " +
@@ -122,9 +123,9 @@ namespace NetworkSocketServer.Client
             var fileInfo = new FileInfo(localFileName);
             var fileLength = fileInfo.Exists ? fileInfo.Length : 0;
 
-            var message = new FileInfoMessage()
+            var message = new FileInfoCommand()
             {
-                MessageType = MessageType.DownloadFileRequest,
+                CommandType = CommandType.DownloadFileRequest,
                 ClientId = ClientId,
                 FileName = command.FileName,
                 IsExist = fileInfo.Exists,
@@ -133,20 +134,13 @@ namespace NetworkSocketServer.Client
 
             Connection.Send(message);
 
-            var serverFileInfoResponse = Connection.Receive().Deserialize<FileInfoMessage>();
+            var serverFileInfoResponse = Connection.Receive().Deserialize<FileInfoCommand>();
             if (serverFileInfoResponse.FileName == null)
             {
                 Console.WriteLine("File not found!");
                 return;
             }
 
-            //if (serverFileInfoResponse.IsExist && serverFileInfoResponse.Size == fileLength)
-            //{
-            //    Console.WriteLine("File already downloaded!");
-            //    return;
-            //}
-
-            // fix
             var stopwatch = new Stopwatch();
             stopwatch.Restart();
             Connection.Send(serverFileInfoResponse);

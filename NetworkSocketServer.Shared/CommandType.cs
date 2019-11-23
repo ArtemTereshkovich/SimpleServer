@@ -1,7 +1,8 @@
 ﻿
+// ReSharper disable once CheckNamespace
 namespace NetworkSocketServer.Messages
 {
-    public enum MessageType
+    public enum CommandType
     {
         UploadFileRequest,
         UploadFileResponse,

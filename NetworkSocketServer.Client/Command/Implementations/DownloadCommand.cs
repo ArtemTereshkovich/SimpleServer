@@ -1,15 +1,15 @@
-﻿using NetworkSocketServer.Client;
+﻿using NetworkSocketServer.Client.Command.Interfaces;
 
-namespace SPOLKS.Client.Command
+namespace NetworkSocketServer.Client.Command.Implementations
 {
-    public class DownloadCommand : Implementations.Command
+    public class DownloadCommand : ICommand
     {
         public const string Command = "-download";
 
         public string FileName { get; set; }
 
 
-        public override void Execute(CommandExecutor executor)
+        public void Execute(CommandExecutor executor)
         {
             executor.Execute(this);
         }

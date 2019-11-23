@@ -1,6 +1,6 @@
 ﻿namespace NetworkSocketServer.Network.Host
 {
-    public interface ISimpleHost
+    public interface INetworkHost
     {
         void StartHost();
 

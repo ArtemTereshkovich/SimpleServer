@@ -7,11 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NetworkSocketServer.Network\NetworkSocketServer.Network.csproj" />
-    <ProjectReference Include="..\NetworkSocketServer.Shared\NetworkSocketServer.Messages.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Messages\" />
+    <ProjectReference Include="..\NetworkSocketServer.Shared\NetworkSocketServer.Commands.csproj" />
   </ItemGroup>
 
 </Project>

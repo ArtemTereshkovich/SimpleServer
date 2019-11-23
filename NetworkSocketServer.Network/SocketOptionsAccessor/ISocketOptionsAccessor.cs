@@ -1,6 +1,6 @@
 ﻿using System.Net.Sockets;
 
-namespace NetworkSocketServer.Network.Tcp.KeepAlive
+namespace NetworkSocketServer.Network.SocketOptionsAccessor
 {
     internal interface ISocketOptionsAccessor
     {

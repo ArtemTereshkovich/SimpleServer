@@ -17,14 +17,9 @@ namespace NetworkSocketServer.Network.ThreadSet
             ThreadPool.SetMaxThreads(threadNumbers, threadNumbers);
         }
 
-        public void Execute(Action<object> action)
+        public void Execute(Action<INetworkAcceptor> action, INetworkAcceptor acceptor)
         {
-            ThreadPool.QueueUserWorkItem(action, null, true);
-        }
-
-        public void Execute(INetworkServiceHandler serviceHandler, Task<ITransportHandler> transportHandler)
-        {
-            throw new NotImplementedException();
+            ThreadPool.QueueUserWorkItem(action, acceptor,false);
         }
     }
 }

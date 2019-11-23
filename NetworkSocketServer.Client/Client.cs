@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Net.Sockets;
-using NetworkSocketServer.Client;
 using NetworkSocketServer.Client.Command.Exceptions;
-using SPOLKS.Client.Command;
-using SPOLKS.Client.Command.Utils;
+using NetworkSocketServer.Client.Command.Implementations;
+using NetworkSocketServer.Client.Command.Utils;
 
-namespace SPOLKS.Client
+namespace NetworkSocketServer.Client
 {
     public class Client
     {

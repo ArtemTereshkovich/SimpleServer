@@ -4,9 +4,9 @@ namespace NetworkSocketServer.Messages
 {
 
     [Serializable]
-    public class Message
+    public class Command
     {
         public string ClientId { get; set; }
-        public MessageType MessageType { get; set; }
+        public CommandType CommandType { get; set; }
     }
 }

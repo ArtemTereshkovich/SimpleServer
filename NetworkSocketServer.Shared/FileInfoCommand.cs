@@ -1,9 +1,10 @@
 ﻿using System;
+using NetworkSocketServer.Messages;
 
-namespace NetworkSocketServer.Messages
+namespace NetworkSocketServer.Commands
 {
     [Serializable]
-    public class FileInfoMessage : Message
+    public class FileInfoCommand : Command
     {
         public string FileName { get; set; }
         public bool IsExist { get; set; }

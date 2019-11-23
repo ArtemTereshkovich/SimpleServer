@@ -1,4 +1,4 @@
-﻿namespace SPOLKS.Client.Command.Interfaces
+﻿namespace NetworkSocketServer.Client.Command.Interfaces
 {
     public interface ICommandParser
     {

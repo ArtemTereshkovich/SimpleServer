@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SPOLKS.Client
+namespace NetworkSocketServer.Client
 {
     class Program
     {

@@ -1,15 +1,16 @@
 ﻿using NetworkSocketServer.Client;
+using NetworkSocketServer.Client.Command.Interfaces;
 
 namespace SPOLKS.Client.Command.Implementations
 {
-    public class UploadCommand : Implementations.Command
+    public class UploadCommand : ICommand
     {
         public const string Command = "-upload";
 
         public string FileName { get; set; }
 
 
-        public override void Execute(CommandExecutor executor)
+        public void Execute(CommandExecutor executor)
         {
             executor.Execute(this);
         }

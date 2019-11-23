@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
-using NetworkSocketServer.Client;
+using NetworkSocketServer.Client.Command.Interfaces;
 
-namespace SPOLKS.Client.Command
+namespace NetworkSocketServer.Client.Command.Implementations
 {
-    public class ConnectCommand : Implementations.Command
+    public class ConnectCommand : ICommand
     {
         public const string Command = "-connect";
 
         public IPEndPoint EndPoint { get; private set; }
 
 
-        public override void Execute(CommandExecutor executor)
+        public void Execute(CommandExecutor executor)
         {
             executor.Execute(this);
         }

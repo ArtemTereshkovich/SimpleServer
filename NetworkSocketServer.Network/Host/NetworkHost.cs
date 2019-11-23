@@ -3,12 +3,12 @@ using NetworkSocketServer.Network.ConnectionDispatcher;
 
 namespace NetworkSocketServer.Network.Host
 {
-    class SimpleHost : ISimpleHost
+    class NetworkHost : INetworkHost
     {
         private readonly IConnectionDispatcher _connectionDispatcher;
         private readonly IEnumerable<INetworkAcceptor> _networkAcceptors;
 
-        public SimpleHost(IConnectionDispatcher connectionDispatcher, IEnumerable<INetworkAcceptor>  networkAcceptors)
+        public NetworkHost(IConnectionDispatcher connectionDispatcher, IEnumerable<INetworkAcceptor>  networkAcceptors)
         {
             _connectionDispatcher = connectionDispatcher;
             _networkAcceptors = networkAcceptors;

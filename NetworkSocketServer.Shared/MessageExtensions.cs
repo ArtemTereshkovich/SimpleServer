@@ -1,8 +1,7 @@
 ﻿using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
 
-namespace NetworkSocketServer.Messages
+namespace NetworkSocketServer.Commands
 {
     public static class ObjectExtensions
     {
@@ -25,14 +24,6 @@ namespace NetworkSocketServer.Messages
             {
                 return (T)formatter.Deserialize(memoryStream);
             }
-        }
-    }
-
-    public static class ByteArrayExtensions
-    {
-        public static string ToString(this byte[] bytes)
-        {
-            return Encoding.Default.GetString(bytes).Trim('\0');
         }
     }
 }

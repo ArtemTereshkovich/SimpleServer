@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using NetworkSocketServer.Client;
+﻿using NetworkSocketServer.Client.Command.Interfaces;
 
-namespace SPOLKS.Client.Command
+namespace NetworkSocketServer.Client.Command.Implementations
 {
-    public class HelpCommand : Implementations.Command
+    public class HelpCommand : ICommand
     {
         public const string Command = "-help";
 
-        public override void Execute(CommandExecutor executor)
+        public void Execute(CommandExecutor executor)
         {
             executor.Execute(this);
         }

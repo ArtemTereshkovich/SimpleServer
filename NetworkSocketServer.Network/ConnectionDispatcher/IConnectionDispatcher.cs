@@ -1,6 +1,6 @@
 ﻿namespace NetworkSocketServer.Network.ConnectionDispatcher
 {
-    internal interface IConnectionDispatcher
+    internal interface IConnectionDispatcher : INetworkAcceptorSubscriber
     {
         void StartListen();
 
