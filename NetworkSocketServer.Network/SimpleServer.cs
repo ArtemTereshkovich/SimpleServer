@@ -1,14 +1,18 @@
 ﻿using System.Collections.Generic;
-using NetworkSocketServer.Network.ConnectionDispatcher;
+using NetworkSocketServer.NetworkLayer.Acceptors;
+using NetworkSocketServer.NetworkLayer.ConnectionDispatcher;
+using NetworkSocketServer.NetworkLayer.Server;
 
-namespace NetworkSocketServer.Network.Host
+namespace NetworkSocketServer.NetworkLayer
 {
-    class NetworkHost : INetworkHost
+    class SimpleServer : IServer
     {
         private readonly IConnectionDispatcher _connectionDispatcher;
         private readonly IEnumerable<INetworkAcceptor> _networkAcceptors;
 
-        public NetworkHost(IConnectionDispatcher connectionDispatcher, IEnumerable<INetworkAcceptor>  networkAcceptors)
+        public SimpleServer(
+            IConnectionDispatcher connectionDispatcher,
+            IEnumerable<INetworkAcceptor> networkAcceptors)
         {
             _connectionDispatcher = connectionDispatcher;
             _networkAcceptors = networkAcceptors;

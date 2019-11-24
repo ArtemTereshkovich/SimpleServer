@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using NetworkSocketServer.Network.SocketOptionsAccessor;
+using NetworkSocketServer.NetworkLayer.SocketOptionsAccessor;
 
-namespace NetworkSocketServer.Network.Tcp.KeepAlive
+namespace NetworkSocketServer.NetworkLayer.Tcp.KeepAlive
 {
     internal class PlatformBasedSocketOptionsAccessorFactory : ISocketOptionsAccessorFactory
     {

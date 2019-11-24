@@ -3,10 +3,12 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using NetworkSocketServer.Network.Host;
-using NetworkSocketServer.Network.Tcp;
-using NetworkSocketServer.Network.Tcp.KeepAlive;
-using NetworkSocketServer.Network.TransportHandler;
+using NetworkSocketServer.NetworkLayer.Acceptors.Tcp;
+using NetworkSocketServer.NetworkLayer.Server;
+using NetworkSocketServer.NetworkLayer.ServerBuilder;
+using NetworkSocketServer.NetworkLayer.Tcp;
+using NetworkSocketServer.NetworkLayer.Tcp.KeepAlive;
+using NetworkSocketServer.NetworkLayer.TransportHandler;
 
 namespace NetworkSocketServer.Server
 {
@@ -18,7 +20,7 @@ namespace NetworkSocketServer.Server
             
             Console.WriteLine(address.ToString());
 
-            var host = new NetworkHostBuilder(new EndPointServiceHandler())
+            var host = new SimpleServerBuilder(new EndPointServiceHandler())
                 .WithTcpFaultToleranceAcceptor(
                     new TcpNetworkAcceptorSettings
                     {
@@ -29,14 +31,8 @@ namespace NetworkSocketServer.Server
                     },
                     new SocketFaultToleranceOptions
                     {
-                        KeepAliveInterval = 10000,
-                        KeepAliveTime = 1000,
-                    })
-                .WithDirectRetryTransportHandler(
-                    new TransportHandlerRetryOptions
-                    {
-                        RetryCount = 10,
-                        RetryInterval = TimeSpan.FromSeconds(10),
+                        KeepAliveInterval = 28000,
+                        KeepAliveTime = 28000,
                     })
                 .Build();
 

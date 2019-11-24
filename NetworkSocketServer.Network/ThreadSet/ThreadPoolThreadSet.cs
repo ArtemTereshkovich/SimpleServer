@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Threading;
-using System.Threading.Tasks;
-using NetworkSocketServer.Network.TransportHandler;
+using NetworkSocketServer.NetworkLayer.Acceptors;
 
-namespace NetworkSocketServer.Network.ThreadSet
+namespace NetworkSocketServer.NetworkLayer.ThreadSet
 {
     internal class ThreadPoolThreadSet : IThreadSet
     {

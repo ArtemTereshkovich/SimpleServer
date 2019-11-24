@@ -1,6 +1,7 @@
 ﻿using System;
+using NetworkSocketServer.NetworkLayer.Acceptors;
 
-namespace NetworkSocketServer.Network.ThreadSet
+namespace NetworkSocketServer.NetworkLayer.ThreadSet
 {
     internal interface IThreadSet
     {

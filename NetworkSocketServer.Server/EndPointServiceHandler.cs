@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
 using NetworkSocketServer.Commands;
-using NetworkSocketServer.Messages;
-using NetworkSocketServer.Network;
-using NetworkSocketServer.Network.TransportHandler;
+using NetworkSocketServer.NetworkLayer;
+using NetworkSocketServer.NetworkLayer.TransportHandler;
 using NetworkSocketServer.Server.CommandHandlers;
 
 namespace NetworkSocketServer.Server
 {
-    class EndPointServiceHandler : INetworkServiceHandler
+    class EndPointServiceHandler : INewTransportHandler
     {
         public async Task HandleNewConnection(ITransportHandler transportHandler)
         {
@@ -37,36 +36,31 @@ namespace NetworkSocketServer.Server
         {
             while (true)
             {
-                var requstBytes = await _transportHandler.Receive();
+                var requestBytes = await _transportHandler.Receive();
+            
+                var request = requestBytes.Deserialize<Command>();
 
-                if (requstBytes.Length == 0)
+                Console.WriteLine($"Message received: {request.CommandType}");
+
+                switch (request.CommandType)
                 {
-                    Console.WriteLine($"Disconnected from server!");
-
-                    _transportHandler.Close();
-                }
-                else
-                {
-
-                    var request = requstBytes.Deserialize<Command>();
-
-                    Console.WriteLine($"Message received: {request.CommandType}");
-
-                    switch (request.CommandType)
-                    {
-                        case CommandType.UploadFileRequest:
-                            await _uploadFileCommandHandler.Handle(request);
-                            break;
-                        case CommandType.DownloadFileRequest:
-                            await _fileDownloadCommandHandler.Handle(request);
-                            break;
-                        case CommandType.EchoRequest:
-                            await _echoCommandHandler.Handle(request);
-                            break;
-                        case CommandType.TimeRequest:
-                            await _timeCommandHandler.Handle(request);
-                            break;
-                    }
+                    case CommandType.UploadFileRequest:
+                        await _uploadFileCommandHandler.Handle(request);
+                        break;
+                    case CommandType.DownloadFileRequest:
+                        await _fileDownloadCommandHandler.Handle(request);
+                        break;
+                    case CommandType.EchoRequest:
+                        await _echoCommandHandler.Handle(request);
+                        break;
+                    case CommandType.TimeRequest:
+                        await _timeCommandHandler.Handle(request);
+                        break;
+                    case CommandType.Disconnect:
+                        _transportHandler.Close();
+                        return ;
+                    default:
+                        continue;
                 }
             }
         }

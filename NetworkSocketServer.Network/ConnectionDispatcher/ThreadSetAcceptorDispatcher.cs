@@ -1,21 +1,22 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
-using NetworkSocketServer.Network.ThreadSet;
-using NetworkSocketServer.Network.TransportHandler;
+using NetworkSocketServer.NetworkLayer.Acceptors;
+using NetworkSocketServer.NetworkLayer.ThreadSet;
+using NetworkSocketServer.NetworkLayer.TransportHandler.Factories;
 
-namespace NetworkSocketServer.Network.ConnectionDispatcher
+namespace NetworkSocketServer.NetworkLayer.ConnectionDispatcher
 {
     internal class ThreadSetAcceptorDispatcher : IConnectionDispatcher
     {
         private readonly IThreadSet _threadSet;
-        private readonly INetworkServiceHandler _serviceHandler;
+        private readonly INewTransportHandler _serviceHandler;
         private readonly ITransportHandlerFactory _transportHandlerFactory;
         private readonly IList<INetworkAcceptor> _acceptors;
         private readonly Thread _workThread;
 
         public ThreadSetAcceptorDispatcher(
             IThreadSet threadSet,
-            INetworkServiceHandler serviceHandler,
+            INewTransportHandler serviceHandler,
             ITransportHandlerFactory transportHandlerFactory)
         {
             _threadSet = threadSet;
@@ -45,7 +46,7 @@ namespace NetworkSocketServer.Network.ConnectionDispatcher
 
                     _threadSet.Execute(async networkAcceptor =>
                     {
-                        var transportHandler = _transportHandlerFactory.CreateTransportHandler();
+                        using var transportHandler = _transportHandlerFactory.CreateTransportHandler();
                         await networkAcceptor.AcceptConnection(transportHandler);
 
                         await _serviceHandler.HandleNewConnection(transportHandler);

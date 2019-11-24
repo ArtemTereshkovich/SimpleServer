@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using NetworkSocketServer.Messages;
+using NetworkSocketServer.Commands;
 
 namespace NetworkSocketServer.Server.CommandHandlers
 {

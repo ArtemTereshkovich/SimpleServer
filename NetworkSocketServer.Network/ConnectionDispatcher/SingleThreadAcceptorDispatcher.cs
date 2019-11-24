@@ -1,21 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using NetworkSocketServer.Network.TransportHandler;
+using NetworkSocketServer.NetworkLayer.Acceptors;
+using NetworkSocketServer.NetworkLayer.TransportHandler.Factories;
 
-namespace NetworkSocketServer.Network.ConnectionDispatcher
+namespace NetworkSocketServer.NetworkLayer.ConnectionDispatcher
 {
     internal class SingleThreadAcceptorDispatcher : IConnectionDispatcher
     {
-        private readonly INetworkServiceHandler _serviceHandler;
+        private readonly INewTransportHandler _newTransportHandler;
         private readonly ITransportHandlerFactory _transportHandlerFactory;
         private readonly IList<INetworkAcceptor> _acceptors;
 
         public SingleThreadAcceptorDispatcher(
-            INetworkServiceHandler serviceHandler,
+            INewTransportHandler newTransportHandler,
             ITransportHandlerFactory transportHandlerFactory)
         {
-            _serviceHandler = serviceHandler;
+            _newTransportHandler = newTransportHandler;
             _transportHandlerFactory = transportHandlerFactory;
             _acceptors = new List<INetworkAcceptor>();
         }
@@ -38,10 +39,18 @@ namespace NetworkSocketServer.Network.ConnectionDispatcher
                 {
                     if (!acceptor.IsHaveNewConnection()) continue;
 
-                        var transportHandler = _transportHandlerFactory.CreateTransportHandler();
+                    try
+                    {
+                        using var transportHandler = _transportHandlerFactory.CreateTransportHandler();
+
                         await acceptor.AcceptConnection(transportHandler);
 
-                        await _serviceHandler.HandleNewConnection(transportHandler);
+                        await _newTransportHandler.HandleNewConnection(transportHandler);
+                    }
+                    catch (Exception exception)
+                    {
+                        Console.WriteLine("Error happend:" + exception.Message);
+                    }
                 }
             }
         }

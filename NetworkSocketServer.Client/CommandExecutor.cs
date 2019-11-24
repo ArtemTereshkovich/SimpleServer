@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using NetworkSocketServer.Client.Command.Implementations;
 using NetworkSocketServer.Commands;
-using NetworkSocketServer.Messages;
 using SPOLKS.Client.Command.Implementations;
 
 namespace NetworkSocketServer.Client
@@ -54,7 +53,7 @@ namespace NetworkSocketServer.Client
                 return;
             }
 
-            var request = new Messages.Command()
+            var request = new Commands.Command()
             {
                 CommandType = CommandType.TimeRequest
             };
@@ -103,7 +102,7 @@ namespace NetworkSocketServer.Client
 
             Connection.Send(bytes);
 
-            Connection.Receive().Deserialize<Messages.Command>();
+            Connection.Receive().Deserialize<Commands.Command>();
             stopwatch.Stop();
 
             Console.WriteLine($"File uploaded successfully! " +

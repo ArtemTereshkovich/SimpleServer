@@ -1,4 +1,4 @@
-﻿namespace NetworkSocketServer.Network.TransportHandler
+﻿namespace NetworkSocketServer.NetworkLayer.TransportHandler.Factories
 {
     interface ITransportHandlerFactory
     {

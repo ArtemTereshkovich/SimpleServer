@@ -1,9 +1,9 @@
 ﻿using System.Net.Sockets;
 using System.Threading.Tasks;
-using NetworkSocketServer.Network.SocketOptionsAccessor;
-using NetworkSocketServer.Network.TransportHandler;
+using NetworkSocketServer.NetworkLayer.SocketOptionsAccessor;
+using NetworkSocketServer.NetworkLayer.TransportHandler;
 
-namespace NetworkSocketServer.Network.Tcp
+namespace NetworkSocketServer.NetworkLayer.Acceptors.Tcp
 {
     internal class TcpKeepAliveNetworkAcceptor : INetworkAcceptor
     {

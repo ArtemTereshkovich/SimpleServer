@@ -1,4 +1,4 @@
-﻿namespace NetworkSocketServer.Network.SocketOptionsAccessor
+﻿namespace NetworkSocketServer.NetworkLayer.SocketOptionsAccessor
 {
     internal interface ISocketOptionsAccessorFactory
     {

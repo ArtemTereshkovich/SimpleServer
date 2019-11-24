@@ -10,7 +10,7 @@ namespace NetworkSocketServer.Client
 
         void Send(byte[] bytes);
 
-        void Send(Messages.Command command);
+        void Send(Commands.Command command);
 
         byte[] Receive();
 

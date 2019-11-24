@@ -1,5 +1,4 @@
 ﻿using System;
-using NetworkSocketServer.Messages;
 
 namespace NetworkSocketServer.Commands
 {

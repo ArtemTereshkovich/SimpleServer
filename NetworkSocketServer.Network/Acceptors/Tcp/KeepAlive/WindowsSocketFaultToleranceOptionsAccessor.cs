@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Net.Sockets;
-using NetworkSocketServer.Network.SocketOptionsAccessor;
+using NetworkSocketServer.NetworkLayer.SocketOptionsAccessor;
 
-namespace NetworkSocketServer.Network.Tcp.KeepAlive
+namespace NetworkSocketServer.NetworkLayer.Tcp.KeepAlive
 {
     internal class WindowsSocketFaultToleranceOptionsAccessor : ISocketOptionsAccessor
     {
@@ -24,6 +24,8 @@ namespace NetworkSocketServer.Network.Tcp.KeepAlive
             tcpSocket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveTime, _faultToleranceOptions.KeepAliveTime);
             tcpSocket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveInterval, _faultToleranceOptions.KeepAliveInterval);
 
+            #region HardSet
+            
             //const int on = 1;
             //const uint keepAliveInterval = 10000; //Send a packet once every 10 seconds.
             //const uint retryInterval = 1000; //If no response, resend every second.
@@ -34,6 +36,8 @@ namespace NetworkSocketServer.Network.Tcp.KeepAlive
             //Array.Copy(BitConverter.GetBytes(keepAliveInterval), 0, inArray, size, size);
             //Array.Copy(BitConverter.GetBytes(retryInterval), 0, inArray, size * 2, size);
             //tcpSocket.IOControl(IOControlCode.KeepAliveValues, inArray, null);
+
+            #endregion
         }
     }
 }

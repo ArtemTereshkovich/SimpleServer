@@ -1,6 +1,6 @@
 ﻿using System.Net.Sockets;
 
-namespace NetworkSocketServer.Network.SocketOptionsAccessor
+namespace NetworkSocketServer.NetworkLayer.SocketOptionsAccessor
 {
     internal interface ISocketOptionsAccessor
     {

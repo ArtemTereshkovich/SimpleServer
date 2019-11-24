@@ -6,8 +6,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NetworkSocketServer.Network\NetworkSocketServer.Network.csproj" />
+    <ProjectReference Include="..\NetworkSocketServer.Network\NetworkSocketServer.NetworkLayer.csproj" />
     <ProjectReference Include="..\NetworkSocketServer.Shared\NetworkSocketServer.Commands.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Resources\1.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\server_file.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

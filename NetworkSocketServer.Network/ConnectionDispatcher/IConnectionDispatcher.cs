@@ -1,4 +1,4 @@
-﻿namespace NetworkSocketServer.Network.ConnectionDispatcher
+﻿namespace NetworkSocketServer.NetworkLayer.ConnectionDispatcher
 {
     internal interface IConnectionDispatcher : INetworkAcceptorSubscriber
     {

@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace NetworkSocketServer.Network.Tcp
+namespace NetworkSocketServer.NetworkLayer.Acceptors.Tcp
 {
     public class TcpNetworkAcceptorSettings
     {

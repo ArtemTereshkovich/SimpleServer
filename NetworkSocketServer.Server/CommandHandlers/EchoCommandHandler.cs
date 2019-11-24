@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using NetworkSocketServer.Commands;
-using NetworkSocketServer.Messages;
-using NetworkSocketServer.Network.TransportHandler;
+using NetworkSocketServer.NetworkLayer.TransportHandler;
 
 namespace NetworkSocketServer.Server.CommandHandlers
 {

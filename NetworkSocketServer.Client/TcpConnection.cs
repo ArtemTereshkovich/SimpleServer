@@ -23,7 +23,7 @@ namespace NetworkSocketServer.Client
             Socket.Send(bytes);
         }
 
-        public void Send(Messages.Command command)
+        public void Send(Commands.Command command)
         {
             Socket.Send(command.Serialize());
         }

@@ -1,4 +1,4 @@
-﻿namespace NetworkSocketServer.Network.Tcp.KeepAlive
+﻿namespace NetworkSocketServer.NetworkLayer.Tcp.KeepAlive
 {
     public class SocketFaultToleranceOptions
     {

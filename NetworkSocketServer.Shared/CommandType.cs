@@ -1,6 +1,4 @@
-﻿
-// ReSharper disable once CheckNamespace
-namespace NetworkSocketServer.Messages
+﻿namespace NetworkSocketServer.Commands
 {
     public enum CommandType
     {
@@ -10,6 +8,7 @@ namespace NetworkSocketServer.Messages
         DownloadFileResponse,
         EchoRequest,
         TimeRequest,
-        TextResponse
+        TextResponse,
+        Disconnect
     }
 }

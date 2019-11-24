@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using NetworkSocketServer.Network.TransportHandler;
+using NetworkSocketServer.NetworkLayer.TransportHandler;
 
-namespace NetworkSocketServer.Network
+namespace NetworkSocketServer.NetworkLayer.Acceptors
 {
     internal interface INetworkAcceptor
     {

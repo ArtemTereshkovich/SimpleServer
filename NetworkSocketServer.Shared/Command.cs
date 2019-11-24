@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NetworkSocketServer.Messages
+namespace NetworkSocketServer.Commands
 {
 
     [Serializable]
