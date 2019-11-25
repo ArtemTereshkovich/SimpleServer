@@ -6,14 +6,16 @@ namespace NetworkSocketServer.TransportLayer.Buffer
     {
         void Append(byte[] array);
 
-        void Insert(byte[] array, int position);
+        byte[] GetAll();
 
         byte[] Get(int length);
 
         byte[] Get(int length, int position);
 
-        void Remaining(int length);
+        void SetLength(int length);
 
         void Clear();
+
+        int Length { get; }
     }
 }

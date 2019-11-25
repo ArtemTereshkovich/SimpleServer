@@ -9,6 +9,7 @@ using NetworkSocketServer.NetworkLayer.ServerBuilder;
 using NetworkSocketServer.NetworkLayer.Tcp;
 using NetworkSocketServer.NetworkLayer.Tcp.KeepAlive;
 using NetworkSocketServer.NetworkLayer.TransportHandler;
+using NetworkSocketServer.TransportLayer;
 
 namespace NetworkSocketServer.Server
 {
@@ -20,7 +21,11 @@ namespace NetworkSocketServer.Server
             
             Console.WriteLine(address.ToString());
 
-            var host = new SimpleServerBuilder(new EndPointServiceHandler())
+            var factory = new SimpleRequestHandlerFactory();
+
+            var connectionHandler = new NewConnectionHandler(factory);
+
+            var host = new SimpleServerBuilder(connectionHandler)
                 .WithTcpFaultToleranceAcceptor(
                     new TcpNetworkAcceptorSettings
                     {

@@ -1,10 +1,12 @@
 ﻿namespace NetworkSocketServer.TransportLayer.DTO
 {
-    enum PacketCommand
+    enum PacketClientCommand
     {
         Read,
         Write,
         ExecuteBuffer,
         ExecutePayload,
+        ClearBuffers,
+        None
     }
 }

@@ -29,14 +29,16 @@ namespace NetworkSocketServer.TransportLayer
 
             CheckContext(packet);
 
-            var packetHandler = CreatePacketHandler(transportHandler, _sessionContext);
+            var packetHandler = CreatePacketHandler(
+                transportHandler, _sessionContext, packet.ConnectionId);
 
             await packetHandler.HandlePacket(packet);
 
             await ContinueProcessingPacket(packetHandler, transportHandler);
         }
 
-        private async Task ContinueProcessingPacket(IPacketHandler packetHandler,ITransportHandler transportHandler)
+        private async Task ContinueProcessingPacket(
+            IPacketHandler packetHandler,ITransportHandler transportHandler)
         {
             while (true)
             {
@@ -64,9 +66,11 @@ namespace NetworkSocketServer.TransportLayer
 
         private IPacketHandler CreatePacketHandler(
             ITransportHandler transportHandler,
-            SessionContext sessionContext)
+            SessionContext sessionContext,
+            Guid connectionId)
         {
-            return new PredictBasedPacketHandler(
+            return new ServerPredictBasedPacketHandler(
+                connectionId,
                 _requestHandlerFactory,
                 transportHandler,
                 sessionContext);

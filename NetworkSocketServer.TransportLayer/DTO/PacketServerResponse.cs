@@ -2,6 +2,7 @@
 {
     enum PacketServerResponse
     {
+        Error,
         Answer,
         ResultInBuffer,
         ResultInPayload
