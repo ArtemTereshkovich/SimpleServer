@@ -1,35 +1,24 @@
-﻿using System;
-using NetworkSocketServer.TransportLayer.Buffer;
+﻿using NetworkSocketServer.TransportLayer.Buffer;
 
 namespace NetworkSocketServer.TransportLayer
 {
-    internal class SessionContext : IDisposable
+    internal class SessionContext
     {
-        public Guid ClientId { get; }
-
-        public MessageOptions MessageOptions { get; }
-
         public IBuffer ReceiveBuffer { get; }
 
         public IBuffer TransmitBuffer { get; }
 
-        public SessionContext(
-            Guid clientId, 
-            IBuffer receiveBuffer,
-            IBuffer transmitBuffer,
-            MessageOptions messageOptions)
+        public SessionContext(IBuffer receiveBuffer, IBuffer transmitBuffer)
         {
-            ClientId = clientId;
             ReceiveBuffer = receiveBuffer;
             TransmitBuffer = transmitBuffer;
-            MessageOptions = messageOptions;
         }
 
-        public void Dispose()
+        public static SessionContext CreateNewMemoryStreamBufferContext()
         {
-            ReceiveBuffer?.Dispose();
-
-            TransmitBuffer?.Dispose();
+            return new SessionContext(
+                new MemoryStreamBuffer(),
+                new MemoryStreamBuffer());
         }
     }
 }

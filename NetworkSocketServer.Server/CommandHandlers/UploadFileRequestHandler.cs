@@ -1,33 +1,28 @@
-﻿using System.IO;
+﻿using System;
 using System.Threading.Tasks;
-using NetworkSocketServer.Commands;
-using NetworkSocketServer.NetworkLayer.TransportHandler;
+using NetworkSocketServer.DTO.Requests;
+using NetworkSocketServer.DTO.Responses;
 
 namespace NetworkSocketServer.Server.CommandHandlers
 {
-    internal class UploadFileCommandHandler : ICommandHandler
+    internal class UploadFileRequestHandler : ICommandHandler
     {
-        private readonly ITransportHandler _transportHandler;
-
-        public UploadFileCommandHandler(ITransportHandler transportHandler)
+        public Task<Response> Handle(Request request)
         {
-            _transportHandler = transportHandler;
-        }
+            var uploadFileRequest = request as UploadFileRequest;
+            /*
+            var fileCommand = command as UploadFileRequest;
 
-        public async Task Handle(Command command)
-        {
-            var fileCommand = command as FileInfoCommand;
-
-            if (!Directory.Exists($"Resources{Path.DirectorySeparatorChar}{fileCommand.ClientId}"))
+            if (!Directory.Exists($"Resources{Path.DirectorySeparatorChar}{fileCommand.ConnectionId}"))
             {
-                Directory.CreateDirectory($"Resources{Path.DirectorySeparatorChar}{fileCommand.ClientId}");
+                Directory.CreateDirectory($"Resources{Path.DirectorySeparatorChar}{fileCommand.ConnectionId}");
             }
-            var localFileName = $"Resources{Path.DirectorySeparatorChar}{fileCommand.ClientId}{Path.DirectorySeparatorChar}{fileCommand.FileName}";
+            var localFileName = $"Resources{Path.DirectorySeparatorChar}{fileCommand.ConnectionId}{Path.DirectorySeparatorChar}{fileCommand.FileName}";
 
             var fileInfo = new FileInfo(localFileName);
             var fileLength = fileInfo.Exists ? fileInfo.Length : 0;
 
-            var serverFileInfoResponse = new FileInfoCommand()
+            var serverFileInfoResponse = new UploadFileRequest()
             {
                 CommandType = CommandType.UploadFileResponse,
                 FileName = fileCommand.FileName,
@@ -54,12 +49,21 @@ namespace NetworkSocketServer.Server.CommandHandlers
                 }
             }
 
-            var response = new Command()
+            var response = new Request()
             {
                 CommandType = CommandType.UploadFileResponse
             };
 
-            await _transportHandler.Send(response.Serialize());
+            await _transportHandler.Send(response.Serialize());*/
+
+            var response = new UploadFileResponse
+            {
+                ConnectionId = uploadFileRequest.ConnectionId,
+                Filename = uploadFileRequest.FileName,
+                UploadTime = TimeSpan.Zero,
+            };
+
+            return Task.FromResult((Response) response);
         }
     }
 }

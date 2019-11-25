@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using System.Net.Sockets;
-using NetworkSocketServer.Commands;
+using NetworkSocketServer.DTO.Requests;
 
 namespace NetworkSocketServer.Client
 {
@@ -23,7 +23,7 @@ namespace NetworkSocketServer.Client
             Socket.Send(bytes);
         }
 
-        public void Send(Commands.Command command)
+        public void Send(Request command)
         {
             Socket.Send(command.Serialize());
         }

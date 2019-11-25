@@ -1,10 +1,11 @@
 ﻿using System.Threading.Tasks;
-using NetworkSocketServer.Commands;
+using NetworkSocketServer.DTO.Requests;
+using NetworkSocketServer.DTO.Responses;
 
 namespace NetworkSocketServer.Server.CommandHandlers
 {
     internal  interface ICommandHandler
     {
-        Task Handle(Command command);
+        Task<Response> Handle(Request request);
     }
 }

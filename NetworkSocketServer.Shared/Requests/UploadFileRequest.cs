@@ -1,12 +1,14 @@
 ﻿using System;
 
-namespace NetworkSocketServer.Commands
+namespace NetworkSocketServer.DTO.Requests
 {
     [Serializable]
-    public class FileInfoCommand : Command
+    public class UploadFileRequest : Request
     {
         public string FileName { get; set; }
-        public bool IsExist { get; set; }
+
         public long Size { get; set; }
+
+        public byte[] File { get; set; }
     }
 }

@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace NetworkSocketServer.Commands
+namespace NetworkSocketServer.DTO.Requests
 {
     [Serializable]
-    public class TextCommand : Command
+    public class TextRequest : Request
     {
         public string Text { get; set; }
     }

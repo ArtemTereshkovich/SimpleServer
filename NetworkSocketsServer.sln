@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkSocketServer.Client"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkSocketServer.NetworkLayer", "NetworkSocketServer.Network\NetworkSocketServer.NetworkLayer.csproj", "{67C8AC1D-8078-42F2-8DA3-9F39EECB4DA0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkSocketServer.Commands", "NetworkSocketServer.Shared\NetworkSocketServer.Commands.csproj", "{2B39B536-4961-416B-8CE4-3E75D4E47E00}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkSocketServer.DTO", "NetworkSocketServer.Shared\NetworkSocketServer.DTO.csproj", "{2B39B536-4961-416B-8CE4-3E75D4E47E00}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkSocketServer.TransportLayer", "NetworkSocketServer.TransportLayer\NetworkSocketServer.TransportLayer.csproj", "{3CF16875-55AC-40B5-AF2D-5CB4153F5783}"
 EndProject

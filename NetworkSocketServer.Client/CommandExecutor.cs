@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using NetworkSocketServer.Client.Command.Implementations;
-using NetworkSocketServer.Commands;
+using NetworkSocketServer.DTO.Requests;
 using SPOLKS.Client.Command.Implementations;
 
 namespace NetworkSocketServer.Client
@@ -33,14 +33,14 @@ namespace NetworkSocketServer.Client
                 return;
             }
 
-            var request = new TextCommand()
+            var request = new TextRequest()
             {
                 CommandType = CommandType.EchoRequest,
                 Text = command.Message
             };
 
             Connection.Send(request);
-            var response = Connection.Receive().Deserialize<TextCommand>();
+            var response = Connection.Receive().Deserialize<TextRequest>();
 
             Console.WriteLine(response.Text);
         }
@@ -53,13 +53,13 @@ namespace NetworkSocketServer.Client
                 return;
             }
 
-            var request = new Commands.Command()
+            var request = new Request()
             {
                 CommandType = CommandType.TimeRequest
             };
 
             Connection.Send(request);
-            var response = Connection.Receive().Deserialize<TextCommand>();
+            var response = Connection.Receive().Deserialize<TextRequest>();
 
             Console.WriteLine(response.Text);
         }
@@ -82,17 +82,17 @@ namespace NetworkSocketServer.Client
                 return;
             }
 
-            var message = new FileInfoCommand()
+            var message = new UploadFileRequest()
             {
                 CommandType = CommandType.UploadFileRequest,
-                ClientId = ClientId,
+                ConnectionId = ClientId,
                 FileName = command.FileName,
                 Size = fileInfo.Length,
                 IsExist = true
             };
 
             Connection.Send(message);
-            var serverFileInfoResponse = Connection.Receive().Deserialize<FileInfoCommand>();
+            var serverFileInfoResponse = Connection.Receive().Deserialize<UploadFileRequest>();
           
 
             var bytes = File.ReadAllBytes(localFileName).Skip((int) serverFileInfoResponse.Size).ToArray();
@@ -102,7 +102,7 @@ namespace NetworkSocketServer.Client
 
             Connection.Send(bytes);
 
-            Connection.Receive().Deserialize<Commands.Command>();
+            Connection.Receive().Deserialize<Request>();
             stopwatch.Stop();
 
             Console.WriteLine($"File uploaded successfully! " +
@@ -122,10 +122,10 @@ namespace NetworkSocketServer.Client
             var fileInfo = new FileInfo(localFileName);
             var fileLength = fileInfo.Exists ? fileInfo.Length : 0;
 
-            var message = new FileInfoCommand()
+            var message = new UploadFileRequest()
             {
                 CommandType = CommandType.DownloadFileRequest,
-                ClientId = ClientId,
+                ConnectionId = ClientId,
                 FileName = command.FileName,
                 IsExist = fileInfo.Exists,
                 Size = fileLength
@@ -133,7 +133,7 @@ namespace NetworkSocketServer.Client
 
             Connection.Send(message);
 
-            var serverFileInfoResponse = Connection.Receive().Deserialize<FileInfoCommand>();
+            var serverFileInfoResponse = Connection.Receive().Deserialize<UploadFileRequest>();
             if (serverFileInfoResponse.FileName == null)
             {
                 Console.WriteLine("File not found!");

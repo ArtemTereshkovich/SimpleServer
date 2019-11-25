@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NetworkSocketServer.Shared\NetworkSocketServer.Commands.csproj" />
+    <ProjectReference Include="..\NetworkSocketServer.Shared\NetworkSocketServer.DTO.csproj" />
   </ItemGroup>
 
 </Project>

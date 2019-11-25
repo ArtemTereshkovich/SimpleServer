@@ -1,6 +1,6 @@
 ﻿namespace NetworkSocketServer.TransportLayer.Serializer
 {
-    interface IByteSerializer
+    public interface IByteSerializer
     {
         byte[] Serialize<T>(T serializeObject);
 

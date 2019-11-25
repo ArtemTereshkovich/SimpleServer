@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using NetworkSocketServer.DTO.Requests;
 
 namespace NetworkSocketServer.Client
 {
@@ -10,7 +11,7 @@ namespace NetworkSocketServer.Client
 
         void Send(byte[] bytes);
 
-        void Send(Commands.Command command);
+        void Send(Request command);
 
         byte[] Receive();
 
