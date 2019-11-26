@@ -17,13 +17,13 @@ namespace NetworkSocketServer.TransportLayer
             SessionId = sessionId;
         }
 
-        public static ClientSessionContext CreateClientContext(ITransportHandler transportHandler)
+        public static ClientSessionContext CreateClientContext(ITransportHandler transportHandler, Guid sessionId)
         {
             return new ClientSessionContext(
                 transportHandler,
                 new MemoryStreamBuffer(),
                 new MemoryStreamBuffer(),
-                Guid.NewGuid());
+                sessionId);
         }
     }
 }

@@ -4,6 +4,7 @@ using NetworkSocketServer.DTO.Requests;
 using NetworkSocketServer.DTO.Responses;
 using NetworkSocketServer.NetworkLayer.Connectors;
 using NetworkSocketServer.NetworkLayer.Dispatchers.ConnectorDispatcher;
+using NetworkSocketServer.TransportLayer.DTO;
 using NetworkSocketServer.TransportLayer.Serializer;
 
 namespace NetworkSocketServer.TransportLayer.ServiceHandlers.NetworkRequestExecutor
@@ -28,7 +29,7 @@ namespace NetworkSocketServer.TransportLayer.ServiceHandlers.NetworkRequestExecu
             {
                 var transportHandler = await _dispatcher.CreateTransportHandler(connectSettings);
 
-                sessionContext = ClientSessionContext.CreateClientContext(transportHandler);
+                sessionContext = ClientSessionContext.CreateClientContext(transportHandler,  Guid.NewGuid());
             }
             catch (Exception exception)
             {
@@ -39,7 +40,19 @@ namespace NetworkSocketServer.TransportLayer.ServiceHandlers.NetworkRequestExecu
 
         public Task<Response> HandleRequest(Request request)
         {
-            throw new NotImplementedException();
+            var requestBytes = _byteSerializer.Serialize(request);
+
+            var packetFactory = new PacketFactory.PacketFactory(sessionContext.SessionId);
+
+            var packet = packetFactory.CreateExecutePayload(requestBytes);
+
+            sessionContext.TransportHandler.Send(_byteSerializer.Serialize(packet));
+
+            var receiveBytes = sessionContext.TransportHandler.Receive();
+
+            var packetResponse = _byteSerializer.Deserialize<Packet>(receiveBytes);
+
+            return Task.FromResult(_byteSerializer.Deserialize<Response>(packetResponse.Payload));
         }
 
         public Task Disconnect()

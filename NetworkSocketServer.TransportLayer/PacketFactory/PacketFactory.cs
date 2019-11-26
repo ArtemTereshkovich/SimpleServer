@@ -69,5 +69,18 @@ namespace NetworkSocketServer.TransportLayer.PacketFactory
                 SessionId = _sessionId
             };
         }
+
+        public Packet CreateExecutePayload(byte[] requestBytes)
+        {
+            return new Packet
+            {
+                Offset = 0,
+                Position = 0,
+                PacketServerResponse = PacketServerResponse.Answer,
+                PacketClientCommand = PacketClientCommand.ExecutePayload,
+                Payload = requestBytes,
+                SessionId = _sessionId
+            };
+        }
     }
 }

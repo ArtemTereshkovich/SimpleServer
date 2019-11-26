@@ -41,6 +41,8 @@ namespace NetworkSocketServer.TransportLayer
             {
                 _sessionContext = null;
                 _sessionId = Guid.Empty;
+
+                Console.WriteLine("Connection disconnected");
             }
         }
 
@@ -55,6 +57,8 @@ namespace NetworkSocketServer.TransportLayer
                 {
                     _sessionContext = null;
                     _sessionId = Guid.Empty;
+
+                    Console.WriteLine("Connection disconnected");
 
                     return;
                 }
