@@ -1,4 +1,6 @@
-﻿namespace NetworkSocketServer.Client.Command.Interfaces
+﻿using NetworkSocketServer.Client.Commands;
+
+namespace NetworkSocketServer.Client.Inputs
 {
     public interface ICommandParser
     {

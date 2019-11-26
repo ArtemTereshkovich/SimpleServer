@@ -6,13 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Command\Exceptions\" />
-    <Folder Include="Command\Interfaces\" />
-    <Folder Include="Command\Utils\" />
+    <Folder Include="Commands\Exceptions\" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\NetworkSocketServer.Network\NetworkSocketServer.NetworkLayer.csproj" />
     <ProjectReference Include="..\NetworkSocketServer.Shared\NetworkSocketServer.DTO.csproj" />
+    <ProjectReference Include="..\NetworkSocketServer.TransportLayer\NetworkSocketServer.TransportLayer.csproj" />
   </ItemGroup>
 
 </Project>

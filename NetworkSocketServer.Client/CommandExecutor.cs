@@ -1,17 +1,18 @@
 ﻿using System;
-using System.Data;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using NetworkSocketServer.Client.Command.Implementations;
-using NetworkSocketServer.DTO.Requests;
-using SPOLKS.Client.Command.Implementations;
+using System.Threading.Tasks;
+using NetworkSocketServer.Client.Commands;
+using NetworkSocketServer.NetworkLayer.Connectors;
+using NetworkSocketServer.NetworkLayer.Dispatchers.ConnectorDispatcher;
+using NetworkSocketServer.NetworkLayer.SocketOptionsAccessor.KeepAlive;
 
 namespace NetworkSocketServer.Client
 {
     public class CommandExecutor
     {
+        public CommandExecutor()
+        {
 
+        }
 
         public void Execute(HelpCommand _)
         {
@@ -24,174 +25,197 @@ namespace NetworkSocketServer.Client
             Console.WriteLine("-upload [file]");
             Console.WriteLine("-download [file]");
         }
-        public void Execute(EchoCommand command)
+
+        public async Task Execute(ConnectTCPCommand connectTcpCommand)
         {
-            if (Connection == null)
+            var dispatcherFactory = new ConnectorDispatcherFactory();
+
+            var dispatcher = dispatcherFactory.CreateConnectorDispatcher(new SocketKeepAliveOptions
             {
-                Console.WriteLine("There is no connection to server!");
+                KeepAliveInterval = 90000,
+                KeepAliveTime = 300000,
+            });
 
-                return;
-            }
-
-            var request = new TextRequest()
+            var transportHandler = await dispatcher.CreateTransportHandler(new NetworkConnectorSettings
             {
-                CommandType = CommandType.EchoRequest,
-                Text = command.Message
-            };
-
-            Connection.Send(request);
-            var response = Connection.Receive().Deserialize<TextRequest>();
-
-            Console.WriteLine(response.Text);
+                ConnectionType = ConnectionType.Tcp,
+                IpEndPointServer = connectTcpCommand.EndPoint
+            });
         }
+
+        public async Task Execute(ConnectUDPCommand connectUdpCommand)
+        {
+            var dispatcherFactory = new ConnectorDispatcherFactory();
+
+            var dispatcher = dispatcherFactory.CreateConnectorDispatcher(new SocketKeepAliveOptions
+            {
+                KeepAliveInterval = 90000,
+                KeepAliveTime = 300000,
+            });
+
+            var transportHandler = await dispatcher.CreateTransportHandler(new NetworkConnectorSettings
+            {
+                ConnectionType = ConnectionType.Udp,
+                IpEndPointServer = connectUdpCommand.EndPoint
+            });
+        }
+
+        public void Execute(TextCommand command)
+        {
+            //if (Connection == null)
+            //{
+            //    Console.WriteLine("There is no connection to server!");
+
+            //    return;
+            //}
+
+            //var request = new TextRequest()
+            //{
+            //    CommandType = CommandType.EchoRequest,
+            //    Text = command.Message
+            //};
+
+            //Connection.Send(request);
+            //var response = Connection.Receive().Deserialize<TextRequest>();
+
+            //Console.WriteLine(response.Text);
+        }
+
         public void Execute(DateCommand _)
         {
-            if (Connection == null)
-            {
-                Console.WriteLine("There is no connection to server!");
+            //if (Connection == null)
+            //{
+            //    Console.WriteLine("There is no connection to server!");
 
-                return;
-            }
+            //    return;
+            //}
 
-            var request = new DateRequest()
-            {
-                ClientDate = DateTime.Now,
-            };
+            //var request = new DateRequest()
+            //{
+            //    ClientDate = DateTime.Now,
+            //};
 
-            Connection.Send(request);
-            var response = Connection.Receive().Deserialize<TextRequest>();
+            //Connection.Send(request);
+            //var response = Connection.Receive().Deserialize<TextRequest>();
 
-            Console.WriteLine(response.Text);
+            //Console.WriteLine(response.Text);
         }
-        public void Execute(UploadCommand command)
+        public void Execute(UploadFileCommand fileCommand)
         {
-            if (Connection == null)
-            {
-                Console.WriteLine("There is no connection to server!");
+            //if (Connection == null)
+            //{
+            //    Console.WriteLine("There is no connection to server!");
 
-                return;
-            }
+            //    return;
+            //}
 
-            var localFileName = $"Resources{Path.DirectorySeparatorChar}{command.FileName}";
-            var fileInfo = new FileInfo(localFileName);
+            //var localFileName = $"Resources{Path.DirectorySeparatorChar}{fileCommand.FileName}";
+            //var fileInfo = new FileInfo(localFileName);
 
-            if (!File.Exists(localFileName))
-            {
-                Console.WriteLine("File not found!");
+            //if (!File.Exists(localFileName))
+            //{
+            //    Console.WriteLine("File not found!");
 
-                return;
-            }
+            //    return;
+            //}
 
-            var message = new UploadFileRequest()
-            {
-                CommandType = CommandType.UploadFileRequest,
-                ConnectionId = ClientId,
-                FileName = command.FileName,
-                Size = fileInfo.Length,
-                IsExist = true
-            };
+            //var message = new UploadFileRequest()
+            //{
+            //    CommandType = CommandType.UploadFileRequest,
+            //    ConnectionId = ClientId,
+            //    FileName = fileCommand.FileName,
+            //    Size = fileInfo.Length,
+            //    IsExist = true
+            //};
 
-            Connection.Send(message);
-            var serverFileInfoResponse = Connection.Receive().Deserialize<UploadFileRequest>();
+            //Connection.Send(message);
+            //var serverFileInfoResponse = Connection.Receive().Deserialize<UploadFileRequest>();
           
 
-            var bytes = File.ReadAllBytes(localFileName).Skip((int) serverFileInfoResponse.Size).ToArray();
+            //var bytes = File.ReadAllBytes(localFileName).Skip((int) serverFileInfoResponse.Size).ToArray();
 
-            var stopwatch = new Stopwatch();
-            stopwatch.Restart();
+            //var stopwatch = new Stopwatch();
+            //stopwatch.Restart();
 
-            Connection.Send(bytes);
+            //Connection.Send(bytes);
 
-            Connection.Receive().Deserialize<Request>();
-            stopwatch.Stop();
+            //Connection.Receive().Deserialize<Request>();
+            //stopwatch.Stop();
 
-            Console.WriteLine($"File uploaded successfully! " +
-                $"Average upload speed is {((double)bytes.Length / (1024 * 1024)) / (((double)stopwatch.ElapsedMilliseconds + 1) / 1000)} Mbps.");
+            //Console.WriteLine($"File uploaded successfully! " +
+            //    $"Average upload speed is {((double)bytes.Length / (1024 * 1024)) / (((double)stopwatch.ElapsedMilliseconds + 1) / 1000)} Mbps.");
         }
-        public void Execute(DownloadCommand command)
+        public void Execute(DownloadFileCommand fileCommand)
         {
-            if (Connection == null)
-            {
-                Console.WriteLine("There is no connection to server!");
+            //if (Connection == null)
+            //{
+            //    Console.WriteLine("There is no connection to server!");
 
-                return;
-            }
+            //    return;
+            //}
 
-            var localFileName = $"Resources{Path.DirectorySeparatorChar}{command.FileName}";
+            //var localFileName = $"Resources{Path.DirectorySeparatorChar}{fileCommand.FileName}";
 
-            var fileInfo = new FileInfo(localFileName);
-            var fileLength = fileInfo.Exists ? fileInfo.Length : 0;
+            //var fileInfo = new FileInfo(localFileName);
+            //var fileLength = fileInfo.Exists ? fileInfo.Length : 0;
 
-            var message = new UploadFileRequest()
-            {
-                CommandType = CommandType.DownloadFileRequest,
-                ConnectionId = ClientId,
-                FileName = command.FileName,
-                IsExist = fileInfo.Exists,
-                Size = fileLength
-            };
+            //var message = new UploadFileRequest()
+            //{
+            //    CommandType = CommandType.DownloadFileRequest,
+            //    ConnectionId = ClientId,
+            //    FileName = fileCommand.FileName,
+            //    IsExist = fileInfo.Exists,
+            //    Size = fileLength
+            //};
 
-            Connection.Send(message);
+            //Connection.Send(message);
 
-            var serverFileInfoResponse = Connection.Receive().Deserialize<UploadFileRequest>();
-            if (serverFileInfoResponse.FileName == null)
-            {
-                Console.WriteLine("File not found!");
-                return;
-            }
+            //var serverFileInfoResponse = Connection.Receive().Deserialize<UploadFileRequest>();
+            //if (serverFileInfoResponse.FileName == null)
+            //{
+            //    Console.WriteLine("File not found!");
+            //    return;
+            //}
 
-            var stopwatch = new Stopwatch();
-            stopwatch.Restart();
-            Connection.Send(serverFileInfoResponse);
+            //var stopwatch = new Stopwatch();
+            //stopwatch.Restart();
+            //Connection.Send(serverFileInfoResponse);
 
-            var bytesReceived = 0;
-            using (var fileStream = File.OpenWrite(localFileName))
-            using (var binaryWriter = new BinaryWriter(fileStream))
-            {
-                binaryWriter.BaseStream.Seek(0, SeekOrigin.End);
+            //var bytesReceived = 0;
+            //using (var fileStream = File.OpenWrite(localFileName))
+            //using (var binaryWriter = new BinaryWriter(fileStream))
+            //{
+            //    binaryWriter.BaseStream.Seek(0, SeekOrigin.End);
 
-                while (bytesReceived < serverFileInfoResponse.Size - fileLength)
-                {
-                    var filePart = Connection.Receive();
+            //    while (bytesReceived < serverFileInfoResponse.Size - fileLength)
+            //    {
+            //        var filePart = Connection.Receive();
 
-                    binaryWriter.Write(filePart);
-                    binaryWriter.Flush();
+            //        binaryWriter.Write(filePart);
+            //        binaryWriter.Flush();
 
-                    bytesReceived += filePart.Length;
-                }
-            }
+            //        bytesReceived += filePart.Length;
+            //    }
+            //}
 
-            stopwatch.Stop();
-            Console.WriteLine($"File successfully downloaded! " +
-                $"Average upload speed is {((double)bytesReceived / (1024 * 1024)) / (((double)stopwatch.ElapsedMilliseconds + 1) / 1000)} Mbps.");
+            //stopwatch.Stop();
+            //Console.WriteLine($"File successfully downloaded! " +
+            //    $"Average upload speed is {((double)bytesReceived / (1024 * 1024)) / (((double)stopwatch.ElapsedMilliseconds + 1) / 1000)} Mbps.");
         }
-        public void Execute(ConnectCommand command)
-        {
-            if (Connection != null && Connection.Connected)
-            {
-                Console.WriteLine("You already connected! Disconnect before start new connection!");
 
-                return;
-            }
-
-            Connection = new TcpConnection();
-            Connection.Connect(command.EndPoint);
-
-            Console.WriteLine("Connected");
-        }
         public void Execute(DisconnectCommand _)
         {
-            if (Connection == null)
-            {
-                Console.WriteLine("There is no connection to server!");
+            //if (Connection == null)
+            //{
+            //    Console.WriteLine("There is no connection to server!");
 
-                return;
-            }
+            //    return;
+            //}
 
-            Connection.Disconect();
-            Connection = null;
+            //Connection.Disconect();
+            //Connection = null;
 
-            Console.WriteLine("Disconnected");
+            //Console.WriteLine("Disconnected");
         }
     }
 }

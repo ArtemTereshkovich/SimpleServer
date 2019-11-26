@@ -60,7 +60,6 @@ namespace NetworkSocketServer.Server.CommandHandlers
             {
                 ConnectionId = uploadFileRequest.ConnectionId,
                 Filename = uploadFileRequest.FileName,
-                UploadTime = TimeSpan.Zero,
             };
 
             return Task.FromResult((Response) response);

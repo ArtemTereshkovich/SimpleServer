@@ -1,4 +1,4 @@
-﻿namespace NetworkSocketServer.Client.Command.Interfaces
+﻿namespace NetworkSocketServer.Client.Commands
 {
     public interface ICommand
     {

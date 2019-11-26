@@ -1,22 +1,19 @@
-﻿using NetworkSocketServer.Client.Command.Interfaces;
-
-namespace NetworkSocketServer.Client.Command.Implementations
+﻿namespace NetworkSocketServer.Client.Commands
 {
-    public class DownloadCommand : ICommand
+    public class DownloadFileCommand : ICommand
     {
         public const string Command = "-download";
 
         public string FileName { get; set; }
-
-
+        
         public void Execute(CommandExecutor executor)
         {
             executor.Execute(this);
         }
 
-        public static DownloadCommand Parse(string data)
+        public static DownloadFileCommand Parse(string data)
         {
-            return new DownloadCommand()
+            return new DownloadFileCommand()
             {
                 FileName = data
             };

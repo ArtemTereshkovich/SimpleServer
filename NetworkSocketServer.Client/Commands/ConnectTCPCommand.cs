@@ -1,23 +1,22 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
-using NetworkSocketServer.Client.Command.Interfaces;
 
-namespace NetworkSocketServer.Client.Command.Implementations
+namespace NetworkSocketServer.Client.Commands
 {
-    public class ConnectCommand : ICommand
+    public class ConnectTCPCommand : ICommand
     {
-        public const string Command = "-connect";
+        public const string Command = "-connecttcp";
 
         public IPEndPoint EndPoint { get; private set; }
 
 
         public void Execute(CommandExecutor executor)
         {
-            executor.Execute(this);
+            executor.Execute(this).Wait();
         }
 
-        public static ConnectCommand Parse(string data)
+        public static ConnectTCPCommand Parse(string data)
         {
             var endPointData = data.Split(':').Select(value => value.TrimEnd(' ', '\0', '\n')).ToList();
             if (endPointData.Count != 2) throw new Exception("Wrong command format");
@@ -28,7 +27,7 @@ namespace NetworkSocketServer.Client.Command.Implementations
             var isPortValid = int.TryParse(endPointData[1], out var port);
             if (!isPortValid) throw new Exception("Wrong command format");
 
-            return new ConnectCommand()
+            return new ConnectTCPCommand()
             {
                 EndPoint = new IPEndPoint(address, port)
             };

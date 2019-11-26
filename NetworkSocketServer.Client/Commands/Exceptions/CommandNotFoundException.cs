@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NetworkSocketServer.Client.Command.Exceptions
+namespace NetworkSocketServer.Client.Commands.Exceptions
 {
     public class CommandNotFoundException : Exception
     {

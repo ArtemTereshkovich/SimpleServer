@@ -1,14 +1,12 @@
-﻿using NetworkSocketServer.Client.Command.Interfaces;
-
-namespace NetworkSocketServer.Client.Command.Implementations
+﻿namespace NetworkSocketServer.Client.Commands
 {
-    public class EchoCommand : ICommand
+    public class TextCommand : ICommand
     {
         public const string Command = "-echo";
         public string Message { get; private set; }
-        public static EchoCommand Parse(string data)
+        public static TextCommand Parse(string data)
         {
-            return new EchoCommand()
+            return new TextCommand()
             {
                 Message = data
             };

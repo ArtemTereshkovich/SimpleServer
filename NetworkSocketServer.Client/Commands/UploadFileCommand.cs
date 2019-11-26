@@ -1,9 +1,6 @@
-﻿using NetworkSocketServer.Client;
-using NetworkSocketServer.Client.Command.Interfaces;
-
-namespace SPOLKS.Client.Command.Implementations
+﻿namespace NetworkSocketServer.Client.Commands
 {
-    public class UploadCommand : ICommand
+    public class UploadFileCommand : ICommand
     {
         public const string Command = "-upload";
 
@@ -15,9 +12,9 @@ namespace SPOLKS.Client.Command.Implementations
             executor.Execute(this);
         }
 
-        public static UploadCommand Parse(string data)
+        public static UploadFileCommand Parse(string data)
         { 
-            return new UploadCommand()
+            return new UploadFileCommand()
             {
                 FileName = data
             };

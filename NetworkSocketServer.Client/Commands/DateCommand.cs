@@ -1,6 +1,4 @@
-﻿using NetworkSocketServer.Client.Command.Interfaces;
-
-namespace NetworkSocketServer.Client.Command.Implementations
+﻿namespace NetworkSocketServer.Client.Commands
 {
     public class DateCommand : ICommand
     {

@@ -1,9 +1,8 @@
 ﻿using System.Linq;
-using NetworkSocketServer.Client.Command.Exceptions;
-using NetworkSocketServer.Client.Command.Interfaces;
-using SPOLKS.Client.Command.Implementations;
+using NetworkSocketServer.Client.Commands;
+using NetworkSocketServer.Client.Commands.Exceptions;
 
-namespace NetworkSocketServer.Client.Command.Implementations
+namespace NetworkSocketServer.Client.Inputs
 {
     public class CommandParser : ICommandParser
     {
@@ -18,25 +17,29 @@ namespace NetworkSocketServer.Client.Command.Implementations
                     {
                         return HelpCommand.Parse(data);
                     }
-                case EchoCommand.Command:
+                case TextCommand.Command:
                     {
-                        return EchoCommand.Parse(data);
+                        return TextCommand.Parse(data);
                     }
                 case DateCommand.Command:
                     {
                         return DateCommand.Parse(data);
                     }
-                case UploadCommand.Command:
+                case UploadFileCommand.Command:
                     {
-                        return UploadCommand.Parse(data);
+                        return UploadFileCommand.Parse(data);
                     }
-                case DownloadCommand.Command:
+                case DownloadFileCommand.Command:
                     {
-                        return DownloadCommand.Parse(data);
+                        return DownloadFileCommand.Parse(data);
                     }
-                case ConnectCommand.Command:
+                case ConnectTCPCommand.Command:
                     {
-                        return ConnectCommand.Parse(data);
+                        return ConnectTCPCommand.Parse(data);
+                    }
+                case ConnectUDPCommand.Command:
+                    {
+                        return ConnectTCPCommand.Parse(data);
                     }
                 case DisconnectCommand.Command:
                     {

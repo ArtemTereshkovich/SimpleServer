@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Net.Sockets;
-using NetworkSocketServer.Client.Command.Exceptions;
-using NetworkSocketServer.Client.Command.Implementations;
-using NetworkSocketServer.Client.Command.Utils;
+using NetworkSocketServer.Client.Commands.Exceptions;
+using NetworkSocketServer.Client.Inputs;
 
 namespace NetworkSocketServer.Client
 {
@@ -13,18 +12,13 @@ namespace NetworkSocketServer.Client
 
         public Client()
         {
-            _inputManager = new InputManager()
-            {
-                CommandParser = new CommandParser()
-            };
+            _inputManager = new InputManager(new CommandParser());
 
             _commandExecutor = new CommandExecutor();
         }
 
         public void Run()
         {
-            var executor = new CommandExecutor();
-            executor.ClientId = ClientId;
 
             while (true)
             {
@@ -32,7 +26,7 @@ namespace NetworkSocketServer.Client
                 {
                     var command = _inputManager.GetCommand();
 
-                    executer
+                    command.Execute(_commandExecutor);
                 }
                 catch (CommandNotFoundException ex)
                 {
@@ -41,7 +35,6 @@ namespace NetworkSocketServer.Client
                 catch (SocketException ex)
                 {
                     Console.WriteLine(ex.Message);
-                    executor.Connection = null;
                 }
                 catch (Exception ex)
                 {

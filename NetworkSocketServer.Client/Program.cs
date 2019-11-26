@@ -1,10 +1,8 @@
-﻿using System;
-
-namespace NetworkSocketServer.Client
+﻿namespace NetworkSocketServer.Client
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             new Client().Run();
         }

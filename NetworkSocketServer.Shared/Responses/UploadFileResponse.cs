@@ -6,7 +6,5 @@ namespace NetworkSocketServer.DTO.Responses
     public class UploadFileResponse : Response
     {
         public string Filename { get; set; }
-
-        public TimeSpan UploadTime { get; set; }
     }
 }
