@@ -94,9 +94,7 @@ namespace NetworkSocketServer.TransportLayer.PacketHandler
         private async Task HandleExecutePayloadCommand(Packet packet)
         {
             _sessionContext.ReceiveBuffer.Clear();
-            _sessionContext.ReceiveBuffer.SetLength(0);
             _sessionContext.TransmitBuffer.Clear();
-            _sessionContext.TransmitBuffer.SetLength(0);
 
             var request = _byteSerializer.Deserialize<Request>(packet.Payload);
 
@@ -104,7 +102,7 @@ namespace NetworkSocketServer.TransportLayer.PacketHandler
 
             var responseBytes = _byteSerializer.Serialize(response);
 
-            if (responseBytes.Length * 2 <= _sessionContext.PacketPayloadThreshold)
+            if (responseBytes.Length <= _sessionContext.PacketPayloadThreshold * 2)
             {
                 var answer = _packetFactory.CreateAnswerExecuteSuccessPayload(responseBytes, responseBytes.Length);
 

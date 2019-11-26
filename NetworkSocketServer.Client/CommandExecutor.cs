@@ -4,8 +4,6 @@ using NetworkSocketServer.Client.Commands;
 using NetworkSocketServer.DTO.Requests;
 using NetworkSocketServer.DTO.Responses;
 using NetworkSocketServer.NetworkLayer.Connectors;
-using NetworkSocketServer.NetworkLayer.Dispatchers.ConnectorDispatcher;
-using NetworkSocketServer.NetworkLayer.SocketOptionsAccessor.KeepAlive;
 using NetworkSocketServer.TransportLayer.ServiceHandlers.NetworkRequestExecutor;
 
 namespace NetworkSocketServer.Client
@@ -25,8 +23,8 @@ namespace NetworkSocketServer.Client
             Console.WriteLine("-connecttcp [ip]:[port]");
             Console.WriteLine("-connectudp [ip]:[port]");
             Console.WriteLine("-disconnect");
-            Console.WriteLine("-time");
-            Console.WriteLine("-echo [message]");
+            Console.WriteLine("-date");
+            Console.WriteLine("-text [message]");
             Console.WriteLine("-upload [file]");
             Console.WriteLine("-download [file]");
         }
@@ -36,6 +34,7 @@ namespace NetworkSocketServer.Client
             if (_networkRequestExecutor.IsConnected)
             {
                 Console.WriteLine("Already connected!");
+                return;
             }
             else
             {
@@ -52,6 +51,7 @@ namespace NetworkSocketServer.Client
             if (_networkRequestExecutor.IsConnected)
             {
                 Console.WriteLine("Already connected!");
+                return;
             }
             else
             {
@@ -68,6 +68,7 @@ namespace NetworkSocketServer.Client
             if (!_networkRequestExecutor.IsConnected)
             {
                 Console.WriteLine("Doesnt connected!");
+                return;
             }
 
             var request = new TextRequest()
@@ -88,6 +89,7 @@ namespace NetworkSocketServer.Client
             if (!_networkRequestExecutor.IsConnected)
             {
                 Console.WriteLine("Doesnt connected!");
+                return;
             }
 
             var request = new DateRequest
@@ -107,6 +109,7 @@ namespace NetworkSocketServer.Client
             if (!_networkRequestExecutor.IsConnected)
             {
                 Console.WriteLine("Doesnt connected!");
+                return Task.CompletedTask;
             }
 
             return Task.CompletedTask;
@@ -151,6 +154,7 @@ namespace NetworkSocketServer.Client
             if (!_networkRequestExecutor.IsConnected)
             {
                 Console.WriteLine("Doesnt connected!");
+                return;
             }
 
             var request = new DownloadFileRequest
@@ -226,6 +230,7 @@ namespace NetworkSocketServer.Client
             if (!_networkRequestExecutor.IsConnected)
             {
                 Console.WriteLine("Doesnt connected!");
+                return;
             }
             else
             {

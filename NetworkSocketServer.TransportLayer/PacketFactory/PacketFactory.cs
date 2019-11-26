@@ -49,7 +49,15 @@ namespace NetworkSocketServer.TransportLayer.PacketFactory
 
         public Packet CreateAnswerExecuteSuccessPayload(byte[] responseBytes, int responseBytesLength)
         {
-            throw new NotImplementedException();
+            return new Packet
+            {
+                Offset = responseBytesLength,
+                PacketServerResponse = PacketServerResponse.Answer,
+                PacketClientCommand = PacketClientCommand.None,
+                Payload = responseBytes,
+                Position = 0,
+                SessionId = _sessionId
+            };
         }
 
         public Packet CreateAnswerExecuteSuccessBuffer(int transmitBufferLength)

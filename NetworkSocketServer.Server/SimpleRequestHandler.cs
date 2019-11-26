@@ -28,7 +28,7 @@ namespace NetworkSocketServer.Server
 
         public async Task<Response> HandleRequest(Request request)
         {
-            Console.WriteLine($"Message received: {nameof(request)}");
+            Console.WriteLine($"Message received: {request.RequestId}");
 
             switch (request)
             {
