@@ -1,4 +1,5 @@
-﻿using NetworkSocketServer.NetworkLayer.SocketOptionsAccessor.KeepAlive;
+﻿using NetworkSocketServer.NetworkLayer.Dispatchers.ConnectorDispatcher;
+using NetworkSocketServer.NetworkLayer.SocketOptionsAccessor.KeepAlive;
 using NetworkSocketServer.TransportLayer.ServiceHandlers.NetworkRequestExecutor;
 
 namespace NetworkSocketServer.Client
@@ -13,7 +14,7 @@ namespace NetworkSocketServer.Client
                 KeepAliveInterval = 90000,
             };
 
-            var networkExecutorFactory = new SimpleNetworkExecutorFactory();
+            var networkExecutorFactory = new SimpleNetworkExecutorFactory(new ConnectorDispatcherFactory());
             
             new Client(networkExecutorFactory, keepAliveOptions)
                 .Run().Wait();

@@ -32,9 +32,16 @@ namespace NetworkSocketServer.TransportLayer
             var packetHandler = CreatePacketHandler(
                 transportHandler, _sessionContext, packet.SessionId);
 
-            await packetHandler.HandlePacket(packet);
+            if (await packetHandler.HandlePacket(packet))
+            {
 
-            await ContinueProcessingPacket(packetHandler, transportHandler);
+                await ContinueProcessingPacket(packetHandler, transportHandler);
+            }
+            else
+            {
+                _sessionContext = null;
+                _sessionId = Guid.Empty;
+            }
         }
 
         private async Task ContinueProcessingPacket(
@@ -44,8 +51,13 @@ namespace NetworkSocketServer.TransportLayer
             {
                 var packet = ReceivePacketMessage(transportHandler);
 
-                if(!await packetHandler.HandlePacket(packet));
+                if (!await packetHandler.HandlePacket(packet))
+                {
+                    _sessionContext = null;
+                    _sessionId = Guid.Empty;
+
                     return;
+                }
             }
         }
 
