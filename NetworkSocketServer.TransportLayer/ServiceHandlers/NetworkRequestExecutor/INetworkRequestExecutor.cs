@@ -11,7 +11,7 @@ namespace NetworkSocketServer.TransportLayer.ServiceHandlers.NetworkRequestExecu
 
         Task Connect(NetworkConnectorSettings connectSettings);
 
-        Task<Response> HandleResponse(Request request);
+        Task<Response> HandleRequest(Request request);
 
         Task Disconnect();
     }

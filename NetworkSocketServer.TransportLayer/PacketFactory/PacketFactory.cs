@@ -6,18 +6,18 @@ namespace NetworkSocketServer.TransportLayer.PacketFactory
 {
     class PacketFactory : IPacketFactory
     {
-        private readonly Guid _connectionId;
+        private readonly Guid _sessionId;
 
-        public PacketFactory(Guid connectionId)
+        public PacketFactory(Guid sessionId)
         {
-            _connectionId = connectionId;
+            _sessionId = sessionId;
         }
 
         public Packet CreateAnswerSuccessWrite(int bufferSize, int bytesWrite)
         {
             return new Packet
             {
-                SessionId = _connectionId,
+                SessionId = _sessionId,
                 Position = bufferSize,
                 Offset = bytesWrite,
                 PacketClientCommand = PacketClientCommand.None,
@@ -30,7 +30,7 @@ namespace NetworkSocketServer.TransportLayer.PacketFactory
         {
             return new Packet
             {
-                SessionId = _connectionId,
+                SessionId = _sessionId,
                 Position = 0,
                 Offset = 0,
                 PacketClientCommand = PacketClientCommand.None,
@@ -55,6 +55,19 @@ namespace NetworkSocketServer.TransportLayer.PacketFactory
         public Packet CreateAnswerExecuteSuccessBuffer(int transmitBufferLength)
         {
             throw new NotImplementedException();
+        }
+
+        public Packet CreateClosePacket()
+        {
+            return new Packet
+            {
+                Offset = 0,
+                Position = 0,
+                PacketServerResponse = PacketServerResponse.Answer,
+                PacketClientCommand = PacketClientCommand.Close,
+                Payload = null,
+                SessionId = _sessionId
+            };
         }
     }
 }

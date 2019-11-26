@@ -9,7 +9,11 @@ namespace NetworkSocketServer.TransportLayer.PacketFactory
         Packet CreateAnswerError(string text);
 
         Packet CreateAnswerSuccessRead(byte[] array, int transmitBufferLength, int arrayLength);
+
         Packet CreateAnswerExecuteSuccessPayload(byte[] responseBytes, int responseBytesLength);
+
         Packet CreateAnswerExecuteSuccessBuffer(int transmitBufferLength);
+
+        Packet CreateClosePacket();
     }
 }

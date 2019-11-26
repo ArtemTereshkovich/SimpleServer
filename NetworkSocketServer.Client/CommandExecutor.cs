@@ -76,7 +76,7 @@ namespace NetworkSocketServer.Client
                 Text = command.Message
             };
 
-            var response = await _networkRequestExecutor.HandleResponse(request);
+            var response = await _networkRequestExecutor.HandleRequest(request);
 
             var textResponse = response as TextResponse;
 
@@ -96,7 +96,7 @@ namespace NetworkSocketServer.Client
                 ClientDate = dateCommand.ClientDateTime
             };
 
-            var response = await _networkRequestExecutor.HandleResponse(request);
+            var response = await _networkRequestExecutor.HandleRequest(request);
 
             var dateResponse = response as DateResponse;
 
@@ -159,7 +159,7 @@ namespace NetworkSocketServer.Client
                 Filename = fileCommand.FileName
             };
 
-            var response = await _networkRequestExecutor.HandleResponse(request);
+            var response = await _networkRequestExecutor.HandleRequest(request);
 
             var downloadFileResponse = response as DownloadFileResponse;
 
