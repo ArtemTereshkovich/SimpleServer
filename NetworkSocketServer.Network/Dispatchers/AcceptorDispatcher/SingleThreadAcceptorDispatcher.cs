@@ -39,6 +39,7 @@ namespace NetworkSocketServer.NetworkLayer.Dispatchers.AcceptorDispatcher
                 {
                     if (!acceptor.IsHaveNewConnection()) continue;
 
+                    Console.WriteLine("Receive new connection");
                     try
                     {
                         using var transportHandler = _transportHandlerFactory.CreateTransportHandler();

@@ -12,7 +12,7 @@ namespace NetworkSocketServer.Server.CommandHandlers
 
             var response = new TextResponse
             {
-                ConnectionId = fileRequest.ConnectionId,
+                ResponseId = fileRequest.RequestId,
                 Text = fileRequest.Text,
             };
 

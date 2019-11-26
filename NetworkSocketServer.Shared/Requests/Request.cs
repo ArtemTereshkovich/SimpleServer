@@ -5,6 +5,6 @@ namespace NetworkSocketServer.DTO.Requests
     [Serializable]
     public class Request
     {
-        public Guid ConnectionId { get; set; }
+        public Guid RequestId { get; set; }
     }
 }

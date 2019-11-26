@@ -1,4 +1,6 @@
-﻿namespace NetworkSocketServer.Client.Commands
+﻿using System.Threading.Tasks;
+
+namespace NetworkSocketServer.Client.Commands
 {
     public class UploadFileCommand : ICommand
     {
@@ -7,9 +9,9 @@
         public string FileName { get; set; }
 
 
-        public void Execute(CommandExecutor executor)
+        public async Task Execute(CommandExecutor executor)
         {
-            executor.Execute(this);
+            await executor.Execute(this);
         }
 
         public static UploadFileCommand Parse(string data)

@@ -1,7 +1,9 @@
-﻿namespace NetworkSocketServer.Client.Commands
+﻿using System.Threading.Tasks;
+
+namespace NetworkSocketServer.Client.Commands
 {
     public interface ICommand
     {
-        void Execute(CommandExecutor executor);
+        Task Execute(CommandExecutor executor);
     }
 }

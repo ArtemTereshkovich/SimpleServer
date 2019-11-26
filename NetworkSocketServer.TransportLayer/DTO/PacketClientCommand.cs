@@ -6,7 +6,7 @@
         Write,
         ExecuteBuffer,
         ExecutePayload,
-        ClearBuffers,
+        Close,
         None
     }
 }

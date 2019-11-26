@@ -13,11 +13,11 @@ namespace NetworkSocketServer.Server.CommandHandlers
             /*
             var fileCommand = command as UploadFileRequest;
 
-            if (!Directory.Exists($"Resources{Path.DirectorySeparatorChar}{fileCommand.ConnectionId}"))
+            if (!Directory.Exists($"Resources{Path.DirectorySeparatorChar}{fileCommand.RequestId}"))
             {
-                Directory.CreateDirectory($"Resources{Path.DirectorySeparatorChar}{fileCommand.ConnectionId}");
+                Directory.CreateDirectory($"Resources{Path.DirectorySeparatorChar}{fileCommand.RequestId}");
             }
-            var localFileName = $"Resources{Path.DirectorySeparatorChar}{fileCommand.ConnectionId}{Path.DirectorySeparatorChar}{fileCommand.FileName}";
+            var localFileName = $"Resources{Path.DirectorySeparatorChar}{fileCommand.RequestId}{Path.DirectorySeparatorChar}{fileCommand.FileName}";
 
             var fileInfo = new FileInfo(localFileName);
             var fileLength = fileInfo.Exists ? fileInfo.Length : 0;
@@ -58,7 +58,7 @@ namespace NetworkSocketServer.Server.CommandHandlers
 
             var response = new UploadFileResponse
             {
-                ConnectionId = uploadFileRequest.ConnectionId,
+                ResponseId = uploadFileRequest.RequestId,
                 Filename = uploadFileRequest.FileName,
             };
 

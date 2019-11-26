@@ -39,7 +39,7 @@ namespace NetworkSocketServer.Client.Inputs
                     }
                 case ConnectUDPCommand.Command:
                     {
-                        return ConnectTCPCommand.Parse(data);
+                        return ConnectUDPCommand.Parse(data);
                     }
                 case DisconnectCommand.Command:
                     {

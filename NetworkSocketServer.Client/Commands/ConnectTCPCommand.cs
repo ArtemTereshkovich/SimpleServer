@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace NetworkSocketServer.Client.Commands
 {
@@ -11,9 +12,9 @@ namespace NetworkSocketServer.Client.Commands
         public IPEndPoint EndPoint { get; private set; }
 
 
-        public void Execute(CommandExecutor executor)
+        public async Task Execute(CommandExecutor executor)
         {
-            executor.Execute(this).Wait();
+            await executor.Execute(this);
         }
 
         public static ConnectTCPCommand Parse(string data)

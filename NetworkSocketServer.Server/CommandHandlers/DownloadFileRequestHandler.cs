@@ -15,11 +15,11 @@ namespace NetworkSocketServer.Server.CommandHandlers
 
             /*var serverRootFileName = $"Resources{Path.DirectorySeparatorChar}{fileCommand.FileName}";
 
-            if (!Directory.Exists($"Resources{Path.DirectorySeparatorChar}{fileCommand.ConnectionId}"))
+            if (!Directory.Exists($"Resources{Path.DirectorySeparatorChar}{fileCommand.RequestId}"))
             {
-                Directory.CreateDirectory($"Resources{Path.DirectorySeparatorChar}{request.ConnectionId}");
+                Directory.CreateDirectory($"Resources{Path.DirectorySeparatorChar}{request.RequestId}");
             }
-            var userFolderFileName = $"Resources{Path.DirectorySeparatorChar}{fileCommand.ConnectionId}{Path.DirectorySeparatorChar}{fileCommand.FileName}";
+            var userFolderFileName = $"Resources{Path.DirectorySeparatorChar}{fileCommand.RequestId}{Path.DirectorySeparatorChar}{fileCommand.FileName}";
             var localFileName = File.Exists(userFolderFileName) ? userFolderFileName : serverRootFileName;
 
             if (!File.Exists(localFileName))
@@ -52,7 +52,7 @@ namespace NetworkSocketServer.Server.CommandHandlers
 
             var response = new DownloadFileResponse
             {
-                ConnectionId = request.ConnectionId,
+                ResponseId = request.RequestId,
                 File = null,
                 FileSize = 0,
                 Filename = downloadFileRequest.Filename

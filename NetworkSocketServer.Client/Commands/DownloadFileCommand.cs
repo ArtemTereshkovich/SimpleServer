@@ -1,4 +1,6 @@
-﻿namespace NetworkSocketServer.Client.Commands
+﻿using System.Threading.Tasks;
+
+namespace NetworkSocketServer.Client.Commands
 {
     public class DownloadFileCommand : ICommand
     {
@@ -6,7 +8,7 @@
 
         public string FileName { get; set; }
         
-        public void Execute(CommandExecutor executor)
+        public async Task Execute(CommandExecutor executor)
         {
             executor.Execute(this);
         }

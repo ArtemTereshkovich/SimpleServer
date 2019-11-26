@@ -44,7 +44,8 @@ namespace NetworkSocketServer.TransportLayer
             {
                 var packet = ReceivePacketMessage(transportHandler);
 
-                await packetHandler.HandlePacket(packet);
+                if(!await packetHandler.HandlePacket(packet));
+                    return;
             }
         }
 

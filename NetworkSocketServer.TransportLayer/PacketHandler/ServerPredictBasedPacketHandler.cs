@@ -120,13 +120,21 @@ namespace NetworkSocketServer.TransportLayer.PacketHandler
             }
         }
 
-        public async Task HandlePacket(Packet packet)
+        public async Task<bool> HandlePacket(Packet packet)
         {
             try
             {
+                if (packet.PacketClientCommand == PacketClientCommand.Close)
+                {
+                    _transportHandler.Close();
+
+                    return false;
+                }   
                 if (_handlers.TryGetValue(packet.PacketClientCommand, out var handler))
                 {
                     await handler(packet);
+
+                    return true;
                 }
                 else
                 {
@@ -136,6 +144,8 @@ namespace NetworkSocketServer.TransportLayer.PacketHandler
             catch (Exception exception)
             {
                 SendErrorPacket(exception.Message);
+
+                return true;
             }
         }
 

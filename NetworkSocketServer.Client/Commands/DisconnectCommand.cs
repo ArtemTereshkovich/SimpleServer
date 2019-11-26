@@ -1,12 +1,14 @@
-﻿namespace NetworkSocketServer.Client.Commands
+﻿using System.Threading.Tasks;
+
+namespace NetworkSocketServer.Client.Commands
 {
     public class DisconnectCommand : ICommand
     {
         public const string Command = "-disconnect";
 
-        public void Execute(CommandExecutor executor)
+        public async Task Execute(CommandExecutor executor)
         {
-            executor.Execute(this);
+            await executor.Execute(this);
         }
 
         public static DisconnectCommand Parse(string _)

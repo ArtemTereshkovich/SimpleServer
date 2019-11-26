@@ -13,7 +13,7 @@ namespace NetworkSocketServer.Server.CommandHandlers
 
             var response = new DateResponse()
             {
-                ConnectionId = dateRequest.ConnectionId,
+                ResponseId = dateRequest.RequestId,
                 Offset = dateRequest.ClientDate - DateTime.Now,
                 ServerTime = DateTime.Now
             };

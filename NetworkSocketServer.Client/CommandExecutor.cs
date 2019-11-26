@@ -1,17 +1,22 @@
 ﻿using System;
 using System.Threading.Tasks;
 using NetworkSocketServer.Client.Commands;
+using NetworkSocketServer.DTO.Requests;
+using NetworkSocketServer.DTO.Responses;
 using NetworkSocketServer.NetworkLayer.Connectors;
 using NetworkSocketServer.NetworkLayer.Dispatchers.ConnectorDispatcher;
 using NetworkSocketServer.NetworkLayer.SocketOptionsAccessor.KeepAlive;
+using NetworkSocketServer.TransportLayer.ServiceHandlers.NetworkRequestExecutor;
 
 namespace NetworkSocketServer.Client
 {
     public class CommandExecutor
     {
-        public CommandExecutor()
-        {
+        private readonly INetworkRequestExecutor _networkRequestExecutor;
 
+        public CommandExecutor(INetworkRequestExecutor networkRequestExecutor)
+        {
+            _networkRequestExecutor = networkRequestExecutor;
         }
 
         public void Execute(HelpCommand _)
@@ -28,87 +33,83 @@ namespace NetworkSocketServer.Client
 
         public async Task Execute(ConnectTCPCommand connectTcpCommand)
         {
-            var dispatcherFactory = new ConnectorDispatcherFactory();
-
-            var dispatcher = dispatcherFactory.CreateConnectorDispatcher(new SocketKeepAliveOptions
+            if (_networkRequestExecutor.IsConnected)
             {
-                KeepAliveInterval = 90000,
-                KeepAliveTime = 300000,
-            });
-
-            var transportHandler = await dispatcher.CreateTransportHandler(new NetworkConnectorSettings
+                Console.WriteLine("Already connected!");
+            }
+            else
             {
-                ConnectionType = ConnectionType.Tcp,
-                IpEndPointServer = connectTcpCommand.EndPoint
-            });
+                await _networkRequestExecutor.Connect(new NetworkConnectorSettings
+                {
+                    ConnectionType = ConnectionType.Udp,
+                    IpEndPointServer = connectTcpCommand.EndPoint
+                });
+            }
         }
 
         public async Task Execute(ConnectUDPCommand connectUdpCommand)
         {
-            var dispatcherFactory = new ConnectorDispatcherFactory();
-
-            var dispatcher = dispatcherFactory.CreateConnectorDispatcher(new SocketKeepAliveOptions
+            if (_networkRequestExecutor.IsConnected)
             {
-                KeepAliveInterval = 90000,
-                KeepAliveTime = 300000,
-            });
-
-            var transportHandler = await dispatcher.CreateTransportHandler(new NetworkConnectorSettings
+                Console.WriteLine("Already connected!");
+            }
+            else
             {
-                ConnectionType = ConnectionType.Udp,
-                IpEndPointServer = connectUdpCommand.EndPoint
-            });
+                await _networkRequestExecutor.Connect(new NetworkConnectorSettings
+                {
+                    ConnectionType = ConnectionType.Udp,
+                    IpEndPointServer = connectUdpCommand.EndPoint
+                });
+            }
         }
 
-        public void Execute(TextCommand command)
+        public async Task Execute(TextCommand command)
         {
-            //if (Connection == null)
-            //{
-            //    Console.WriteLine("There is no connection to server!");
+            if (!_networkRequestExecutor.IsConnected)
+            {
+                Console.WriteLine("Doesnt connected!");
+            }
 
-            //    return;
-            //}
+            var request = new TextRequest()
+            {
+                RequestId = Guid.NewGuid(),
+                Text = command.Message
+            };
 
-            //var request = new TextRequest()
-            //{
-            //    CommandType = CommandType.EchoRequest,
-            //    Text = command.Message
-            //};
+            var response = await _networkRequestExecutor.HandleResponse(request);
 
-            //Connection.Send(request);
-            //var response = Connection.Receive().Deserialize<TextRequest>();
+            var textResponse = response as TextResponse;
 
-            //Console.WriteLine(response.Text);
+            Console.WriteLine($"Execute text command ({textResponse.ResponseId}):{textResponse.Text}");
         }
 
-        public void Execute(DateCommand _)
+        public async Task Execute(DateCommand dateCommand)
         {
-            //if (Connection == null)
-            //{
-            //    Console.WriteLine("There is no connection to server!");
+            if (!_networkRequestExecutor.IsConnected)
+            {
+                Console.WriteLine("Doesnt connected!");
+            }
 
-            //    return;
-            //}
+            var request = new DateRequest
+            {
+                RequestId = Guid.NewGuid(),
+                ClientDate = dateCommand.ClientDateTime
+            };
 
-            //var request = new DateRequest()
-            //{
-            //    ClientDate = DateTime.Now,
-            //};
+            var response = await _networkRequestExecutor.HandleResponse(request);
 
-            //Connection.Send(request);
-            //var response = Connection.Receive().Deserialize<TextRequest>();
+            var dateResponse = response as DateResponse;
 
-            //Console.WriteLine(response.Text);
+            Console.WriteLine($"Execute date command ({dateResponse.ResponseId}):{dateResponse.ServerTime}. Time offset: {dateResponse.Offset}");
         }
-        public void Execute(UploadFileCommand fileCommand)
+        public Task Execute(UploadFileCommand fileCommand)
         {
-            //if (Connection == null)
-            //{
-            //    Console.WriteLine("There is no connection to server!");
+            if (!_networkRequestExecutor.IsConnected)
+            {
+                Console.WriteLine("Doesnt connected!");
+            }
 
-            //    return;
-            //}
-
+            return Task.CompletedTask;
             //var localFileName = $"Resources{Path.DirectorySeparatorChar}{fileCommand.FileName}";
             //var fileInfo = new FileInfo(localFileName);
 
@@ -130,7 +131,7 @@ namespace NetworkSocketServer.Client
 
             //Connection.Send(message);
             //var serverFileInfoResponse = Connection.Receive().Deserialize<UploadFileRequest>();
-          
+
 
             //var bytes = File.ReadAllBytes(localFileName).Skip((int) serverFileInfoResponse.Size).ToArray();
 
@@ -145,14 +146,31 @@ namespace NetworkSocketServer.Client
             //Console.WriteLine($"File uploaded successfully! " +
             //    $"Average upload speed is {((double)bytes.Length / (1024 * 1024)) / (((double)stopwatch.ElapsedMilliseconds + 1) / 1000)} Mbps.");
         }
-        public void Execute(DownloadFileCommand fileCommand)
+        public async Task Execute(DownloadFileCommand fileCommand)
         {
-            //if (Connection == null)
-            //{
-            //    Console.WriteLine("There is no connection to server!");
+            if (!_networkRequestExecutor.IsConnected)
+            {
+                Console.WriteLine("Doesnt connected!");
+            }
 
-            //    return;
-            //}
+            var request = new DownloadFileRequest
+            {
+                RequestId = Guid.NewGuid(),
+                Filename = fileCommand.FileName
+            };
+
+            var response = await _networkRequestExecutor.HandleResponse(request);
+
+            var downloadFileResponse = response as DownloadFileResponse;
+
+            if (!downloadFileResponse.IsSuccess)
+            {
+                Console.WriteLine(downloadFileResponse.ErrorMessage);
+            }
+            else
+            {
+
+            }
 
             //var localFileName = $"Resources{Path.DirectorySeparatorChar}{fileCommand.FileName}";
 
@@ -203,19 +221,16 @@ namespace NetworkSocketServer.Client
             //    $"Average upload speed is {((double)bytesReceived / (1024 * 1024)) / (((double)stopwatch.ElapsedMilliseconds + 1) / 1000)} Mbps.");
         }
 
-        public void Execute(DisconnectCommand _)
+        public async Task Execute(DisconnectCommand _)
         {
-            //if (Connection == null)
-            //{
-            //    Console.WriteLine("There is no connection to server!");
-
-            //    return;
-            //}
-
-            //Connection.Disconect();
-            //Connection = null;
-
-            //Console.WriteLine("Disconnected");
+            if (!_networkRequestExecutor.IsConnected)
+            {
+                Console.WriteLine("Doesnt connected!");
+            }
+            else
+            {
+                await _networkRequestExecutor.Disconnect();
+            }
         }
     }
 }

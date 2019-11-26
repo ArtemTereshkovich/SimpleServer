@@ -5,6 +5,6 @@ namespace NetworkSocketServer.DTO.Responses
     [Serializable]
     public class Response
     {
-        public Guid ConnectionId { get; set; }
+        public Guid ResponseId { get; set; }
     }
 }

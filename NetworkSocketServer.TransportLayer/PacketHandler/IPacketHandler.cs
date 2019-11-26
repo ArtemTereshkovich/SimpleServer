@@ -5,6 +5,6 @@ namespace NetworkSocketServer.TransportLayer.PacketHandler
 {
     interface IPacketHandler
     {
-        Task HandlePacket(Packet packet);
+        Task<bool> HandlePacket(Packet packet);
     }
 }

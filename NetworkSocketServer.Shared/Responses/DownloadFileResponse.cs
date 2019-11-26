@@ -7,6 +7,10 @@ namespace NetworkSocketServer.DTO.Responses
     {
         public byte[] File { get; set; }
 
+        public bool IsSuccess { get; set; }
+
+        public string ErrorMessage { get; set; }
+
         public string Filename { get; set; }
 
         public long FileSize { get; set; }
