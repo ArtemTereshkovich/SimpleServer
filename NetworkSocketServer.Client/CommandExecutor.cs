@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -10,14 +11,13 @@ namespace NetworkSocketServer.Client
 {
     public class CommandExecutor
     {
-        public TcpConnection Connection { get; set; }
 
-        public string ClientId { get; set; }
 
         public void Execute(HelpCommand _)
         {
             Console.WriteLine("Supported commands:");
-            Console.WriteLine("-connect [ip]:[port]");
+            Console.WriteLine("-connecttcp [ip]:[port]");
+            Console.WriteLine("-connectudp [ip]:[port]");
             Console.WriteLine("-disconnect");
             Console.WriteLine("-time");
             Console.WriteLine("-echo [message]");
@@ -44,7 +44,7 @@ namespace NetworkSocketServer.Client
 
             Console.WriteLine(response.Text);
         }
-        public void Execute(TimeCommand _)
+        public void Execute(DateCommand _)
         {
             if (Connection == null)
             {
@@ -53,9 +53,9 @@ namespace NetworkSocketServer.Client
                 return;
             }
 
-            var request = new Request()
+            var request = new DateRequest()
             {
-                CommandType = CommandType.TimeRequest
+                ClientDate = DateTime.Now,
             };
 
             Connection.Send(request);

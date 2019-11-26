@@ -1,23 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading;
 using NetworkSocketServer.NetworkLayer.Acceptors;
+using NetworkSocketServer.NetworkLayer.ThreadSet;
 using NetworkSocketServer.NetworkLayer.TransportHandler.Factories;
 
-namespace NetworkSocketServer.NetworkLayer.ConnectionDispatcher
+namespace NetworkSocketServer.NetworkLayer.Dispatchers.AcceptorDispatcher
 {
-    internal class SingleThreadAcceptorDispatcher : IConnectionDispatcher
+    internal class ThreadSetAcceptorDispatcher : IAcceptorDispatcher
     {
-        private readonly INewTransportHandler _newTransportHandler;
+        private readonly IThreadSet _threadSet;
+        private readonly IConnectionManager _serviceHandler;
         private readonly ITransportHandlerFactory _transportHandlerFactory;
         private readonly IList<INetworkAcceptor> _acceptors;
+        private readonly Thread _workThread;
 
-        public SingleThreadAcceptorDispatcher(
-            INewTransportHandler newTransportHandler,
+        public ThreadSetAcceptorDispatcher(
+            IThreadSet threadSet,
+            IConnectionManager serviceHandler,
             ITransportHandlerFactory transportHandlerFactory)
         {
-            _newTransportHandler = newTransportHandler;
+            _threadSet = threadSet;
+            _serviceHandler = serviceHandler;
             _transportHandlerFactory = transportHandlerFactory;
+            _workThread = new Thread(InternalStart);
             _acceptors = new List<INetworkAcceptor>();
         }
 
@@ -28,10 +33,10 @@ namespace NetworkSocketServer.NetworkLayer.ConnectionDispatcher
 
         public void StartListen()
         {
-            InternalStart().Wait();
+            _workThread.Start();
         }
 
-        private async Task InternalStart()
+        private void InternalStart()
         {
             while (true)
             {
@@ -39,25 +44,21 @@ namespace NetworkSocketServer.NetworkLayer.ConnectionDispatcher
                 {
                     if (!acceptor.IsHaveNewConnection()) continue;
 
-                    try
+                    _threadSet.Execute(async networkAcceptor =>
                     {
                         using var transportHandler = _transportHandlerFactory.CreateTransportHandler();
+                        await networkAcceptor.AcceptConnection(transportHandler);
 
-                        await acceptor.AcceptConnection(transportHandler);
+                        await _serviceHandler.HandleNewConnection(transportHandler);
 
-                        await _newTransportHandler.HandleNewConnection(transportHandler);
-                    }
-                    catch (Exception exception)
-                    {
-                        Console.WriteLine("Error happend:" + exception.Message);
-                    }
+                    }, acceptor);
                 }
             }
         }
 
         public void StopListen()
         {
-            throw new NotSupportedException();
+            _workThread.Abort();
         }
     }
 }

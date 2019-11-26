@@ -4,11 +4,13 @@ namespace NetworkSocketServer.TransportLayer
 {
     internal class SessionContext
     {
+        public int PacketPayloadThreshold { get; } = 1024;
+
         public IBuffer ReceiveBuffer { get; }
 
         public IBuffer TransmitBuffer { get; }
 
-        public SessionContext(IBuffer receiveBuffer, IBuffer transmitBuffer)
+        private SessionContext(IBuffer receiveBuffer, IBuffer transmitBuffer)
         {
             ReceiveBuffer = receiveBuffer;
             TransmitBuffer = transmitBuffer;

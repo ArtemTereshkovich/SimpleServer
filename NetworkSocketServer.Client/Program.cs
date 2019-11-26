@@ -6,9 +6,7 @@ namespace NetworkSocketServer.Client
     {
         static void Main(string[] args)
         {
-            var clientId = Guid.NewGuid().ToString();
-
-            new Client(clientId).Run();
+            new Client().Run();
         }
     }
 }

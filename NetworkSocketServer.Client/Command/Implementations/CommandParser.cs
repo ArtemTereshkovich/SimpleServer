@@ -22,9 +22,9 @@ namespace NetworkSocketServer.Client.Command.Implementations
                     {
                         return EchoCommand.Parse(data);
                     }
-                case TimeCommand.Command:
+                case DateCommand.Command:
                     {
-                        return TimeCommand.Parse(data);
+                        return DateCommand.Parse(data);
                     }
                 case UploadCommand.Command:
                     {

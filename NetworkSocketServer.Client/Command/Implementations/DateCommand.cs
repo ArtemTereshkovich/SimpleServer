@@ -2,12 +2,12 @@
 
 namespace NetworkSocketServer.Client.Command.Implementations
 {
-    public class TimeCommand : ICommand
+    public class DateCommand : ICommand
     {
         public const string Command = "-time";
-        public static TimeCommand Parse(string _)
+        public static DateCommand Parse(string _)
         {
-            return new TimeCommand();
+            return new DateCommand();
         }
 
         public void Execute(CommandExecutor executor)

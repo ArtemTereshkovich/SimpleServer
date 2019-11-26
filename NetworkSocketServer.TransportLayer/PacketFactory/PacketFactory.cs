@@ -17,7 +17,7 @@ namespace NetworkSocketServer.TransportLayer.PacketFactory
         {
             return new Packet
             {
-                ConnectionId = _connectionId,
+                SessionId = _connectionId,
                 Position = bufferSize,
                 Offset = bytesWrite,
                 PacketClientCommand = PacketClientCommand.None,
@@ -30,7 +30,7 @@ namespace NetworkSocketServer.TransportLayer.PacketFactory
         {
             return new Packet
             {
-                ConnectionId = _connectionId,
+                SessionId = _connectionId,
                 Position = 0,
                 Offset = 0,
                 PacketClientCommand = PacketClientCommand.None,
@@ -40,6 +40,19 @@ namespace NetworkSocketServer.TransportLayer.PacketFactory
         }
 
         public Packet CreateAnswerSuccessRead(byte[] array, int transmitBufferLength, int arrayLength)
+        {
+            return new Packet
+            {
+
+            };
+        }
+
+        public Packet CreateAnswerExecuteSuccessPayload(byte[] responseBytes, int responseBytesLength)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Packet CreateAnswerExecuteSuccessBuffer(int transmitBufferLength)
         {
             throw new NotImplementedException();
         }

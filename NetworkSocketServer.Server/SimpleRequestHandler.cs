@@ -7,6 +7,7 @@ using NetworkSocketServer.NetworkLayer.TransportHandler;
 using NetworkSocketServer.Server.CommandHandlers;
 using NetworkSocketServer.TransportLayer;
 using NetworkSocketServer.TransportLayer.Serializer;
+using NetworkSocketServer.TransportLayer.ServiceHandlers;
 
 namespace NetworkSocketServer.Server
 {

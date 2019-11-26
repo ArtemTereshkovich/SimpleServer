@@ -7,7 +7,6 @@
 
   <ItemGroup>
     <Folder Include="Command\Exceptions\" />
-    <Folder Include="Command\Implementations\" />
     <Folder Include="Command\Interfaces\" />
     <Folder Include="Command\Utils\" />
   </ItemGroup>

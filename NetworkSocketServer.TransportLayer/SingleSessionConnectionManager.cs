@@ -9,14 +9,14 @@ using NetworkSocketServer.TransportLayer.ServiceHandlers;
 
 namespace NetworkSocketServer.TransportLayer
 {
-    public class NewConnectionHandler : INewTransportHandler
+    public class SingleSessionConnectionManager : IConnectionManager
     {
         private readonly IRequestHandlerFactory _requestHandlerFactory;
         private SessionContext _sessionContext;
         private readonly IByteSerializer _byteSerializer;
-        private Guid _connectionId = Guid.Empty;
+        private Guid _sessionId = Guid.Empty;
 
-        public NewConnectionHandler(IRequestHandlerFactory requestHandlerFactory)
+        public SingleSessionConnectionManager(IRequestHandlerFactory requestHandlerFactory)
         {
             _requestHandlerFactory = requestHandlerFactory;
             _byteSerializer = new BinaryFormatterByteSerializer();
@@ -30,7 +30,7 @@ namespace NetworkSocketServer.TransportLayer
             CheckContext(packet);
 
             var packetHandler = CreatePacketHandler(
-                transportHandler, _sessionContext, packet.ConnectionId);
+                transportHandler, _sessionContext, packet.SessionId);
 
             await packetHandler.HandlePacket(packet);
 
@@ -50,11 +50,11 @@ namespace NetworkSocketServer.TransportLayer
 
         private void CheckContext(Packet packet)
         {
-            if (_sessionContext != null && _connectionId == packet.ConnectionId) return;
+            if (_sessionContext != null && _sessionId == packet.SessionId) return;
 
             _sessionContext = SessionContext.CreateNewMemoryStreamBufferContext();
 
-            _connectionId = packet.ConnectionId;
+            _sessionId = packet.SessionId;
         }
 
         private Packet ReceivePacketMessage(ITransportHandler transportHandler)

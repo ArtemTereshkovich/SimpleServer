@@ -1,20 +1,20 @@
 ﻿using System.Collections.Generic;
 using NetworkSocketServer.NetworkLayer.Acceptors;
-using NetworkSocketServer.NetworkLayer.ConnectionDispatcher;
+using NetworkSocketServer.NetworkLayer.Dispatchers.AcceptorDispatcher;
 using NetworkSocketServer.NetworkLayer.Server;
 
 namespace NetworkSocketServer.NetworkLayer
 {
     class SimpleServer : IServer
     {
-        private readonly IConnectionDispatcher _connectionDispatcher;
+        private readonly IAcceptorDispatcher _acceptorDispatcher;
         private readonly IEnumerable<INetworkAcceptor> _networkAcceptors;
 
         public SimpleServer(
-            IConnectionDispatcher connectionDispatcher,
+            IAcceptorDispatcher acceptorDispatcher,
             IEnumerable<INetworkAcceptor> networkAcceptors)
         {
-            _connectionDispatcher = connectionDispatcher;
+            _acceptorDispatcher = acceptorDispatcher;
             _networkAcceptors = networkAcceptors;
         }
 
@@ -25,7 +25,7 @@ namespace NetworkSocketServer.NetworkLayer
                 acceptor.Open();
             }
 
-            _connectionDispatcher.StartListen();
+            _acceptorDispatcher.StartListen();
         }
 
         public void StopHost()
@@ -35,7 +35,7 @@ namespace NetworkSocketServer.NetworkLayer
                 acceptor.Close();
             }
 
-            _connectionDispatcher.StopListen();
+            _acceptorDispatcher.StopListen();
         }
     }
 }

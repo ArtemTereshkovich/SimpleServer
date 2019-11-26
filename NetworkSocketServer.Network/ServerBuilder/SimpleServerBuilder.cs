@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using NetworkSocketServer.NetworkLayer.Acceptors;
 using NetworkSocketServer.NetworkLayer.Acceptors.Tcp;
-using NetworkSocketServer.NetworkLayer.ConnectionDispatcher;
+using NetworkSocketServer.NetworkLayer.Dispatchers.AcceptorDispatcher;
 using NetworkSocketServer.NetworkLayer.Server;
-using NetworkSocketServer.NetworkLayer.Tcp.KeepAlive;
+using NetworkSocketServer.NetworkLayer.SocketOptionsAccessor.KeepAlive;
 using NetworkSocketServer.NetworkLayer.ThreadSet;
 using NetworkSocketServer.NetworkLayer.TransportHandler.Factories;
 
@@ -11,24 +11,24 @@ namespace NetworkSocketServer.NetworkLayer.ServerBuilder
 {
     public class SimpleServerBuilder
     {
-        private readonly INewTransportHandler _newTransportHandler;
+        private readonly IConnectionManager _connectionManager;
         private readonly ITransportHandlerFactory _transportHandlerFactory;
         private readonly IList<INetworkAcceptor> _acceptors;
 
         private int? _maxThreadsNumber = null;
 
-        public SimpleServerBuilder(INewTransportHandler newTransportHandler)
+        public SimpleServerBuilder(IConnectionManager connectionManager)
         {
-            _newTransportHandler = newTransportHandler;
+            _connectionManager = connectionManager;
             _transportHandlerFactory = new BlockingTransportHandlerFactory();
             _acceptors = new List<INetworkAcceptor>();
         }
 
-        public SimpleServerBuilder WithTcpFaultToleranceAcceptor(
+        public SimpleServerBuilder WithTcpKeepAliveAcceptor(
             TcpNetworkAcceptorSettings acceptorSettings,
-            SocketFaultToleranceOptions socketFaultToleranceOptions)
+            SocketKeepAliveOptions socketKeepAliveOptions)
         {
-            var socketOptionsAccessor = new PlatformBasedSocketOptionsAccessorFactory(socketFaultToleranceOptions);
+            var socketOptionsAccessor = new PlatformBasedKeepAliveAccessorFactory(socketKeepAliveOptions);
 
             _acceptors.Add(new TcpKeepAliveNetworkAcceptor(acceptorSettings, socketOptionsAccessor));
 
@@ -44,16 +44,16 @@ namespace NetworkSocketServer.NetworkLayer.ServerBuilder
 
         public IServer Build()
         {
-            IConnectionDispatcher dispatcher = null;
+            IAcceptorDispatcher dispatcher = null;
 
             if (_maxThreadsNumber != null)
             {
                 dispatcher = new ThreadSetAcceptorDispatcher(new ThreadPoolThreadSet(_maxThreadsNumber.Value),
-                    _newTransportHandler, _transportHandlerFactory);
+                    _connectionManager, _transportHandlerFactory);
             }
             else
             {
-                dispatcher = new SingleThreadAcceptorDispatcher(_newTransportHandler, _transportHandlerFactory);
+                dispatcher = new SingleThreadAcceptorDispatcher(_connectionManager, _transportHandlerFactory);
             }
 
 

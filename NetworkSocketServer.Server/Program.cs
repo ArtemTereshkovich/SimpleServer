@@ -4,11 +4,8 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using NetworkSocketServer.NetworkLayer.Acceptors.Tcp;
-using NetworkSocketServer.NetworkLayer.Server;
 using NetworkSocketServer.NetworkLayer.ServerBuilder;
-using NetworkSocketServer.NetworkLayer.Tcp;
-using NetworkSocketServer.NetworkLayer.Tcp.KeepAlive;
-using NetworkSocketServer.NetworkLayer.TransportHandler;
+using NetworkSocketServer.NetworkLayer.SocketOptionsAccessor.KeepAlive;
 using NetworkSocketServer.TransportLayer;
 
 namespace NetworkSocketServer.Server
@@ -23,10 +20,10 @@ namespace NetworkSocketServer.Server
 
             var factory = new SimpleRequestHandlerFactory();
 
-            var connectionHandler = new NewConnectionHandler(factory);
+            var connectionHandler = new SingleSessionConnectionManager(factory);
 
             var host = new SimpleServerBuilder(connectionHandler)
-                .WithTcpFaultToleranceAcceptor(
+                .WithTcpKeepAliveAcceptor(
                     new TcpNetworkAcceptorSettings
                     {
                         ListenIpAddress = address,
@@ -34,7 +31,7 @@ namespace NetworkSocketServer.Server
 
                         ListenPort = 1337,
                     },
-                    new SocketFaultToleranceOptions
+                    new SocketKeepAliveOptions
                     {
                         KeepAliveInterval = 28000,
                         KeepAliveTime = 28000,

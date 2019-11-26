@@ -9,17 +9,16 @@ namespace NetworkSocketServer.Client
     public class Client
     {
         private InputManager _inputManager;
+        private CommandExecutor _commandExecutor;
 
-        public string ClientId { get; set; }
-
-        public Client(string clientId)
+        public Client()
         {
-            ClientId = clientId;
-
             _inputManager = new InputManager()
             {
                 CommandParser = new CommandParser()
             };
+
+            _commandExecutor = new CommandExecutor();
         }
 
         public void Run()
@@ -33,7 +32,7 @@ namespace NetworkSocketServer.Client
                 {
                     var command = _inputManager.GetCommand();
 
-                    command.Execute(executor);
+                    executer
                 }
                 catch (CommandNotFoundException ex)
                 {

@@ -1,6 +1,6 @@
 ﻿using NetworkSocketServer.NetworkLayer.Acceptors;
 
-namespace NetworkSocketServer.NetworkLayer.ConnectionDispatcher
+namespace NetworkSocketServer.NetworkLayer.Dispatchers.AcceptorDispatcher
 {
     internal interface INetworkAcceptorSubscriber
     {

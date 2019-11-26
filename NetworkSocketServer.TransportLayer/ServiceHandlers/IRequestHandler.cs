@@ -2,7 +2,7 @@
 using NetworkSocketServer.DTO.Requests;
 using NetworkSocketServer.DTO.Responses;
 
-namespace NetworkSocketServer.TransportLayer
+namespace NetworkSocketServer.TransportLayer.ServiceHandlers
 {
     public interface IRequestHandler
     {

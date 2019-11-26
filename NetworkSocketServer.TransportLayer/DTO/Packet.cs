@@ -5,7 +5,7 @@ namespace NetworkSocketServer.TransportLayer.DTO
     [Serializable]
     class Packet
     {
-        public Guid ConnectionId { get; set; }
+        public Guid SessionId { get; set; }
 
         public int Position { get; set; }
 

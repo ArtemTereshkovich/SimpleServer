@@ -3,7 +3,7 @@ using NetworkSocketServer.NetworkLayer.TransportHandler;
 
 namespace NetworkSocketServer.NetworkLayer
 {
-    public interface INewTransportHandler
+    public interface IConnectionManager
     {
         Task HandleNewConnection(ITransportHandler transportHandler);
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using NetworkSocketServer.DTO.Requests;
 using NetworkSocketServer.NetworkLayer.TransportHandler;
 using NetworkSocketServer.TransportLayer.DTO;
 using NetworkSocketServer.TransportLayer.PacketFactory;
@@ -20,12 +21,12 @@ namespace NetworkSocketServer.TransportLayer.PacketHandler
         private readonly IDictionary<PacketClientCommand, Func<Packet, Task>> _handlers;
 
         public ServerPredictBasedPacketHandler(
-            Guid connectionId,
+            Guid sessionId,
             IRequestHandlerFactory requestHandlerFactory,
             ITransportHandler transportHandler,
             SessionContext sessionContext)
         {
-            _packetFactory = new PacketFactory.PacketFactory(connectionId);
+            _packetFactory = new PacketFactory.PacketFactory(sessionId);
             _byteSerializer = new BinaryFormatterByteSerializer();
 
             _requestHandlerFactory = requestHandlerFactory;
@@ -84,12 +85,39 @@ namespace NetworkSocketServer.TransportLayer.PacketHandler
 
         private Task HandleExecuteBufferCommand(Packet packet)
         {
+            _sessionContext.TransmitBuffer.Clear();
+            _sessionContext.TransmitBuffer.SetLength(0);
+
             throw new NotImplementedException();
         }
 
-        private Task HandleExecutePayloadCommand(Packet packet)
+        private async Task HandleExecutePayloadCommand(Packet packet)
         {
-            throw new NotImplementedException();
+            _sessionContext.ReceiveBuffer.Clear();
+            _sessionContext.ReceiveBuffer.SetLength(0);
+            _sessionContext.TransmitBuffer.Clear();
+            _sessionContext.TransmitBuffer.SetLength(0);
+
+            var request = _byteSerializer.Deserialize<Request>(packet.Payload);
+
+            var response = await _requestHandlerFactory.CreateRequestHandler().HandleRequest(request);
+
+            var responseBytes = _byteSerializer.Serialize(response);
+
+            if (responseBytes.Length * 2 <= _sessionContext.PacketPayloadThreshold)
+            {
+                var answer = _packetFactory.CreateAnswerExecuteSuccessPayload(responseBytes, responseBytes.Length);
+
+                _transportHandler.Send(_byteSerializer.Serialize(answer));
+            }
+            else
+            {
+                _sessionContext.TransmitBuffer.Append(responseBytes);
+
+                var answer = _packetFactory.CreateAnswerExecuteSuccessBuffer(_sessionContext.TransmitBuffer.Length);
+
+                _transportHandler.Send(_byteSerializer.Serialize(answer));
+            }
         }
 
         public async Task HandlePacket(Packet packet)

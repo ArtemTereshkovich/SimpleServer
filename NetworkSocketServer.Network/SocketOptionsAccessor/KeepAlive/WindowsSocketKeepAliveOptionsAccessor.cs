@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Net.Sockets;
-using NetworkSocketServer.NetworkLayer.SocketOptionsAccessor;
 
-namespace NetworkSocketServer.NetworkLayer.Tcp.KeepAlive
+namespace NetworkSocketServer.NetworkLayer.SocketOptionsAccessor.KeepAlive
 {
-    internal class WindowsSocketFaultToleranceOptionsAccessor : ISocketOptionsAccessor
+    internal class WindowsSocketKeepAliveOptionsAccessor : ISocketOptionsAccessor
     {
-        private readonly SocketFaultToleranceOptions _faultToleranceOptions;
+        private readonly SocketKeepAliveOptions _keepAliveOptions;
 
-        public WindowsSocketFaultToleranceOptionsAccessor(SocketFaultToleranceOptions faultToleranceOptions)
+        public WindowsSocketKeepAliveOptionsAccessor(SocketKeepAliveOptions keepAliveOptions)
         {
-            _faultToleranceOptions = faultToleranceOptions;
+            _keepAliveOptions = keepAliveOptions;
         }
 
         public void SetOptions(Socket tcpSocket)
@@ -21,8 +20,8 @@ namespace NetworkSocketServer.NetworkLayer.Tcp.KeepAlive
             }
 
             tcpSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, 1);
-            tcpSocket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveTime, _faultToleranceOptions.KeepAliveTime);
-            tcpSocket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveInterval, _faultToleranceOptions.KeepAliveInterval);
+            tcpSocket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveTime, _keepAliveOptions.KeepAliveTime);
+            tcpSocket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveInterval, _keepAliveOptions.KeepAliveInterval);
 
             #region HardSet
             
