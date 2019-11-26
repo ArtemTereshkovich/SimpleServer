@@ -41,7 +41,7 @@ namespace NetworkSocketServer.Client
             {
                 await _networkRequestExecutor.Connect(new NetworkConnectorSettings
                 {
-                    ConnectionType = ConnectionType.Udp,
+                    ConnectionType = ConnectionType.Tcp,
                     IpEndPointServer = connectTcpCommand.EndPoint
                 });
             }
