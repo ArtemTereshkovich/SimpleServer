@@ -13,7 +13,8 @@ namespace NetworkSocketServer.TransportLayer
         protected ClientSessionContext(ITransportHandler transportHandler, IBuffer receiveBuffer,
             IBuffer transmitBuffer, Guid sessionId) : base(receiveBuffer, transmitBuffer)
         {
-
+            TransportHandler = transportHandler;
+            SessionId = sessionId;
         }
 
         public static ClientSessionContext CreateClientContext(ITransportHandler transportHandler)

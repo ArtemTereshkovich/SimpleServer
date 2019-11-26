@@ -24,8 +24,17 @@ namespace NetworkSocketServer.TransportLayer.ServiceHandlers.NetworkRequestExecu
 
         public async Task Connect(NetworkConnectorSettings connectSettings)
         {
-            var _transportHandler = await _dispatcher.CreateTransportHandler(connectSettings);
-            sessionContext = ClientSessionContext.CreateClientContext(_transportHandler);
+            try
+            {
+                var transportHandler = await _dispatcher.CreateTransportHandler(connectSettings);
+
+                sessionContext = ClientSessionContext.CreateClientContext(transportHandler);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message);
+                sessionContext = null;
+            }
         }
 
         public Task<Response> HandleRequest(Request request)
