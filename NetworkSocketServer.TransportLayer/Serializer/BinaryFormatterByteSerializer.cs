@@ -55,7 +55,7 @@ namespace NetworkSocketServer.TransportLayer.Serializer
             {
                 PacketServerResponse = (PacketServerResponse) BitConverter.ToInt32(array.Take(4).ToArray()),
                 PacketClientCommand = (PacketClientCommand) BitConverter.ToInt32(array.Skip(4).Take(4).ToArray()),
-                SessionId = new Guid(array.Skip(8).Take(2).ToArray()),
+                SessionId = new Guid(array.Skip(8).Take(16).ToArray()),
                 Size = BitConverter.ToInt32(array.Skip(10).Take(4).ToArray()),
                 Offset = BitConverter.ToInt32(array.Skip(14).Take(4).ToArray()),
                 Payload = array.Skip(18).ToArray()
