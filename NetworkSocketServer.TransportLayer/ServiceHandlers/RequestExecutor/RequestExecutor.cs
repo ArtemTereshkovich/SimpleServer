@@ -20,7 +20,7 @@ namespace NetworkSocketServer.TransportLayer.ServiceHandlers.RequestExecutor
             NetworkClientManager.NetworkClientManager networkClientManager, 
             RetrySettings retrySettings)
         {
-            _bytesSender = new PollyAcceptedBytesSender(_networkClientManager,_retrySettings);
+            _bytesSender = new PollyAcceptedBytesSender(networkClientManager, retrySettings);
             _byteSerializer = new BinaryFormatterByteSerializer();
             _networkClientManager = networkClientManager;
             _retrySettings = retrySettings;

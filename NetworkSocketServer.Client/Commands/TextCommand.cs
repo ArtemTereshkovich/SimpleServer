@@ -4,7 +4,7 @@ namespace NetworkSocketServer.Client.Commands
 {
     public class TextCommand : ICommand
     {
-        public const string Command = "-echo";
+        public const string Command = "-text";
         public string Message { get; private set; }
         public static TextCommand Parse(string data)
         {

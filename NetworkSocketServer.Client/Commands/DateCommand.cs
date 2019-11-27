@@ -5,7 +5,7 @@ namespace NetworkSocketServer.Client.Commands
 {
     public class DateCommand : ICommand
     {
-        public const string Command = "-time";
+        public const string Command = "-date";
 
         public DateTime ClientDateTime { get; }
 

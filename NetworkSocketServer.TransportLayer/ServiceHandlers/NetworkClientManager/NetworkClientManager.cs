@@ -82,10 +82,8 @@ namespace NetworkSocketServer.TransportLayer.ServiceHandlers.NetworkClientManage
                 var requestExecutor = _requestExecutorFactory.Create(this);
 
                 var receiveBytes = await requestExecutor.HandleRequest(requestBytes);
-
-                var packetResponse = _byteSerializer.Deserialize<Packet>(receiveBytes);
-
-                return _byteSerializer.Deserialize<Response>(packetResponse.Payload);
+                
+                return _byteSerializer.Deserialize<Response>(receiveBytes);
             }
             catch (Exception exception)
             {
