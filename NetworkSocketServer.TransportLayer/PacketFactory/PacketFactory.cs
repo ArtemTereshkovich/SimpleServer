@@ -57,7 +57,7 @@ namespace NetworkSocketServer.TransportLayer.PacketFactory
             return new Packet
             {
                 Offset = responseBytesLength,
-                PacketServerResponse = PacketServerResponse.Answer,
+                PacketServerResponse = PacketServerResponse.ResultInPayload,
                 PacketClientCommand = PacketClientCommand.None,
                 Payload = responseBytes,
                 Position = 0,
