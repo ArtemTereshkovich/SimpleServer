@@ -1,12 +1,12 @@
 ﻿using System;
 using NetworkSocketServer.NetworkLayer.Connectors;
 using NetworkSocketServer.NetworkLayer.TransportHandler;
-using NetworkSocketServer.TransportLayer.Buffer;
 
 namespace NetworkSocketServer.TransportLayer
 {
     public class ClientSessionContext
     {
+        public int PacketSizeThreshold { get; } = 1024;
         public NetworkConnectorSettings CurrentConnectorSettings { get; }
 
         public ITransportHandler TransportHandler { get; private set; }

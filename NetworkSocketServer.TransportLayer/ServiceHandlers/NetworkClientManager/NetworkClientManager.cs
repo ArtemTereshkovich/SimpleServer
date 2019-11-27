@@ -5,6 +5,7 @@ using NetworkSocketServer.DTO.Responses;
 using NetworkSocketServer.NetworkLayer.Connectors;
 using NetworkSocketServer.NetworkLayer.Dispatchers.ConnectorDispatcher;
 using NetworkSocketServer.TransportLayer.DTO;
+using NetworkSocketServer.TransportLayer.PacketFactory;
 using NetworkSocketServer.TransportLayer.Serializer;
 using NetworkSocketServer.TransportLayer.ServiceHandlers.RequestExecutor;
 
@@ -111,7 +112,7 @@ namespace NetworkSocketServer.TransportLayer.ServiceHandlers.NetworkClientManage
 
         private void SafeCloseSession()
         {
-            var packetFactory = new PacketFactory.PacketFactory(SessionContext.SessionId);
+            IPacketFactory packetFactory = new PacketFactory.PacketFactory(SessionContext.SessionId);
 
             var packet = packetFactory.CreateClosePacket();
 

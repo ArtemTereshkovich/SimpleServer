@@ -15,5 +15,9 @@ namespace NetworkSocketServer.TransportLayer.PacketFactory
         Packet CreateAnswerExecuteSuccessBuffer(int transmitBufferLength);
 
         Packet CreateClosePacket();
+
+        Packet CreateExecuteBuffer(int requestByteLength);
+
+        Packet CreateExecutePayload(byte[] requestBytes);
     }
 }

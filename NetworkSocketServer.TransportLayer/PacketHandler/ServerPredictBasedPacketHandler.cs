@@ -83,12 +83,34 @@ namespace NetworkSocketServer.TransportLayer.PacketHandler
             return Task.CompletedTask;
         }
 
-        private Task HandleExecuteBufferCommand(Packet packet)
+        private async Task HandleExecuteBufferCommand(Packet packet)
         {
             _sessionContext.TransmitBuffer.Clear();
-            _sessionContext.TransmitBuffer.SetLength(0);
 
-            throw new NotImplementedException();
+            var requestBytes = _sessionContext.ReceiveBuffer.Get(packet.Offset);
+
+            var request = _byteSerializer.Deserialize<Request>(requestBytes);
+
+            var response = await _requestHandlerFactory.CreateRequestHandler().HandleRequest(request);
+            
+            _sessionContext.ReceiveBuffer.Clear();
+
+            var responseBytes = _byteSerializer.Serialize(response);
+
+            if (responseBytes.Length <= _sessionContext.PacketPayloadThreshold * 2)
+            {
+                var answer = _packetFactory.CreateAnswerExecuteSuccessPayload(responseBytes, responseBytes.Length);
+
+                _transportHandler.Send(_byteSerializer.Serialize(answer));
+            }
+            else
+            {
+                _sessionContext.TransmitBuffer.Append(responseBytes);
+
+                var answer = _packetFactory.CreateAnswerExecuteSuccessBuffer(_sessionContext.TransmitBuffer.Length);
+
+                _transportHandler.Send(_byteSerializer.Serialize(answer));
+            }
         }
 
         private async Task HandleExecutePayloadCommand(Packet packet)

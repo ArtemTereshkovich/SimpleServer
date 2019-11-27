@@ -11,8 +11,6 @@ namespace NetworkSocketServer.TransportLayer.ServiceHandlers.RequestExecutor.Byt
     {
         private readonly NetworkClientManager.NetworkClientManager _networkClientManager;
         private readonly RetrySettings _retrySettings;
-        private readonly Policy _receivePolicy;
-        private readonly Policy _sendPolicy;
 
         public PollyAcceptedBytesSender(
             NetworkClientManager.NetworkClientManager networkClientManager,
@@ -36,7 +34,7 @@ namespace NetworkSocketServer.TransportLayer.ServiceHandlers.RequestExecutor.Byt
 
             byte[] receiveBytes = null;
 
-            var receiveTask = receiveRetry.ExecuteAsync(() =>
+            var receiveTask = receiveTimeout.ExecuteAsync(() =>
             {
                 receiveBytes = Receive();
                 return Task.CompletedTask;
@@ -77,7 +75,7 @@ namespace NetworkSocketServer.TransportLayer.ServiceHandlers.RequestExecutor.Byt
                         onRetryAsync);
         }
 
-        private (TimeoutPolicy timeoutPolicy, AsyncRetryPolicy asyncRetryPolicy) CreateReceivePolicy(RetrySettings settings, byte[] sendBytes)
+        private (AsyncTimeoutPolicy timeoutPolicy, AsyncRetryPolicy asyncRetryPolicy) CreateReceivePolicy(RetrySettings settings, byte[] sendBytes)
         {
             
             Func<Exception, TimeSpan, Task> onRetryAsync = async (exc, time) =>
@@ -87,10 +85,11 @@ namespace NetworkSocketServer.TransportLayer.ServiceHandlers.RequestExecutor.Byt
             };
 
             var timeout =
-                Policy.Timeout(settings.TimeOutAnswer,
+                Policy.TimeoutAsync(settings.TimeOutAnswer,
                     (a, b, c) =>
                     {
                         Console.WriteLine("Timeout Receive Answer Packet");
+                        return Task.CompletedTask;
                     });
 
             var retry =
