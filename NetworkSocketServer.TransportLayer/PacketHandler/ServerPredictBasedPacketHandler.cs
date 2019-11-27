@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using NetworkSocketServer.DTO.Requests;
+using NetworkSocketServer.DTO.Responses;
 using NetworkSocketServer.NetworkLayer.TransportHandler;
 using NetworkSocketServer.TransportLayer.DTO;
 using NetworkSocketServer.TransportLayer.PacketFactory;
@@ -88,7 +89,17 @@ namespace NetworkSocketServer.TransportLayer.PacketHandler
 
             var requestBytes = _sessionContext.ReceiveBuffer.GetAll();
 
-            var request = _byteSerializer.Deserialize<Request>(requestBytes);
+            var filename = "client.txt";
+
+            Console.WriteLine("New File:" + filename);
+
+            var request = new UploadFileRequest
+            {
+                File = _sessionContext.ReceiveBuffer.GetAll(),
+                FileName = filename,
+                RequestId = Guid.NewGuid(),
+                Size = requestBytes.Length
+            };
 
             var response = await _requestHandlerFactory.CreateRequestHandler().HandleRequest(request);
             
@@ -104,8 +115,10 @@ namespace NetworkSocketServer.TransportLayer.PacketHandler
             }
             else
             {
-                _sessionContext.TransmitBuffer.SetLength(responseBytes.Length);
-                _sessionContext.TransmitBuffer.Insert(responseBytes, 0);
+                var downloadResponse = response as DownloadFileResponse;
+
+                _sessionContext.TransmitBuffer.SetLength(downloadResponse.File.Length);
+                _sessionContext.TransmitBuffer.Insert(downloadResponse.File, 0);
 
                 var answer = _packetFactory.CreateAnswerExecuteSuccessBuffer(_sessionContext.TransmitBuffer.Length);
 

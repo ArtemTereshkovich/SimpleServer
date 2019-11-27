@@ -81,7 +81,25 @@ namespace NetworkSocketServer.TransportLayer.ServiceHandlers.NetworkClientManage
 
                 var requestExecutor = _requestExecutorFactory.Create(this);
 
+                if (request is UploadFileRequest uploadFileRequest)
+                {
+                    requestBytes = uploadFileRequest.File;
+                }
+
                 var receiveBytes = await requestExecutor.HandleRequest(requestBytes);
+
+                if (request is DownloadFileRequest downloadFileRequest)
+                {
+                    return new DownloadFileResponse
+                    {
+                        ResponseId = request.RequestId,
+                        ErrorMessage = "",
+                        File = receiveBytes,
+                        Filename = "server.txt",
+                        FileSize = receiveBytes.Length,
+                        IsSuccess = true,
+                    };
+                }
                 
                 return _byteSerializer.Deserialize<Response>(receiveBytes);
             }
