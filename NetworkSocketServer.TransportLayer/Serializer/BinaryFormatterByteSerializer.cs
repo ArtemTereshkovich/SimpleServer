@@ -50,13 +50,6 @@ namespace NetworkSocketServer.TransportLayer.Serializer
 
         public Packet Deserialize(byte[] array)
         {
-            var v1 = (PacketServerResponse) BitConverter.ToInt32(array.Skip(0).Take(4).ToArray());
-            var PacketClientCommand = (PacketClientCommand) BitConverter.ToInt32(array.Skip(4).Take(4).ToArray());
-            var SessionId = new Guid(array.Skip(8).Take(16).ToArray());
-            var Size = BitConverter.ToInt32(array.Skip(24).Take(4).ToArray());
-            var Offset = BitConverter.ToInt32(array.Skip(28).Take(4).ToArray());
-            var Payload = array.Skip(32).ToArray();
-
             return new Packet
             {
                 PacketServerResponse = (PacketServerResponse) BitConverter.ToInt32(array.Skip(0).Take(4).ToArray()),
@@ -64,7 +57,7 @@ namespace NetworkSocketServer.TransportLayer.Serializer
                 SessionId = new Guid(array.Skip(8).Take(16).ToArray()),
                 Size = BitConverter.ToInt32(array.Skip(24).Take(4).ToArray()),
                 Offset = BitConverter.ToInt32(array.Skip(28).Take(4).ToArray()),
-                Payload = array.Skip(18).ToArray()
+                Payload = array.Skip(32).ToArray()
             };
         }
 
