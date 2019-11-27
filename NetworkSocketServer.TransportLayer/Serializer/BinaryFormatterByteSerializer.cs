@@ -39,6 +39,16 @@ namespace NetworkSocketServer.TransportLayer.Serializer
             byte[] offset = BitConverter.GetBytes(packet.Offset);
             byte[] payload = packet.Payload;
 
+            if (payload == null)
+            {
+                return server
+                    .Concat(client)
+                    .Concat(guid)
+                    .Concat(size)
+                    .Concat(offset)
+                    .ToArray();
+            }
+
             return server
                 .Concat(client)
                 .Concat(guid)
@@ -50,6 +60,19 @@ namespace NetworkSocketServer.TransportLayer.Serializer
 
         public Packet Deserialize(byte[] array)
         {
+            if (array.Length == 32)
+            {
+                return new Packet
+                {
+                    PacketServerResponse = (PacketServerResponse) BitConverter.ToInt32(array.Skip(0).Take(4).ToArray()),
+                    PacketClientCommand = (PacketClientCommand) BitConverter.ToInt32(array.Skip(4).Take(4).ToArray()),
+                    SessionId = new Guid(array.Skip(8).Take(16).ToArray()),
+                    Size = BitConverter.ToInt32(array.Skip(24).Take(4).ToArray()),
+                    Offset = BitConverter.ToInt32(array.Skip(28).Take(4).ToArray()),
+                    Payload = null,
+                };
+            }
+
             return new Packet
             {
                 PacketServerResponse = (PacketServerResponse) BitConverter.ToInt32(array.Skip(0).Take(4).ToArray()),
