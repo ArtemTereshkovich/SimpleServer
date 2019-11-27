@@ -18,12 +18,11 @@ namespace NetworkSocketServer.TransportLayer.Serializer
                 if (serializeObject == null) return null;
 
                 var formatter = new BinaryFormatter();
-                using var memoryStream = new MemoryStream
+                using (var memoryStream = new MemoryStream())
                 {
-                    Position = 0
-                };
-                formatter.Serialize(memoryStream, serializeObject);
-                return memoryStream.ToArray();
+                    formatter.Serialize(memoryStream, serializeObject);
+                    return memoryStream.ToArray();
+                }
             }
         }
 
@@ -32,11 +31,10 @@ namespace NetworkSocketServer.TransportLayer.Serializer
             lock (_lockObject)
             {
                 var formatter = new BinaryFormatter();
-                using var memoryStream = new MemoryStream(array)
+                using (var memoryStream = new MemoryStream(array))
                 {
-                    Position = 0
-                };
-                return (T) formatter.Deserialize(memoryStream);
+                    return (T) formatter.Deserialize(memoryStream);
+                }
             }
         }
     }
