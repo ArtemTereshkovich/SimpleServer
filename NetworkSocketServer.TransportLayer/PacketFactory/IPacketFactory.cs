@@ -21,5 +21,7 @@ namespace NetworkSocketServer.TransportLayer.PacketFactory
         Packet CreateExecutePayload(byte[] requestBytes);
 
         Packet CreateWrite(byte[] data, int position, int offset);
+
+        Packet CreateRead(int position, int offset);
     }
 }

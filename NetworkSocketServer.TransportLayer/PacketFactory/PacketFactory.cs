@@ -129,5 +129,18 @@ namespace NetworkSocketServer.TransportLayer.PacketFactory
                 Payload = data
             };
         }
+
+        public Packet CreateRead(int position, int offset)
+        {
+            return new Packet
+            {
+                SessionId = _sessionId,
+                Offset = offset,
+                Size = position,
+                PacketClientCommand = PacketClientCommand.Read,
+                PacketServerResponse = PacketServerResponse.Answer,
+                Payload = null,
+            };
+        }
     }
 }

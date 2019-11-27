@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualBasic;
@@ -12,7 +13,6 @@ namespace NetworkSocketServer.TransportLayer.ServiceHandlers.RequestExecutor
     class RequestExecutor : IRequestExecutor
     {
         private readonly NetworkClientManager.NetworkClientManager _networkClientManager;
-        private readonly RetrySettings _retrySettings;
         private readonly IPacketFactory _packetFactory;
         private readonly IByteSerializer _byteSerializer;
         private readonly IBytesSender _bytesSender;
@@ -24,7 +24,6 @@ namespace NetworkSocketServer.TransportLayer.ServiceHandlers.RequestExecutor
             _bytesSender = new PollyAcceptedBytesSender(networkClientManager, retrySettings);
             _byteSerializer = new BinaryFormatterByteSerializer();
             _networkClientManager = networkClientManager;
-            _retrySettings = retrySettings;
             _packetFactory = new PacketFactory.PacketFactory(networkClientManager.SessionContext.SessionId);
         }
 
@@ -69,7 +68,37 @@ namespace NetworkSocketServer.TransportLayer.ServiceHandlers.RequestExecutor
 
         private async Task<byte[]> HandleResponseResultInBuffer(Packet answerPacket)
         {
-            throw new NotImplementedException();
+            byte[] file = new byte[0];
+
+            int fileSize = answerPacket.Size;
+
+            int receivedBytes = 0;
+
+            int receivedBytesPortition = _networkClientManager.SessionContext.PacketSizeThreshold;
+            int receivedBytePortitionStep = 100;
+
+            while (receivedBytes < fileSize)
+            {
+                int offset = receivedBytes + receivedBytesPortition > fileSize
+                    ? fileSize - receivedBytes
+                    : receivedBytesPortition;
+
+                var requestPacket = _packetFactory.CreateRead(receivedBytes, offset);
+
+                var requestSer = _byteSerializer.Serialize(requestPacket);
+
+                var dataBytes = await _bytesSender.AcceptedSend(requestSer);
+
+                var dataPacket = _byteSerializer.Deserialize(dataBytes);
+
+                file = file.Concat(dataPacket.Payload).ToArray();
+
+                receivedBytes += offset;
+
+                receivedBytesPortition += receivedBytePortitionStep;
+            }
+
+            return file;
         }
 
         private async Task<Packet> CreateBufferedExecutPacket(byte[] request)
