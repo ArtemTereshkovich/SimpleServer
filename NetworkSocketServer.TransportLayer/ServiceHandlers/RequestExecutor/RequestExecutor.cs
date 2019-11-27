@@ -83,9 +83,13 @@ namespace NetworkSocketServer.TransportLayer.ServiceHandlers.RequestExecutor
 
             while (sendedBytes <= requestLength)
             {
-                var arraySegment = new ArraySegment<byte>(request, sendedBytes, sendedPacketPortition);
+                int offset = sendedBytes + sendedPacketPortition > requestLength
+                    ? requestLength - sendedBytes
+                    : sendedPacketPortition;
 
-                var dataPacket = _packetFactory.CreateWrite(arraySegment.ToArray(), sendedBytes, sendedPacketPortition);
+                var arraySegment = new ArraySegment<byte>(request, sendedBytes, offset);
+
+                var dataPacket = _packetFactory.CreateWrite(arraySegment.ToArray(), sendedBytes, offset);
 
                 var dataSerializedPacket = _byteSerializer.Serialize(dataPacket);
 
@@ -95,7 +99,7 @@ namespace NetworkSocketServer.TransportLayer.ServiceHandlers.RequestExecutor
 
                 CheckPacket(answerPacket);
 
-                sendedBytes += sendedPacketPortition;
+                sendedBytes += offset;
 
                 sendedPacketPortition += sendedPacketPortitionStep;
             }
