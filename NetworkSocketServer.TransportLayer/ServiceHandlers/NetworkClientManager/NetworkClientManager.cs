@@ -77,7 +77,7 @@ namespace NetworkSocketServer.TransportLayer.ServiceHandlers.NetworkClientManage
 
             try
             {
-                var requestBytes = _byteSerializer.Serialize(request);
+                var requestBytes = _byteSerializer.SerializeT(request);
 
                 var requestExecutor = _requestExecutorFactory.Create(this);
 
@@ -101,7 +101,7 @@ namespace NetworkSocketServer.TransportLayer.ServiceHandlers.NetworkClientManage
                     };
                 }
                 
-                return _byteSerializer.Deserialize<Response>(receiveBytes);
+                return _byteSerializer.DeserializeT<Response>(receiveBytes);
             }
             catch (Exception exception)
             {

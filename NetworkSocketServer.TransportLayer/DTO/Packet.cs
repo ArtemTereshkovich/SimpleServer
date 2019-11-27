@@ -3,7 +3,7 @@
 namespace NetworkSocketServer.TransportLayer.DTO
 {
     [Serializable]
-    class Packet
+    public class Packet
     {
         public Guid SessionId { get; set; }
 

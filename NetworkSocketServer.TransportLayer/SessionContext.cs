@@ -14,6 +14,9 @@ namespace NetworkSocketServer.TransportLayer
         {
             ReceiveBuffer = receiveBuffer;
             TransmitBuffer = transmitBuffer;
+
+            ReceiveBuffer.SetLength(0);
+            TransmitBuffer.SetLength(0);
         }
 
         public static SessionContext CreateNewMemoryStreamBufferContext()

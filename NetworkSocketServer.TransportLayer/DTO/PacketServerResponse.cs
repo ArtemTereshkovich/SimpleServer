@@ -1,6 +1,6 @@
 ﻿namespace NetworkSocketServer.TransportLayer.DTO
 {
-    enum PacketServerResponse
+    public enum PacketServerResponse
     {
         Error,
         Answer,

@@ -1,9 +1,13 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Threading.Tasks;
+using NetworkSocketServer.TransportLayer.DTO;
 
 namespace NetworkSocketServer.TransportLayer.Serializer
 {
-    public class BinaryFormatterByteSerializer : IByteSerializer
+    class BinaryFormatterByteSerializer : IByteSerializer
     {
         private readonly object _lockObject;
 
@@ -11,7 +15,7 @@ namespace NetworkSocketServer.TransportLayer.Serializer
         {
             _lockObject = new object();
         }
-        public byte[] Serialize<T>(T serializeObject)
+        public byte[] SerializeT<T>(T serializeObject)
         {
             lock (_lockObject)
             {
@@ -26,13 +30,49 @@ namespace NetworkSocketServer.TransportLayer.Serializer
             }
         }
 
-        public T Deserialize<T>(byte[] array)
+        public byte[] Serialize(Packet packet)
+        {
+            byte[] server = BitConverter.GetBytes((int) packet.PacketServerResponse);
+            byte[] client = BitConverter.GetBytes((int) packet.PacketClientCommand);
+            byte[] guid = packet.SessionId.ToByteArray();
+            byte[] size = BitConverter.GetBytes(packet.Size);
+            byte[] offset = BitConverter.GetBytes(packet.Offset);
+            byte[] payload = packet.Payload;
+
+            return server
+                .Concat(server)
+                .Concat(client)
+                .Concat(guid)
+                .Concat(size)
+                .Concat(offset)
+                .Concat(payload)
+                .ToArray();
+        }
+
+        public Packet Deserialize(byte[] array)
+        {
+            return new Packet
+            {
+                PacketServerResponse = (PacketServerResponse) BitConverter.ToInt32(array.Take(4).ToArray()),
+                PacketClientCommand = (PacketClientCommand) BitConverter.ToInt32(array.Skip(4).Take(4).ToArray()),
+                SessionId = new Guid(array.Skip(8).Take(2).ToArray()),
+                Size = BitConverter.ToInt32(array.Skip(10).Take(4).ToArray()),
+                Offset = BitConverter.ToInt32(array.Skip(14).Take(4).ToArray()),
+                Payload = array.Skip(18).ToArray()
+            };
+        }
+
+        public T DeserializeT<T>(byte[] array)
         {
             lock (_lockObject)
             {
                 var formatter = new BinaryFormatter();
-                using (var memoryStream = new MemoryStream(array))
+
+                using (var memoryStream = new MemoryStream())
                 {
+                    memoryStream.Write(array, 0, array.Length);
+                    memoryStream.Seek(0, SeekOrigin.Begin);
+
                     return (T) formatter.Deserialize(memoryStream);
                 }
             }

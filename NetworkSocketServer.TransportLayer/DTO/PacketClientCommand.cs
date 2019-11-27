@@ -1,6 +1,6 @@
 ﻿namespace NetworkSocketServer.TransportLayer.DTO
 {
-    enum PacketClientCommand
+    public enum PacketClientCommand
     {
         Read,
         Write,

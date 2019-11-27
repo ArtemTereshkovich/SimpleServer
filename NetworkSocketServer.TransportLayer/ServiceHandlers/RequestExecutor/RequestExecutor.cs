@@ -43,7 +43,7 @@ namespace NetworkSocketServer.TransportLayer.ServiceHandlers.RequestExecutor
 
             var executeBytes = _byteSerializer.Serialize(executPacket);
             var answerBytes = await _bytesSender.AcceptedSend(executeBytes);
-            var answerPacket = _byteSerializer.Deserialize<Packet>(answerBytes);
+            var answerPacket = _byteSerializer.DeserializeT<Packet>(answerBytes);
 
             CheckPacket(answerPacket);
 
@@ -95,7 +95,7 @@ namespace NetworkSocketServer.TransportLayer.ServiceHandlers.RequestExecutor
 
                 var answer = await _bytesSender.AcceptedSend(dataSerializedPacket);
 
-                var answerPacket = _byteSerializer.Deserialize<Packet>(answer);
+                var answerPacket = _byteSerializer.DeserializeT<Packet>(answer);
 
                 CheckPacket(answerPacket);
 

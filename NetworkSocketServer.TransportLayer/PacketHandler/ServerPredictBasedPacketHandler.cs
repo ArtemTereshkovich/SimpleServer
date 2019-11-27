@@ -105,7 +105,7 @@ namespace NetworkSocketServer.TransportLayer.PacketHandler
             
             _sessionContext.ReceiveBuffer.SetLength(0);
 
-            var responseBytes = _byteSerializer.Serialize(response);
+            var responseBytes = _byteSerializer.SerializeT(response);
 
             if (responseBytes.Length <= _sessionContext.PacketPayloadThreshold * 2)
             {
@@ -131,11 +131,11 @@ namespace NetworkSocketServer.TransportLayer.PacketHandler
             _sessionContext.ReceiveBuffer.SetLength(0);
             _sessionContext.TransmitBuffer.SetLength(0);
 
-            var request = _byteSerializer.Deserialize<Request>(packet.Payload);
+            var request = _byteSerializer.DeserializeT<Request>(packet.Payload);
 
             var response = await _requestHandlerFactory.CreateRequestHandler().HandleRequest(request);
 
-            var responseBytes = _byteSerializer.Serialize(response);
+            var responseBytes = _byteSerializer.SerializeT(response);
 
             if (responseBytes.Length <= _sessionContext.PacketPayloadThreshold * 2)
             {

@@ -78,7 +78,7 @@ namespace NetworkSocketServer.TransportLayer
         {
             var messageBytes = transportHandler.Receive();
 
-            return _byteSerializer.Deserialize<Packet>(messageBytes);
+            return _byteSerializer.DeserializeT<Packet>(messageBytes);
         }
 
         private IPacketHandler CreatePacketHandler(
