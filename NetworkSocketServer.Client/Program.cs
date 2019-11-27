@@ -20,7 +20,7 @@ namespace NetworkSocketServer.Client
             {
                 CountReconnect = 5,
                 ReconnectPeriod = TimeSpan.FromSeconds(10),
-                TimeOutAnswer = TimeSpan.FromSeconds(90)
+                TimeOutAnswer = TimeSpan.FromSeconds(1)
             };
 
             var networkClientManagerFactory = new NetworkClientManagerFactory(

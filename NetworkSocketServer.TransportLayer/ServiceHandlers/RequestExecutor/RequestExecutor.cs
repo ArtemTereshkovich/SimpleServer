@@ -70,7 +70,7 @@ namespace NetworkSocketServer.TransportLayer.ServiceHandlers.RequestExecutor
         {
             byte[] file = new byte[0];
 
-            int fileSize = answerPacket.Size;
+            int fileSize = answerPacket.Offset;
 
             int receivedBytes = 0;
 
@@ -91,9 +91,14 @@ namespace NetworkSocketServer.TransportLayer.ServiceHandlers.RequestExecutor
 
                 var dataPacket = _byteSerializer.Deserialize(dataBytes);
 
+                CheckPacket(dataPacket);
+
                 file = file.Concat(dataPacket.Payload).ToArray();
 
-                receivedBytes += offset;
+
+                Console.WriteLine($"{receivedBytes} / {fileSize}");
+
+                receivedBytes += dataPacket.Payload.Length;
 
                 receivedBytesPortition += receivedBytePortitionStep;
             }
@@ -127,6 +132,8 @@ namespace NetworkSocketServer.TransportLayer.ServiceHandlers.RequestExecutor
                 var answerPacket = _byteSerializer.Deserialize(answer);
 
                 CheckPacket(answerPacket);
+
+                Console.WriteLine($"{sendedBytes} / {requestLength}");
 
                 sendedBytes += offset;
 
