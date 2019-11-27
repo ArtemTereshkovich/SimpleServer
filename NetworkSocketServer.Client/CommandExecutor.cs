@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using NetworkSocketServer.Client.Commands;
 using NetworkSocketServer.DTO.Requests;
@@ -104,51 +107,46 @@ namespace NetworkSocketServer.Client
 
             Console.WriteLine($"Execute date command ({dateResponse.ResponseId}):{dateResponse.ServerTime}. Time offset: {dateResponse.Offset}");
         }
-        public Task Execute(UploadFileCommand fileCommand)
+        public async Task Execute(UploadFileCommand fileCommand)
         {
             if (!_networkClientManager.IsConnected)
             {
                 Console.WriteLine("Doesnt connected!");
-                return Task.CompletedTask;
+                return ;
             }
 
-            return Task.CompletedTask;
-            //var localFileName = $"Resources{Path.DirectorySeparatorChar}{fileCommand.FileName}";
-            //var fileInfo = new FileInfo(localFileName);
+            var localFileName = $"Files{Path.DirectorySeparatorChar}{fileCommand.FileName}";
+            if (!File.Exists(localFileName))
+            {
+                Console.WriteLine("File not found!");
+                return ;
+            }
 
-            //if (!File.Exists(localFileName))
-            //{
-            //    Console.WriteLine("File not found!");
+            var fileInfo = new FileInfo(localFileName);
 
-            //    return;
-            //}
+            var stopwatch = new Stopwatch();
+            stopwatch.Restart();
 
-            //var message = new UploadFileRequest()
-            //{
-            //    CommandType = CommandType.UploadFileRequest,
-            //    ConnectionId = ClientId,
-            //    FileName = fileCommand.FileName,
-            //    Size = fileInfo.Length,
-            //    IsExist = true
-            //};
+            var bytes = File.ReadAllBytes(localFileName).ToArray();
 
-            //Connection.Send(message);
-            //var serverFileInfoResponse = Connection.Receive().Deserialize<UploadFileRequest>();
+            var request = new UploadFileRequest
+            {
+                File = bytes,
+                FileName = fileCommand.FileName,
+                RequestId = Guid.NewGuid(),
+                Size = fileInfo.Length
+            };
 
+            var response = await _networkClientManager.HandleRequest(request);
 
-            //var bytes = File.ReadAllBytes(localFileName).Skip((int) serverFileInfoResponse.Size).ToArray();
+            var uploadResponse = response as UploadFileResponse;
 
-            //var stopwatch = new Stopwatch();
-            //stopwatch.Restart();
+            stopwatch.Stop();
 
-            //Connection.Send(bytes);
-
-            //Connection.Receive().Deserialize<Request>();
-            //stopwatch.Stop();
-
-            //Console.WriteLine($"File uploaded successfully! " +
-            //    $"Average upload speed is {((double)bytes.Length / (1024 * 1024)) / (((double)stopwatch.ElapsedMilliseconds + 1) / 1000)} Mbps.");
+            Console.WriteLine($"File uploaded successfully! {uploadResponse.ResponseId} " +
+                $"Average upload speed is {((double)bytes.Length / (1024 * 1024)) / (((double)stopwatch.ElapsedMilliseconds + 1) / 1000)} Mbps.");
         }
+
         public async Task Execute(DownloadFileCommand fileCommand)
         {
             if (!_networkClientManager.IsConnected)

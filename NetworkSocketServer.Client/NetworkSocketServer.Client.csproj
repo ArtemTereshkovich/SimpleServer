@@ -15,4 +15,10 @@
     <ProjectReference Include="..\NetworkSocketServer.TransportLayer\NetworkSocketServer.TransportLayer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Files\client.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

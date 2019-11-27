@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.VisualBasic;
 using NetworkSocketServer.TransportLayer.DTO;
 using NetworkSocketServer.TransportLayer.PacketFactory;
 using NetworkSocketServer.TransportLayer.Serializer;
@@ -56,11 +57,6 @@ namespace NetworkSocketServer.TransportLayer.ServiceHandlers.RequestExecutor
             }
         }
 
-        private async Task<byte[]> HandleResponseResultInBuffer(Packet answerPacket)
-        {
-            throw new NotImplementedException();
-        }
-
         private void CheckPacket(Packet packet)
         {
             if (packet.PacketServerResponse == PacketServerResponse.Error)
@@ -71,9 +67,40 @@ namespace NetworkSocketServer.TransportLayer.ServiceHandlers.RequestExecutor
             }
         }
 
-        private Task<Packet> CreateBufferedExecutPacket(byte[] request)
+        private async Task<byte[]> HandleResponseResultInBuffer(Packet answerPacket)
         {
             throw new NotImplementedException();
+        }
+
+        private async Task<Packet> CreateBufferedExecutPacket(byte[] request)
+        {
+            int requestLength = request.Length;
+
+            int sendedBytes = 0;
+
+            int sendedPacketPortition = _networkClientManager.SessionContext.PacketSizeThreshold;
+            int sendedPacketPortitionStep = 100;
+
+            while (sendedBytes <= requestLength)
+            {
+                var arraySegment = new ArraySegment<byte>(request, sendedBytes, sendedPacketPortition);
+
+                var dataPacket = _packetFactory.CreateWrite(arraySegment.ToArray(), sendedBytes, sendedPacketPortition);
+
+                var dataSerializedPacket = _byteSerializer.Serialize(dataPacket);
+
+                var answer = await _bytesSender.AcceptedSend(dataSerializedPacket);
+
+                var answerPacket = _byteSerializer.Deserialize<Packet>(answer);
+
+                CheckPacket(answerPacket);
+
+                sendedBytes += sendedPacketPortition;
+
+                sendedPacketPortition += sendedPacketPortitionStep;
+            }
+
+            return _packetFactory.CreateExecuteBuffer(requestLength);
         }
     }
 }

@@ -116,5 +116,18 @@ namespace NetworkSocketServer.TransportLayer.PacketFactory
                 SessionId = _sessionId
             };
         }
+
+        public Packet CreateWrite(byte[] data, int position, int offset)
+        {
+            return new Packet
+            {
+                SessionId = _sessionId,
+                Offset = offset,
+                Position = position,
+                PacketClientCommand = PacketClientCommand.Write,
+                PacketServerResponse = PacketServerResponse.Answer,
+                Payload = data
+            };
+        }
     }
 }
