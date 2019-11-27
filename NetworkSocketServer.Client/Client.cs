@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using NetworkSocketServer.Client.Commands.Exceptions;
 using NetworkSocketServer.Client.Inputs;
 using NetworkSocketServer.NetworkLayer.SocketOptionsAccessor.KeepAlive;
-using NetworkSocketServer.TransportLayer.ServiceHandlers.NetworkRequestExecutor;
+using NetworkSocketServer.TransportLayer.ServiceHandlers.NetworkClientManager;
 
 namespace NetworkSocketServer.Client
 {
@@ -13,11 +13,11 @@ namespace NetworkSocketServer.Client
         private readonly InputManager _inputManager;
         private readonly CommandExecutor _commandExecutor;
 
-        public Client(INetworkRequestExecutorFactory factory, SocketKeepAliveOptions keepAliveOptions)
+        public Client(INetworkClientManagerFactory factory, SocketKeepAliveOptions keepAliveOptions)
         {
             _inputManager = new InputManager(new CommandParser());
 
-            _commandExecutor = new CommandExecutor(factory.CreateExecutor(keepAliveOptions));
+            _commandExecutor = new CommandExecutor(factory.Create(keepAliveOptions));
         }
 
         public async Task Run()
@@ -31,17 +31,9 @@ namespace NetworkSocketServer.Client
 
                     await command.Execute(_commandExecutor);
                 }
-                catch (CommandNotFoundException ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-                catch (SocketException ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    Console.WriteLine("Client Error" + ex.Message);
                 }
             }
         }

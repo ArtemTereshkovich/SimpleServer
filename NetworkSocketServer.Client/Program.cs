@@ -1,6 +1,8 @@
-﻿using NetworkSocketServer.NetworkLayer.Dispatchers.ConnectorDispatcher;
+﻿using System;
+using NetworkSocketServer.NetworkLayer.Dispatchers.ConnectorDispatcher;
 using NetworkSocketServer.NetworkLayer.SocketOptionsAccessor.KeepAlive;
-using NetworkSocketServer.TransportLayer.ServiceHandlers.NetworkRequestExecutor;
+using NetworkSocketServer.TransportLayer.ServiceHandlers.NetworkClientManager;
+using NetworkSocketServer.TransportLayer.ServiceHandlers.RequestExecutor;
 
 namespace NetworkSocketServer.Client
 {
@@ -14,9 +16,18 @@ namespace NetworkSocketServer.Client
                 KeepAliveInterval = 90000,
             };
 
-            var networkExecutorFactory = new SimpleNetworkExecutorFactory(new ConnectorDispatcherFactory());
+            var retrySettings = new RetrySettings
+            {
+                CountReconnect = 5,
+                ReconnectPeriod = TimeSpan.FromSeconds(10),
+                TimeOutAnswer = TimeSpan.FromSeconds(90)
+            };
+
+            var networkClientManagerFactory = new NetworkClientManagerFactory(
+                new ConnectorDispatcherFactory(), 
+                new RequestExecutorFactory(retrySettings));
             
-            new Client(networkExecutorFactory, keepAliveOptions)
+            new Client(networkClientManagerFactory, keepAliveOptions)
                 .Run().Wait();
         }
     }

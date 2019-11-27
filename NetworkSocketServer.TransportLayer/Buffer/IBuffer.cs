@@ -2,7 +2,7 @@
 
 namespace NetworkSocketServer.TransportLayer.Buffer
 {
-    interface IBuffer : IDisposable
+    public interface IBuffer : IDisposable
     {
         void Append(byte[] array);
 

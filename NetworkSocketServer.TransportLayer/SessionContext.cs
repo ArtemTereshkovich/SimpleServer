@@ -2,7 +2,7 @@
 
 namespace NetworkSocketServer.TransportLayer
 {
-    internal class SessionContext
+    public class SessionContext
     {
         public int PacketPayloadThreshold { get; } = 1024;
 

@@ -1,29 +1,31 @@
 ﻿using System;
+using NetworkSocketServer.NetworkLayer.Connectors;
 using NetworkSocketServer.NetworkLayer.TransportHandler;
 using NetworkSocketServer.TransportLayer.Buffer;
 
 namespace NetworkSocketServer.TransportLayer
 {
-    internal class ClientSessionContext : SessionContext
+    public class ClientSessionContext
     {
-        public ITransportHandler TransportHandler { get; }
+        public NetworkConnectorSettings CurrentConnectorSettings { get; }
+
+        public ITransportHandler TransportHandler { get; private set; }
 
         public Guid SessionId { get; }
 
-        protected ClientSessionContext(ITransportHandler transportHandler, IBuffer receiveBuffer,
-            IBuffer transmitBuffer, Guid sessionId) : base(receiveBuffer, transmitBuffer)
+        public ClientSessionContext(
+            ITransportHandler transportHandler, 
+            Guid sessionId, 
+            NetworkConnectorSettings currentConnectorSettings)
         {
             TransportHandler = transportHandler;
             SessionId = sessionId;
+            CurrentConnectorSettings = currentConnectorSettings;
         }
 
-        public static ClientSessionContext CreateClientContext(ITransportHandler transportHandler, Guid sessionId)
+        public void ChangeTransportHandler(ITransportHandler transportHandler)
         {
-            return new ClientSessionContext(
-                transportHandler,
-                new MemoryStreamBuffer(),
-                new MemoryStreamBuffer(),
-                sessionId);
+            TransportHandler = transportHandler;
         }
     }
 }

@@ -43,7 +43,12 @@ namespace NetworkSocketServer.TransportLayer.PacketFactory
         {
             return new Packet
             {
-
+                SessionId = _sessionId,
+                PacketClientCommand = PacketClientCommand.None,
+                PacketServerResponse = PacketServerResponse.Answer,
+                Payload = array,
+                Offset = arrayLength,
+                Position = transmitBufferLength
             };
         }
 
@@ -62,7 +67,15 @@ namespace NetworkSocketServer.TransportLayer.PacketFactory
 
         public Packet CreateAnswerExecuteSuccessBuffer(int transmitBufferLength)
         {
-            throw new NotImplementedException();
+            return new Packet
+            {
+                Position = 0,
+                Offset = transmitBufferLength,
+                PacketClientCommand = PacketClientCommand.None,
+                PacketServerResponse = PacketServerResponse.ResultInBuffer,
+                SessionId = _sessionId,
+                Payload = null,
+            };
         }
 
         public Packet CreateClosePacket()
@@ -78,11 +91,24 @@ namespace NetworkSocketServer.TransportLayer.PacketFactory
             };
         }
 
+        public Packet CreateExecuteBuffer(int requestByteLength)
+        {
+            return new Packet
+            {
+                Position = 0,
+                Offset = requestByteLength,
+                SessionId = _sessionId,
+                PacketServerResponse = PacketServerResponse.Answer,
+                PacketClientCommand = PacketClientCommand.ExecuteBuffer,
+                Payload = null
+            };
+        }
+
         public Packet CreateExecutePayload(byte[] requestBytes)
         {
             return new Packet
             {
-                Offset = 0,
+                Offset = requestBytes.Length,
                 Position = 0,
                 PacketServerResponse = PacketServerResponse.Answer,
                 PacketClientCommand = PacketClientCommand.ExecutePayload,
