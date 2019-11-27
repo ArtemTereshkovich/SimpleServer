@@ -16,7 +16,7 @@ namespace NetworkSocketServer.TransportLayer.Buffer
         {
             _buffer = _buffer.Take(position)
                 .Concat(array)
-                .Concat(_buffer.Skip(position))
+                .Concat(_buffer.Skip(position + array.Length))
                 .ToArray();
         }
 

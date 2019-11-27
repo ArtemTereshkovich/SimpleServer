@@ -9,56 +9,27 @@ namespace NetworkSocketServer.Server.CommandHandlers
 {
     internal class DownloadFileRequestHandler : ICommandHandler
     {
-        public Task<Response> Handle(Request request)
+        public async Task<Response> Handle(Request request)
         {
-            var downloadFileRequest = request as DownloadFileRequest; 
+            var downloadFileRequest = request as DownloadFileRequest;
 
-            /*var serverRootFileName = $"Resources{Path.DirectorySeparatorChar}{fileCommand.FileName}";
-
-            if (!Directory.Exists($"Resources{Path.DirectorySeparatorChar}{fileCommand.RequestId}"))
-            {
-                Directory.CreateDirectory($"Resources{Path.DirectorySeparatorChar}{request.RequestId}");
-            }
-            var userFolderFileName = $"Resources{Path.DirectorySeparatorChar}{fileCommand.RequestId}{Path.DirectorySeparatorChar}{fileCommand.FileName}";
-            var localFileName = File.Exists(userFolderFileName) ? userFolderFileName : serverRootFileName;
-
-            if (!File.Exists(localFileName))
-            {
-                var fileNotFoundResponse = new UploadFileRequest()
-                {
-                    CommandType = CommandType.DownloadFileResponse
-                };
-                await _transportHandler.Send(fileNotFoundResponse.Serialize());
-
-                return;
-            }
+            var localFileName = $"Files{Path.DirectorySeparatorChar}{downloadFileRequest.Filename}";
 
             var fileInfo = new FileInfo(localFileName);
-            var response = new UploadFileRequest()
+
+            await Task.Delay(1);
+
+            var bytes = File.ReadAllBytes(localFileName).ToArray();
+
+            return new DownloadFileResponse
             {
-                CommandType = CommandType.DownloadFileResponse,
-                FileName = fileCommand.FileName,
-                IsExist = fileInfo.Exists,
-                Size = fileInfo.Length
+                ErrorMessage = "",
+                Filename = downloadFileRequest.Filename,
+                File = bytes,
+                FileSize = bytes.Length,
+                IsSuccess = true,
+                ResponseId = downloadFileRequest.RequestId
             };
-
-            await _transportHandler.Send(response.Serialize());
-
-            (await _transportHandler.Receive()).Deserialize<UploadFileRequest>();
-
-            var bytes = File.ReadAllBytes(localFileName).Skip((int)fileCommand.Size).ToArray();
-
-            await _transportHandler.Send(bytes);*/
-
-            var response = new DownloadFileResponse
-            {
-                ResponseId = request.RequestId,
-                File = null,
-                FileSize = 0,
-                Filename = downloadFileRequest.Filename
-            };
-
-            return Task.FromResult((Response)response);
         }
     }
 }

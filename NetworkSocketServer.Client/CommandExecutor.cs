@@ -161,66 +161,25 @@ namespace NetworkSocketServer.Client
                 Filename = fileCommand.FileName
             };
 
-            var response = await _networkClientManager.HandleRequest(request);
+            var stopwatch = new Stopwatch();
+            stopwatch.Restart();
 
-            var downloadFileResponse = response as DownloadFileResponse;
+            var response = await _networkClientManager.HandleRequest(request) as DownloadFileResponse;
 
-            if (!downloadFileResponse.IsSuccess)
+            var localFileName = $"Files{Path.DirectorySeparatorChar}{response.Filename}";
+
+            var fileInfo = new FileInfo(localFileName);
+
+            await using (var fileStream = File.OpenWrite(localFileName))
+            await using (var binaryWriter = new BinaryWriter(fileStream))
             {
-                Console.WriteLine(downloadFileResponse.ErrorMessage);
-            }
-            else
-            {
-
+                binaryWriter.Write(response.File);
+                binaryWriter.Flush();
             }
 
-            //var localFileName = $"Resources{Path.DirectorySeparatorChar}{fileCommand.FileName}";
-
-            //var fileInfo = new FileInfo(localFileName);
-            //var fileLength = fileInfo.Exists ? fileInfo.Length : 0;
-
-            //var message = new UploadFileRequest()
-            //{
-            //    CommandType = CommandType.DownloadFileRequest,
-            //    ConnectionId = ClientId,
-            //    FileName = fileCommand.FileName,
-            //    IsExist = fileInfo.Exists,
-            //    Size = fileLength
-            //};
-
-            //Connection.Send(message);
-
-            //var serverFileInfoResponse = Connection.Receive().Deserialize<UploadFileRequest>();
-            //if (serverFileInfoResponse.FileName == null)
-            //{
-            //    Console.WriteLine("File not found!");
-            //    return;
-            //}
-
-            //var stopwatch = new Stopwatch();
-            //stopwatch.Restart();
-            //Connection.Send(serverFileInfoResponse);
-
-            //var bytesReceived = 0;
-            //using (var fileStream = File.OpenWrite(localFileName))
-            //using (var binaryWriter = new BinaryWriter(fileStream))
-            //{
-            //    binaryWriter.BaseStream.Seek(0, SeekOrigin.End);
-
-            //    while (bytesReceived < serverFileInfoResponse.Size - fileLength)
-            //    {
-            //        var filePart = Connection.Receive();
-
-            //        binaryWriter.Write(filePart);
-            //        binaryWriter.Flush();
-
-            //        bytesReceived += filePart.Length;
-            //    }
-            //}
-
-            //stopwatch.Stop();
-            //Console.WriteLine($"File successfully downloaded! " +
-            //    $"Average upload speed is {((double)bytesReceived / (1024 * 1024)) / (((double)stopwatch.ElapsedMilliseconds + 1) / 1000)} Mbps.");
+            stopwatch.Stop();
+            Console.WriteLine($"File successfully downloaded! " +
+                $"Average upload speed is {((double)response.FileSize / (1024 * 1024)) / (((double)stopwatch.ElapsedMilliseconds + 1) / 1000)} Mbps.");
         }
 
         public async Task Execute(DisconnectCommand _)

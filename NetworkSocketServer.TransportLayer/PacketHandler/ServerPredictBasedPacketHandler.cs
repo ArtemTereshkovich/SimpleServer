@@ -172,7 +172,7 @@ namespace NetworkSocketServer.TransportLayer.PacketHandler
                 }
                 else
                 {
-                    throw new InvalidOperationException($"Unsupported command:" + nameof(packet.PacketClientCommand));
+                    return true;
                 }
             }
             catch (Exception exception)

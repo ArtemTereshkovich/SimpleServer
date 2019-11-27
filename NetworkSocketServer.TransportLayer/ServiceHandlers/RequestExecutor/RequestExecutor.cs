@@ -81,7 +81,7 @@ namespace NetworkSocketServer.TransportLayer.ServiceHandlers.RequestExecutor
             int sendedPacketPortition = _networkClientManager.SessionContext.PacketSizeThreshold;
             int sendedPacketPortitionStep = 100;
 
-            while (sendedBytes <= requestLength)
+            while (sendedBytes < requestLength)
             {
                 int offset = sendedBytes + sendedPacketPortition > requestLength
                     ? requestLength - sendedBytes

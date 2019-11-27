@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Data;
+using System.IO;
 using System.Threading.Tasks;
 using NetworkSocketServer.DTO.Requests;
 using NetworkSocketServer.DTO.Responses;
@@ -7,62 +9,30 @@ namespace NetworkSocketServer.Server.CommandHandlers
 {
     internal class UploadFileRequestHandler : ICommandHandler
     {
-        public Task<Response> Handle(Request request)
+        public async Task<Response> Handle(Request request)
         {
-            var uploadFileRequest = request as UploadFileRequest;
-            /*
-            var fileCommand = command as UploadFileRequest;
+            
+            var fileCommand = request as UploadFileRequest;
 
-            if (!Directory.Exists($"Resources{Path.DirectorySeparatorChar}{fileCommand.RequestId}"))
-            {
-                Directory.CreateDirectory($"Resources{Path.DirectorySeparatorChar}{fileCommand.RequestId}");
-            }
-            var localFileName = $"Resources{Path.DirectorySeparatorChar}{fileCommand.RequestId}{Path.DirectorySeparatorChar}{fileCommand.FileName}";
+            var localFileName = $"Files{Path.DirectorySeparatorChar}{fileCommand.FileName}";
 
             var fileInfo = new FileInfo(localFileName);
-            var fileLength = fileInfo.Exists ? fileInfo.Length : 0;
-
-            var serverFileInfoResponse = new UploadFileRequest()
-            {
-                CommandType = CommandType.UploadFileResponse,
-                FileName = fileCommand.FileName,
-                IsExist = fileInfo.Exists,
-                Size = fileLength
-            };
-
-            await _transportHandler.Send(serverFileInfoResponse.Serialize());
 
             await using (var fileStream = File.OpenWrite(localFileName))
             await using (var binaryWriter = new BinaryWriter(fileStream))
             {
-                binaryWriter.BaseStream.Seek(0, SeekOrigin.End);
-
-                var bytesReceived = 0;
-                while (bytesReceived < fileCommand.Size - fileLength)
-                {
-                    var filePart = await _transportHandler.Receive();
-
-                    binaryWriter.Write(filePart);
-                    binaryWriter.Flush();
-
-                    bytesReceived += filePart.Length;
-                }
+                binaryWriter.Write(fileCommand.File);
+                binaryWriter.Flush();
             }
 
-            var response = new Request()
+
+            Console.Write("Receive File Upload Request");
+
+            return new UploadFileResponse
             {
-                CommandType = CommandType.UploadFileResponse
+                ResponseId = fileCommand.RequestId,
+                Filename = fileCommand.FileName,
             };
-
-            await _transportHandler.Send(response.Serialize());*/
-
-            var response = new UploadFileResponse
-            {
-                ResponseId = uploadFileRequest.RequestId,
-                Filename = uploadFileRequest.FileName,
-            };
-
-            return Task.FromResult((Response) response);
         }
     }
 }

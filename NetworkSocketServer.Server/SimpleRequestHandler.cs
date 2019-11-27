@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Data;
 using System.Threading.Tasks;
 using NetworkSocketServer.DTO.Requests;
 using NetworkSocketServer.DTO.Responses;
-using NetworkSocketServer.NetworkLayer.TransportHandler;
 using NetworkSocketServer.Server.CommandHandlers;
-using NetworkSocketServer.TransportLayer;
-using NetworkSocketServer.TransportLayer.Serializer;
 using NetworkSocketServer.TransportLayer.ServiceHandlers;
 
 namespace NetworkSocketServer.Server
