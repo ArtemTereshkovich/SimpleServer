@@ -25,11 +25,11 @@ namespace NetworkSocketServer.NetworkLayer.Connectors
                 _networkConnectorSettings.IpEndPointServer.AddressFamily,
                 SocketType.Stream, ProtocolType.Tcp);
 
-            socket.Connect(_networkConnectorSettings.IpEndPointServer);
-
             var accessor = _socketOptionsAccessorFactory.GetSocketOptionsAccessor();
 
             accessor.SetOptions(socket);
+
+            socket.Connect(_networkConnectorSettings.IpEndPointServer);
 
             transportHandler.Activate(socket);
 

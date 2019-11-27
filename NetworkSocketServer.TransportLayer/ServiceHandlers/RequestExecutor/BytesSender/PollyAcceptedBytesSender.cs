@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Polly;
 using Polly.Retry;
 using Polly.Timeout;
+using Polly.Wrap;
 
 namespace NetworkSocketServer.TransportLayer.ServiceHandlers.RequestExecutor.BytesSender
 {
@@ -24,7 +25,7 @@ namespace NetworkSocketServer.TransportLayer.ServiceHandlers.RequestExecutor.Byt
         {
             var sendRetry = CreateSendPolicy(_retrySettings);
 
-            var (receiveTimeout, receiveRetry) = CreateReceivePolicy(_retrySettings, bytes);
+            var receivePolicy = CreateReceivePolicy(_retrySettings, bytes);
 
             await sendRetry.ExecuteAsync(() =>
             {
@@ -34,14 +35,7 @@ namespace NetworkSocketServer.TransportLayer.ServiceHandlers.RequestExecutor.Byt
 
             byte[] receiveBytes = null;
 
-            var receiveTask = receiveTimeout.ExecuteAsync(() =>
-            {
-                receiveBytes = Receive();
-                return Task.CompletedTask;
-            });
-
-            await receiveRetry.ExecuteAsync(async () => { await receiveTask; }
-            );
+            receivePolicy.Execute(() => { receiveBytes = Receive(); });
 
             return receiveBytes;
         }
@@ -65,7 +59,11 @@ namespace NetworkSocketServer.TransportLayer.ServiceHandlers.RequestExecutor.Byt
 
         private AsyncRetryPolicy CreateSendPolicy(RetrySettings settings)
         {
-            Func<Exception, TimeSpan, Task> onRetryAsync = async (exc, time) => { await Reconnect(); };
+            Func<Exception, TimeSpan, Task> onRetryAsync = async (exc, time) =>
+            {
+                Console.WriteLine("Reconnection...");
+                await Reconnect();
+            };
 
             return
                 Policy.Handle<SocketException>()
@@ -75,32 +73,42 @@ namespace NetworkSocketServer.TransportLayer.ServiceHandlers.RequestExecutor.Byt
                         onRetryAsync);
         }
 
-        private (AsyncTimeoutPolicy timeoutPolicy, AsyncRetryPolicy asyncRetryPolicy) CreateReceivePolicy(RetrySettings settings, byte[] sendBytes)
+        private PolicyWrap CreateReceivePolicy(RetrySettings settings, byte[] sendBytes)
         {
             
-            Func<Exception, TimeSpan, Task> onRetryAsync = async (exc, time) =>
+            Action<Exception, TimeSpan> onRetryAsync = (exc, time) =>
             {
-                await Reconnect();
-                _networkClientManager.SessionContext.TransportHandler.Send(sendBytes);
+                try
+                {
+                    Console.WriteLine("Reconnection...");
+                    Reconnect().Wait();
+                    _networkClientManager.SessionContext.TransportHandler.Send(sendBytes);
+                }
+                catch { }
             };
 
             var timeout =
-                Policy.TimeoutAsync(settings.TimeOutAnswer,
-                    (a, b, c) =>
-                    {
-                        Console.WriteLine("Timeout Receive Answer Packet");
-                        return Task.CompletedTask;
-                    });
+                Policy.Timeout(settings.TimeOutAnswer, TimeoutStrategy.Pessimistic, (context, span, arg3) =>
+                {
+                    try { 
+                        Console.WriteLine("Reconnection...");
+                        Reconnect().Wait();
+                        _networkClientManager.SessionContext.TransportHandler.Send(sendBytes);
+                    }catch { }
+                });
 
             var retry =
-                Policy.Handle<SocketException>()
-                    .Or<TimeoutRejectedException>()
-                    .WaitAndRetryAsync(
+                Policy
+                    .Handle<Exception>()
+                    .Or<ExecutionRejectedException>()
+                    .Or<SocketException>()
+                    .Or<AggregateException>()
+                    .WaitAndRetry(
                         settings.CountReconnect,
                         (_) => settings.ReconnectPeriod,
                         onRetryAsync);
 
-            return (timeout, retry);
+            return retry.Wrap(timeout);
         }
     }
 }

@@ -12,15 +12,15 @@ namespace NetworkSocketServer.Client
         {
             var keepAliveOptions = new SocketKeepAliveOptions
             {
-                KeepAliveTime = 90000,
-                KeepAliveInterval = 90000,
+                KeepAliveTime = 5000,
+                KeepAliveInterval = 5000,
             };
 
             var retrySettings = new RetrySettings
             {
                 CountReconnect = 5,
                 ReconnectPeriod = TimeSpan.FromSeconds(10),
-                TimeOutAnswer = TimeSpan.FromSeconds(1)
+                TimeOutAnswer = TimeSpan.FromSeconds(4)
             };
 
             var networkClientManagerFactory = new NetworkClientManagerFactory(
