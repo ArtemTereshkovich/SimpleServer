@@ -45,13 +45,12 @@ namespace NetworkSocketServer.TransportLayer.PacketHandler
 
         private Task HandleWriteCommand(Packet packet)
         {
-            if (_sessionContext.ReceiveBuffer.Length == 0)
+            if (_sessionContext.ReceiveBuffer.Length != packet.Size)
             {
-                _sessionContext.ReceiveBuffer.Clear();
-                _sessionContext.ReceiveBuffer.SetLength(packet.Position);
+                _sessionContext.ReceiveBuffer.SetLength(packet.Size);
             }
 
-            _sessionContext.ReceiveBuffer.Append(packet.Payload);
+            _sessionContext.ReceiveBuffer.Insert(packet.Payload, packet.Offset);
 
             var answerPacket = _packetFactory.CreateAnswerSuccessWrite(
                 _sessionContext.ReceiveBuffer.Length,
@@ -71,7 +70,7 @@ namespace NetworkSocketServer.TransportLayer.PacketHandler
                 return Task.CompletedTask;
             }
 
-            var array =_sessionContext.TransmitBuffer.Get(packet.Offset, packet.Position);
+            var array =_sessionContext.TransmitBuffer.Get(packet.Offset, packet.Size);
 
             var answerPacket = _packetFactory.CreateAnswerSuccessRead(
                     array, 
@@ -85,15 +84,15 @@ namespace NetworkSocketServer.TransportLayer.PacketHandler
 
         private async Task HandleExecuteBufferCommand(Packet packet)
         {
-            _sessionContext.TransmitBuffer.Clear();
+            _sessionContext.TransmitBuffer.SetLength(0);
 
-            var requestBytes = _sessionContext.ReceiveBuffer.Get(packet.Offset);
+            var requestBytes = _sessionContext.ReceiveBuffer.GetAll();
 
             var request = _byteSerializer.Deserialize<Request>(requestBytes);
 
             var response = await _requestHandlerFactory.CreateRequestHandler().HandleRequest(request);
             
-            _sessionContext.ReceiveBuffer.Clear();
+            _sessionContext.ReceiveBuffer.SetLength(0);
 
             var responseBytes = _byteSerializer.Serialize(response);
 
@@ -105,7 +104,8 @@ namespace NetworkSocketServer.TransportLayer.PacketHandler
             }
             else
             {
-                _sessionContext.TransmitBuffer.Append(responseBytes);
+                _sessionContext.TransmitBuffer.SetLength(responseBytes.Length);
+                _sessionContext.TransmitBuffer.Insert(responseBytes, 0);
 
                 var answer = _packetFactory.CreateAnswerExecuteSuccessBuffer(_sessionContext.TransmitBuffer.Length);
 
@@ -115,8 +115,8 @@ namespace NetworkSocketServer.TransportLayer.PacketHandler
 
         private async Task HandleExecutePayloadCommand(Packet packet)
         {
-            _sessionContext.ReceiveBuffer.Clear();
-            _sessionContext.TransmitBuffer.Clear();
+            _sessionContext.ReceiveBuffer.SetLength(0);
+            _sessionContext.TransmitBuffer.SetLength(0);
 
             var request = _byteSerializer.Deserialize<Request>(packet.Payload);
 
@@ -132,7 +132,8 @@ namespace NetworkSocketServer.TransportLayer.PacketHandler
             }
             else
             {
-                _sessionContext.TransmitBuffer.Append(responseBytes);
+                _sessionContext.TransmitBuffer.SetLength(responseBytes.Length);
+                _sessionContext.TransmitBuffer.Insert(responseBytes, 0);
 
                 var answer = _packetFactory.CreateAnswerExecuteSuccessBuffer(_sessionContext.TransmitBuffer.Length);
 

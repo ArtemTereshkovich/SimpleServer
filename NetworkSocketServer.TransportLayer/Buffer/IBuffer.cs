@@ -4,17 +4,13 @@ namespace NetworkSocketServer.TransportLayer.Buffer
 {
     public interface IBuffer : IDisposable
     {
-        void Append(byte[] array);
+        void Insert(byte[] array, int position);
 
         byte[] GetAll();
 
-        byte[] Get(int length);
-
-        byte[] Get(int length, int position);
+        byte[] Get(int position, int offset);
 
         void SetLength(int length);
-
-        void Clear();
 
         int Length { get; }
     }

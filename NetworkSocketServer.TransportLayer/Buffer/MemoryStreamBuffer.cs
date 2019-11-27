@@ -11,29 +11,16 @@ namespace NetworkSocketServer.TransportLayer.Buffer
         {
             _memoryStream = new MemoryStream();
         }
-        
-        public void Append(byte[] array)
-        {
-            if(array == null || array.Length == 0)
-                throw new ArgumentException(nameof(array));
 
-            _memoryStream.Write(array,0, array.Length);
+
+        public void Insert(byte[] array, int position)
+        {
+            throw new NotImplementedException();
         }
-        
+
         public byte[] GetAll()
         {
             return _memoryStream.ToArray();
-        }
-
-        public byte[] Get(int length)
-        {
-            if (length <= 0)
-                throw new ArgumentException(nameof(length));
-
-            var array = new byte[length];
-            _memoryStream.Read(array, 0, length);
-
-            return array;
         }
 
         public byte[] Get(int length, int position)
@@ -49,18 +36,9 @@ namespace NetworkSocketServer.TransportLayer.Buffer
             return array;
         }
 
-        public void SetLength(int length)
+        public void SetLength(int lenght)
         {
-            if (length <= 0)
-                throw new ArgumentException(nameof(length));
-
-            _memoryStream.SetLength(length);
-        }
-
-        public void Clear()
-        {
-            _memoryStream.Seek(0, SeekOrigin.Begin);
-            _memoryStream.SetLength(0);
+            _memoryStream.SetLength(lenght);
         }
 
         public int Length => (int) _memoryStream.Length;

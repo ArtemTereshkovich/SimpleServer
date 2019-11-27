@@ -18,7 +18,7 @@ namespace NetworkSocketServer.TransportLayer.PacketFactory
             return new Packet
             {
                 SessionId = _sessionId,
-                Position = bufferSize,
+                Size = bufferSize,
                 Offset = bytesWrite,
                 PacketClientCommand = PacketClientCommand.None,
                 PacketServerResponse = PacketServerResponse.Answer,
@@ -31,7 +31,7 @@ namespace NetworkSocketServer.TransportLayer.PacketFactory
             return new Packet
             {
                 SessionId = _sessionId,
-                Position = 0,
+                Size = 0,
                 Offset = 0,
                 PacketClientCommand = PacketClientCommand.None,
                 PacketServerResponse = PacketServerResponse.Error,
@@ -48,7 +48,7 @@ namespace NetworkSocketServer.TransportLayer.PacketFactory
                 PacketServerResponse = PacketServerResponse.Answer,
                 Payload = array,
                 Offset = arrayLength,
-                Position = transmitBufferLength
+                Size = transmitBufferLength
             };
         }
 
@@ -60,7 +60,7 @@ namespace NetworkSocketServer.TransportLayer.PacketFactory
                 PacketServerResponse = PacketServerResponse.ResultInPayload,
                 PacketClientCommand = PacketClientCommand.None,
                 Payload = responseBytes,
-                Position = 0,
+                Size = 0,
                 SessionId = _sessionId
             };
         }
@@ -69,7 +69,7 @@ namespace NetworkSocketServer.TransportLayer.PacketFactory
         {
             return new Packet
             {
-                Position = 0,
+                Size = 0,
                 Offset = transmitBufferLength,
                 PacketClientCommand = PacketClientCommand.None,
                 PacketServerResponse = PacketServerResponse.ResultInBuffer,
@@ -83,7 +83,7 @@ namespace NetworkSocketServer.TransportLayer.PacketFactory
             return new Packet
             {
                 Offset = 0,
-                Position = 0,
+                Size = 0,
                 PacketServerResponse = PacketServerResponse.Answer,
                 PacketClientCommand = PacketClientCommand.Close,
                 Payload = null,
@@ -95,7 +95,7 @@ namespace NetworkSocketServer.TransportLayer.PacketFactory
         {
             return new Packet
             {
-                Position = 0,
+                Size = 0,
                 Offset = requestByteLength,
                 SessionId = _sessionId,
                 PacketServerResponse = PacketServerResponse.Answer,
@@ -109,7 +109,7 @@ namespace NetworkSocketServer.TransportLayer.PacketFactory
             return new Packet
             {
                 Offset = requestBytes.Length,
-                Position = 0,
+                Size = 0,
                 PacketServerResponse = PacketServerResponse.Answer,
                 PacketClientCommand = PacketClientCommand.ExecutePayload,
                 Payload = requestBytes,
@@ -117,13 +117,13 @@ namespace NetworkSocketServer.TransportLayer.PacketFactory
             };
         }
 
-        public Packet CreateWrite(byte[] data, int position, int offset)
+        public Packet CreateWrite(byte[] data, int size, int offset)
         {
             return new Packet
             {
                 SessionId = _sessionId,
                 Offset = offset,
-                Position = position,
+                Size = size,
                 PacketClientCommand = PacketClientCommand.Write,
                 PacketServerResponse = PacketServerResponse.Answer,
                 Payload = data

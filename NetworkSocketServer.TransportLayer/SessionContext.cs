@@ -19,8 +19,8 @@ namespace NetworkSocketServer.TransportLayer
         public static SessionContext CreateNewMemoryStreamBufferContext()
         {
             return new SessionContext(
-                new MemoryStreamBuffer(),
-                new MemoryStreamBuffer());
+                new ArrayBuffer(),
+                new ArrayBuffer());
         }
     }
 }

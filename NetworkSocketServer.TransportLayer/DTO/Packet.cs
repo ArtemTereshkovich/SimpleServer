@@ -7,7 +7,7 @@ namespace NetworkSocketServer.TransportLayer.DTO
     {
         public Guid SessionId { get; set; }
 
-        public int Position { get; set; }
+        public int Size { get; set; }
 
         public int Offset { get; set; }
         

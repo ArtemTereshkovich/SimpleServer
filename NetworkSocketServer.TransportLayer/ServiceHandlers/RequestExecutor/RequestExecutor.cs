@@ -89,7 +89,7 @@ namespace NetworkSocketServer.TransportLayer.ServiceHandlers.RequestExecutor
 
                 var arraySegment = new ArraySegment<byte>(request, sendedBytes, offset);
 
-                var dataPacket = _packetFactory.CreateWrite(arraySegment.ToArray(), sendedBytes, offset);
+                var dataPacket = _packetFactory.CreateWrite(arraySegment.ToArray(), requestLength, offset);
 
                 var dataSerializedPacket = _byteSerializer.Serialize(dataPacket);
 
