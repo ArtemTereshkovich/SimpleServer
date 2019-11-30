@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Net.Sockets;
 using System.Threading.Tasks;
-using NetworkSocketServer.Client.Commands.Exceptions;
 using NetworkSocketServer.Client.Inputs;
 using NetworkSocketServer.NetworkLayer.SocketOptionsAccessor.KeepAlive;
 using NetworkSocketServer.TransportLayer.ServiceHandlers.NetworkClientManager;
