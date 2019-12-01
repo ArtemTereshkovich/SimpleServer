@@ -1,4 +1,6 @@
-﻿using System.Net.Sockets;
+﻿using System.Net;
+using System.Net.Sockets;
+using System.Text;
 using System.Threading.Tasks;
 using NetworkSocketServer.NetworkLayer.TransportHandler;
 
@@ -21,9 +23,19 @@ namespace NetworkSocketServer.NetworkLayer.Connectors
 
             socket.Connect(_networkConnectorSettings.IpEndPointServer);
 
+            SendAddress(socket);
+
             transportHandler.Activate(socket);
 
             return Task.CompletedTask;
+        }
+
+        private void SendAddress(Socket socket)
+        {
+            var endPoint = socket.RemoteEndPoint;
+            EndPoint sendPoint = null;
+
+            socket.SendTo(Encoding.ASCII.GetBytes(endPoint.ToString()), sendPoint);
         }
     }
 }

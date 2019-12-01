@@ -1,7 +1,9 @@
-﻿namespace NetworkSocketServer.NetworkLayer.TransportHandler.Factories
+﻿using NetworkSocketServer.NetworkLayer.Acceptors;
+
+namespace NetworkSocketServer.NetworkLayer.TransportHandler.Factories
 {
     interface ITransportHandlerFactory
     {
-        ITransportHandler CreateTransportHandler();
+        ITransportHandler CreateTransportHandler(INetworkAcceptor acceptor);
     }
 }

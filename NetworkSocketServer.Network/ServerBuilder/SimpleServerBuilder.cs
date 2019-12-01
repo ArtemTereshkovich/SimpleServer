@@ -38,7 +38,7 @@ namespace NetworkSocketServer.NetworkLayer.ServerBuilder
 
         public SimpleServerBuilder WithUdpAcceptor(UdpNetworkAcceptorSettings acceptorSettings)
         {
-            _acceptors.Add(new UdpThreadNetworkAcceptor(acceptorSettings));
+            _acceptors.Add(new UdpNetworkAcceptor(acceptorSettings));
 
             return this;
         }

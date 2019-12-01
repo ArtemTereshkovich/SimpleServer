@@ -3,7 +3,7 @@ using System.Net.Sockets;
 
 namespace NetworkSocketServer.NetworkLayer.TransportHandler
 {
-    internal class BlockingReceiveTransportHandler : ITransportHandler
+    internal class TcpBlockingReceiveTransportHandler : ITransportHandler
     {
         private Socket _socket;
 

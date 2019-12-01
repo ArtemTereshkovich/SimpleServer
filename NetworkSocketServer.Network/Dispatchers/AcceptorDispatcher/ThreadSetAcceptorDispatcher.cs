@@ -46,7 +46,8 @@ namespace NetworkSocketServer.NetworkLayer.Dispatchers.AcceptorDispatcher
 
                     _threadSet.Execute(async networkAcceptor =>
                     {
-                        using var transportHandler = _transportHandlerFactory.CreateTransportHandler();
+                        using var transportHandler = _transportHandlerFactory.CreateTransportHandler(acceptor);
+
                         await networkAcceptor.AcceptConnection(transportHandler);
 
                         await _serviceHandler.HandleNewConnection(transportHandler);

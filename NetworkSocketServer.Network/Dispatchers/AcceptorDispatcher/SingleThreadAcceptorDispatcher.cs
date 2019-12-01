@@ -42,7 +42,7 @@ namespace NetworkSocketServer.NetworkLayer.Dispatchers.AcceptorDispatcher
                     Console.WriteLine("Receive new connection");
                     try
                     {
-                        using var transportHandler = _transportHandlerFactory.CreateTransportHandler();
+                        using var transportHandler = _transportHandlerFactory.CreateTransportHandler(acceptor);
 
                         await acceptor.AcceptConnection(transportHandler);
 

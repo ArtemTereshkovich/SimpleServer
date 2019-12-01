@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using NetworkSocketServer.NetworkLayer.Acceptors.Tcp;
+using NetworkSocketServer.NetworkLayer.Acceptors.Udp;
 using NetworkSocketServer.NetworkLayer.Connectors;
 using NetworkSocketServer.NetworkLayer.SocketOptionsAccessor;
 using NetworkSocketServer.NetworkLayer.SocketOptionsAccessor.KeepAlive;
@@ -24,10 +26,12 @@ namespace NetworkSocketServer.NetworkLayer.Dispatchers.ConnectorDispatcher
 
         public async Task<ITransportHandler> CreateTransportHandler(NetworkConnectorSettings settings)
         {
-            var transportHandler = _transportHandlerFactory.CreateTransportHandler();
+            ITransportHandler transportHandler = null;
 
             if (settings.ConnectionType == ConnectionType.Tcp)
             {
+                transportHandler = _transportHandlerFactory.CreateTransportHandler(
+                    new TcpKeepAliveNetworkAcceptor(null,null));
 
                 var connector = new TcpNetworkConnector(settings, _socketOptionsAccessorFactory);
 
@@ -35,6 +39,9 @@ namespace NetworkSocketServer.NetworkLayer.Dispatchers.ConnectorDispatcher
             }
             else if (settings.ConnectionType == ConnectionType.Udp)
             {
+                transportHandler = _transportHandlerFactory.CreateTransportHandler(
+                    new UdpNetworkAcceptor(null));
+
                 var connector = new UdpNetworkConnector(settings);
 
                 await connector.Activate(transportHandler);

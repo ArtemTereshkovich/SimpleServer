@@ -1,10 +1,21 @@
-﻿namespace NetworkSocketServer.NetworkLayer.TransportHandler.Factories
+﻿using NetworkSocketServer.NetworkLayer.Acceptors;
+using NetworkSocketServer.NetworkLayer.Acceptors.Tcp;
+using NetworkSocketServer.NetworkLayer.TransportHandler.NetworkSocketServer.NetworkLayer.TransportHandler;
+
+namespace NetworkSocketServer.NetworkLayer.TransportHandler.Factories
 {
     internal class BlockingTransportHandlerFactory : ITransportHandlerFactory
     {
-        public ITransportHandler CreateTransportHandler()
+        public ITransportHandler CreateTransportHandler(INetworkAcceptor acceptor)
         {
-            return new BlockingReceiveTransportHandler();
+            if (acceptor is TcpKeepAliveNetworkAcceptor)
+            {
+                return new TcpBlockingReceiveTransportHandler();
+            }
+            else
+            {
+                return new UDPBlockingReceiveTransportHandler();
+            }
         }
     }
 }
