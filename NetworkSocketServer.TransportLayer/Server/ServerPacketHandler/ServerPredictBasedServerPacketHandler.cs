@@ -87,7 +87,8 @@ namespace NetworkSocketServer.TransportLayer.PacketHandler
                 return await handler.Handle(packet);
             }
 
-            throw new InvalidOperationException("Unsupported command in packet");
+            Console.WriteLine("Receive unsupported command. Possible keep alive packet.");
+            return true;
         }
     }
 }
