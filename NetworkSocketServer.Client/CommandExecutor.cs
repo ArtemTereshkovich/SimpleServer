@@ -7,17 +7,18 @@ using NetworkSocketServer.Client.Commands;
 using NetworkSocketServer.DTO.Requests;
 using NetworkSocketServer.DTO.Responses;
 using NetworkSocketServer.NetworkLayer.Connectors;
-using NetworkSocketServer.TransportLayer.ServiceHandlers.NetworkClientManager;
+using NetworkSocketServer.TransportLayer.Client.ClientManager;
+using NetworkSocketServer.TransportLayer.Client.ConnectionManager;
 
 namespace NetworkSocketServer.Client
 {
     public class CommandExecutor
     {
-        private readonly INetworkClientManager _networkClientManager;
+        private readonly IClientConnectionManager _clientConnectionManager;
 
-        public CommandExecutor(INetworkClientManager networkClientManager)
+        public CommandExecutor(IClientConnectionManager clientConnectionManager)
         {
-            _networkClientManager = networkClientManager;
+            _clientConnectionManager = clientConnectionManager;
         }
 
         public void Execute(HelpCommand _)
@@ -34,14 +35,13 @@ namespace NetworkSocketServer.Client
 
         public async Task Execute(ConnectTCPCommand connectTcpCommand)
         {
-            if (_networkClientManager.IsConnected)
+            if (_clientConnectionManager.IsConnected)
             {
                 Console.WriteLine("Already connected!");
-                return;
             }
             else
             {
-                await _networkClientManager.Connect(new NetworkConnectorSettings
+                await _clientConnectionManager.Connect(new NetworkConnectorSettings
                 {
                     ConnectionType = ConnectionType.Tcp,
                     IpEndPointServer = connectTcpCommand.EndPoint
@@ -51,14 +51,13 @@ namespace NetworkSocketServer.Client
 
         public async Task Execute(ConnectUDPCommand connectUdpCommand)
         {
-            if (_networkClientManager.IsConnected)
+            if (_clientConnectionManager.IsConnected)
             {
                 Console.WriteLine("Already connected!");
-                return;
             }
             else
             {
-                await _networkClientManager.Connect(new NetworkConnectorSettings
+                await _clientConnectionManager.Connect(new NetworkConnectorSettings
                 {
                     ConnectionType = ConnectionType.Udp,
                     IpEndPointServer = connectUdpCommand.EndPoint
@@ -68,7 +67,7 @@ namespace NetworkSocketServer.Client
 
         public async Task Execute(TextCommand command)
         {
-            if (!_networkClientManager.IsConnected)
+            if (!_clientConnectionManager.IsConnected)
             {
                 Console.WriteLine("Doesnt connected!");
                 return;
@@ -80,7 +79,7 @@ namespace NetworkSocketServer.Client
                 Text = command.Message
             };
 
-            var response = await _networkClientManager.HandleRequest(request);
+            var response = await _clientConnectionManager.SendRequest(request);
 
             var textResponse = response as TextResponse;
 
@@ -89,7 +88,7 @@ namespace NetworkSocketServer.Client
 
         public async Task Execute(DateCommand dateCommand)
         {
-            if (!_networkClientManager.IsConnected)
+            if (!_clientConnectionManager.IsConnected)
             {
                 Console.WriteLine("Doesnt connected!");
                 return;
@@ -101,7 +100,7 @@ namespace NetworkSocketServer.Client
                 ClientDate = dateCommand.ClientDateTime
             };
 
-            var response = await _networkClientManager.HandleRequest(request);
+            var response = await _clientConnectionManager.SendRequest(request);
 
             var dateResponse = response as DateResponse;
 
@@ -109,7 +108,7 @@ namespace NetworkSocketServer.Client
         }
         public async Task Execute(UploadFileCommand fileCommand)
         {
-            if (!_networkClientManager.IsConnected)
+            if (!_clientConnectionManager.IsConnected)
             {
                 Console.WriteLine("Doesnt connected!");
                 return ;
@@ -137,7 +136,7 @@ namespace NetworkSocketServer.Client
                 Size = fileInfo.Length
             };
 
-            var response = await _networkClientManager.HandleRequest(request);
+            var response = await _clientConnectionManager.SendRequest(request);
 
             var uploadResponse = response as UploadFileResponse;
 
@@ -149,7 +148,7 @@ namespace NetworkSocketServer.Client
 
         public async Task Execute(DownloadFileCommand fileCommand)
         {
-            if (!_networkClientManager.IsConnected)
+            if (!_clientConnectionManager.IsConnected)
             {
                 Console.WriteLine("Doesnt connected!");
                 return;
@@ -164,7 +163,7 @@ namespace NetworkSocketServer.Client
             var stopwatch = new Stopwatch();
             stopwatch.Restart();
 
-            var response = await _networkClientManager.HandleRequest(request) as DownloadFileResponse;
+            var response = await _clientConnectionManager.SendRequest(request) as DownloadFileResponse;
 
             var localFileName = $"Files{Path.DirectorySeparatorChar}{response.Filename}";
 
@@ -184,14 +183,13 @@ namespace NetworkSocketServer.Client
 
         public async Task Execute(DisconnectCommand _)
         {
-            if (!_networkClientManager.IsConnected)
+            if (!_clientConnectionManager.IsConnected)
             {
                 Console.WriteLine("Doesnt connected!");
-                return;
             }
             else
             {
-                await _networkClientManager.Disconnect();
+                await _clientConnectionManager.Disconnect();
             }
         }
     }

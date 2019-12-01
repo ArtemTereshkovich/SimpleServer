@@ -8,9 +8,9 @@ namespace NetworkSocketServer.TransportLayer.Buffer
 
         byte[] GetAll();
 
-        byte[] Get(int position, int offset);
+        byte[] Get(int offset, int size);
 
-        void SetLength(int length);
+        void Reinitialize(int length);
 
         int Length { get; }
     }

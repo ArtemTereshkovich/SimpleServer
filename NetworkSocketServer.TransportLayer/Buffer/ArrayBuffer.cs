@@ -25,14 +25,14 @@ namespace NetworkSocketServer.TransportLayer.Buffer
             return _buffer;
         }
 
-        public byte[] Get(int length, int position)
+        public byte[] Get(int offset, int size)
         {
-            var arraySegment = new ArraySegment<byte>(_buffer, position, length);
+            var arraySegment = new ArraySegment<byte>(_buffer, offset, size);
 
             return arraySegment.ToArray();
         }
 
-        public void SetLength(int length)
+        public void Reinitialize(int length)
         {
             _buffer = new byte[length];
         }

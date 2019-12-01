@@ -1,8 +1,11 @@
 ﻿using System;
 using NetworkSocketServer.NetworkLayer.Dispatchers.ConnectorDispatcher;
 using NetworkSocketServer.NetworkLayer.SocketOptionsAccessor.KeepAlive;
-using NetworkSocketServer.TransportLayer.ServiceHandlers.NetworkClientManager;
-using NetworkSocketServer.TransportLayer.ServiceHandlers.RequestExecutor;
+using NetworkSocketServer.TransportLayer.Client.ClientManager;
+using NetworkSocketServer.TransportLayer.Client.ConnectionManager;
+using NetworkSocketServer.TransportLayer.Client.RequestExecutor;
+using NetworkSocketServer.TransportLayer.Client.ServiceHandlers.RequestExecutor;
+using NetworkSocketServer.TransportLayer.Client.TransportManager;
 
 namespace NetworkSocketServer.Client
 {
@@ -23,9 +26,9 @@ namespace NetworkSocketServer.Client
                 TimeOutAnswer = TimeSpan.FromSeconds(4)
             };
 
-            var networkClientManagerFactory = new NetworkClientManagerFactory(
+            var networkClientManagerFactory = new ClientConnectionManagerFactory(
                 new ConnectorDispatcherFactory(), 
-                new RequestExecutorFactory(retrySettings));
+                new ClientTransportManagerFactory(retrySettings));
             
             new Client(networkClientManagerFactory, keepAliveOptions)
                 .Run().Wait();

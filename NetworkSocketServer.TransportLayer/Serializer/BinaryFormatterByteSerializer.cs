@@ -2,8 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Threading.Tasks;
-using NetworkSocketServer.TransportLayer.DTO;
+using NetworkSocketServer.TransportLayer.Packets;
 
 namespace NetworkSocketServer.TransportLayer.Serializer
 {
@@ -15,7 +14,7 @@ namespace NetworkSocketServer.TransportLayer.Serializer
         {
             _lockObject = new object();
         }
-        public byte[] SerializeT<T>(T serializeObject)
+        public byte[] Serialize<T>(T serializeObject)
         {
             lock (_lockObject)
             {
@@ -84,7 +83,7 @@ namespace NetworkSocketServer.TransportLayer.Serializer
             };
         }
 
-        public T DeserializeT<T>(byte[] array)
+        public T Deserialize<T>(byte[] array)
         {
             lock (_lockObject)
             {

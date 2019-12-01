@@ -1,12 +1,12 @@
-﻿using NetworkSocketServer.TransportLayer.DTO;
+﻿using NetworkSocketServer.TransportLayer.Packets;
 
 namespace NetworkSocketServer.TransportLayer.Serializer
 {
     public interface IByteSerializer
     {
-        byte[] SerializeT<T>(T serializeObject);
+        byte[] Serialize<T>(T serializeObject);
 
-        T DeserializeT<T>(byte[] array);
+        T Deserialize<T>(byte[] array);
 
         byte[] Serialize(Packet serializeObject);
 

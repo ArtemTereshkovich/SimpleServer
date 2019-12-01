@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using NetworkSocketServer.Client.Inputs;
 using NetworkSocketServer.NetworkLayer.SocketOptionsAccessor.KeepAlive;
-using NetworkSocketServer.TransportLayer.ServiceHandlers.NetworkClientManager;
+using NetworkSocketServer.TransportLayer.Client.ClientManager;
 
 namespace NetworkSocketServer.Client
 {
@@ -11,7 +11,7 @@ namespace NetworkSocketServer.Client
         private readonly InputManager _inputManager;
         private readonly CommandExecutor _commandExecutor;
 
-        public Client(INetworkClientManagerFactory factory, SocketKeepAliveOptions keepAliveOptions)
+        public Client(IClientConnectionManagerFactory factory, SocketKeepAliveOptions keepAliveOptions)
         {
             _inputManager = new InputManager(new CommandParser());
 
