@@ -15,8 +15,8 @@ namespace NetworkSocketServer.Client
         {
             var keepAliveOptions = new SocketKeepAliveOptions
             {
-                KeepAliveTime = 5000,
-                KeepAliveInterval = 5000,
+                KeepAliveTime = 30000,
+                KeepAliveInterval = 30000,
             };
 
             var retrySettings = new RetrySettings

@@ -34,8 +34,8 @@ namespace NetworkSocketServer.Server
                     },
                     new SocketKeepAliveOptions
                     {
-                        KeepAliveInterval = 28000,
-                        KeepAliveTime = 28000,
+                        KeepAliveInterval = 30000,
+                        KeepAliveTime = 30000,
                     })
                 .Build();
 
