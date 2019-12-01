@@ -20,7 +20,7 @@ namespace NetworkSocketServer.Client
             var retrySettings = new RetrySettings
             {
                 CountReconnect = 5,
-                ReconnectPeriod = TimeSpan.FromSeconds(10),
+                ReconnectPeriod = TimeSpan.FromSeconds(2),
                 TimeOutAnswer = TimeSpan.FromSeconds(4)
             };
 
