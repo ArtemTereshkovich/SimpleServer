@@ -63,7 +63,7 @@ namespace NetworkSocketServer.TransportLayer.Client.TransportManager
                     _bytesSender,
                     _clientLogger);
 
-                return await handler.ProvideRequestToServerBuffer(requestBytes, 100);
+                return await handler.ProvideRequestToServerBuffer(requestBytes, 30);
             }
         }
 
@@ -91,7 +91,7 @@ namespace NetworkSocketServer.TransportLayer.Client.TransportManager
                     _bytesSender,
                     _clientLogger);
 
-                return await handler.GetResponseFromServerBuffer(answerPacket.Offset, 100);
+                return await handler.GetResponseFromServerBuffer(answerPacket.Offset, 30);
             }
         }
     }
