@@ -51,7 +51,7 @@ namespace NetworkSocketServer.NetworkLayer.TransportHandler
                 System.Threading.Thread.Sleep(100);
             }
 
-            System.Threading.Thread.Sleep(100);
+            System.Threading.Thread.Sleep(400);
         }
 
         public void Close()
