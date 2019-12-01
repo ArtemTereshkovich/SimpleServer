@@ -1,10 +1,8 @@
 ﻿using System;
 using NetworkSocketServer.NetworkLayer.Dispatchers.ConnectorDispatcher;
 using NetworkSocketServer.NetworkLayer.SocketOptionsAccessor.KeepAlive;
-using NetworkSocketServer.TransportLayer.Client.ClientManager;
 using NetworkSocketServer.TransportLayer.Client.ConnectionManager;
 using NetworkSocketServer.TransportLayer.Client.RequestExecutor;
-using NetworkSocketServer.TransportLayer.Client.ServiceHandlers.RequestExecutor;
 using NetworkSocketServer.TransportLayer.Client.TransportManager;
 
 namespace NetworkSocketServer.Client
