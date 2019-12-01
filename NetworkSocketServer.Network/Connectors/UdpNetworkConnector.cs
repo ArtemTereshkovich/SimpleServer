@@ -3,7 +3,6 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using NetworkSocketServer.NetworkLayer.TransportHandler;
-using NetworkSocketServer.NetworkLayer.TransportHandler.NetworkSocketServer.NetworkLayer.TransportHandler;
 
 namespace NetworkSocketServer.NetworkLayer.Connectors
 {
@@ -40,7 +39,6 @@ namespace NetworkSocketServer.NetworkLayer.Connectors
             var endPoint = socket.LocalEndPoint;
 
             socket.SendTo(Encoding.ASCII.GetBytes(endPoint.ToString()), sendPoint);
-
 
             System.Threading.Thread.Sleep(500);
         }

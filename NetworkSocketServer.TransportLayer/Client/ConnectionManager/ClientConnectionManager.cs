@@ -4,6 +4,7 @@ using NetworkSocketServer.DTO.Requests;
 using NetworkSocketServer.DTO.Responses;
 using NetworkSocketServer.NetworkLayer.Connectors;
 using NetworkSocketServer.NetworkLayer.Dispatchers.ConnectorDispatcher;
+using NetworkSocketServer.NetworkLayer.TransportHandler;
 using NetworkSocketServer.TransportLayer.Client.Logger;
 using NetworkSocketServer.TransportLayer.Client.RequestExecutor;
 using NetworkSocketServer.TransportLayer.Client.TransportManager;
@@ -60,6 +61,13 @@ namespace NetworkSocketServer.TransportLayer.Client.ConnectionManager
         {
             if (SessionContext == null)
                 throw new InvalidOperationException("No session context");
+
+            if (SessionContext.TransportHandler is UDPBlockingReceiveTransportHandler udpBlocking)
+            {
+                udpBlocking.Reconnect(SessionContext.CurrentConnectorSettings);
+
+                _logger.LogReconnectEvent(SessionContext.CurrentConnectorSettings.IpEndPointServer);
+            }
 
             try
             {
