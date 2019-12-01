@@ -3,6 +3,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using NetworkSocketServer.NetworkLayer.TransportHandler;
+using NetworkSocketServer.NetworkLayer.TransportHandler.NetworkSocketServer.NetworkLayer.TransportHandler;
 
 namespace NetworkSocketServer.NetworkLayer.Connectors
 {
@@ -23,19 +24,25 @@ namespace NetworkSocketServer.NetworkLayer.Connectors
 
             socket.Connect(_networkConnectorSettings.IpEndPointServer);
 
-            SendAddress(socket);
+            SendLocalAddress(socket, _networkConnectorSettings.IpEndPointServer);
+
+            var udpTransportHandler = transportHandler as UDPBlockingReceiveTransportHandler;
+
+            udpTransportHandler.IpEndPointClient = _networkConnectorSettings.IpEndPointServer;
 
             transportHandler.Activate(socket);
 
             return Task.CompletedTask;
         }
 
-        private void SendAddress(Socket socket)
+        private void SendLocalAddress(Socket socket, EndPoint sendPoint)
         {
-            var endPoint = socket.RemoteEndPoint;
-            EndPoint sendPoint = null;
+            var endPoint = socket.LocalEndPoint;
 
             socket.SendTo(Encoding.ASCII.GetBytes(endPoint.ToString()), sendPoint);
+
+
+            System.Threading.Thread.Sleep(500);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using NetworkSocketServer.NetworkLayer.Acceptors;
 using NetworkSocketServer.NetworkLayer.Acceptors.Tcp;
+using NetworkSocketServer.NetworkLayer.Connectors;
 using NetworkSocketServer.NetworkLayer.TransportHandler.NetworkSocketServer.NetworkLayer.TransportHandler;
 
 namespace NetworkSocketServer.NetworkLayer.TransportHandler.Factories
@@ -11,6 +12,18 @@ namespace NetworkSocketServer.NetworkLayer.TransportHandler.Factories
             if (acceptor is TcpKeepAliveNetworkAcceptor)
             {
                 return new TcpBlockingReceiveTransportHandler();
+            }
+            else
+            {
+                return new UDPBlockingReceiveTransportHandler();
+            }
+        }
+
+        public ITransportHandler CreateTransportHandler(ConnectionType connectionType)
+        {
+            if (connectionType == ConnectionType.Tcp)
+            {
+                return  new TcpBlockingReceiveTransportHandler();
             }
             else
             {

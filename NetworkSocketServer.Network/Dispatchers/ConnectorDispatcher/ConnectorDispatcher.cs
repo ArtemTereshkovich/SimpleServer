@@ -26,22 +26,17 @@ namespace NetworkSocketServer.NetworkLayer.Dispatchers.ConnectorDispatcher
 
         public async Task<ITransportHandler> CreateTransportHandler(NetworkConnectorSettings settings)
         {
-            ITransportHandler transportHandler = null;
+            ITransportHandler
+                transportHandler = _transportHandlerFactory.CreateTransportHandler(settings.ConnectionType);
 
             if (settings.ConnectionType == ConnectionType.Tcp)
             {
-                transportHandler = _transportHandlerFactory.CreateTransportHandler(
-                    new TcpKeepAliveNetworkAcceptor(null,null));
-
                 var connector = new TcpNetworkConnector(settings, _socketOptionsAccessorFactory);
 
                 await connector.Activate(transportHandler);
             }
             else if (settings.ConnectionType == ConnectionType.Udp)
             {
-                transportHandler = _transportHandlerFactory.CreateTransportHandler(
-                    new UdpNetworkAcceptor(null));
-
                 var connector = new UdpNetworkConnector(settings);
 
                 await connector.Activate(transportHandler);
