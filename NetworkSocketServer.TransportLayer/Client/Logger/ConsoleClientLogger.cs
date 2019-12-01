@@ -22,7 +22,9 @@ namespace NetworkSocketServer.TransportLayer.Client.Logger
         
         public void LogProcessingBytes(int byteProcessed, int totalBytes)
         {
-            throw new System.NotImplementedException();
+            Console.SetCursorPosition(30, Console.CursorTop);
+
+            Console.Write($"{byteProcessed} / {totalBytes} Bytes");
         }
 
         public void LogErrorException(Exception exception)

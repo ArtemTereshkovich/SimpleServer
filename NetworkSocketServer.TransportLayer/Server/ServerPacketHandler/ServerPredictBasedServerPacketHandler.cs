@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using NetworkSocketServer.DTO.Requests;
 using NetworkSocketServer.NetworkLayer.TransportHandler;
 using NetworkSocketServer.TransportLayer.PacketHandler.NetworkCommandsHandler;
 using NetworkSocketServer.TransportLayer.PacketHandler.NetworkCommandsHandler.Base;
@@ -9,6 +8,7 @@ using NetworkSocketServer.TransportLayer.Packets;
 using NetworkSocketServer.TransportLayer.Packets.PacketFactory;
 using NetworkSocketServer.TransportLayer.Serializer;
 using NetworkSocketServer.TransportLayer.Server;
+using NetworkSocketServer.TransportLayer.Server.ServerPacketHandler.NetworkCommandsHandler;
 using NetworkSocketServer.TransportLayer.ServiceHandlers;
 
 namespace NetworkSocketServer.TransportLayer.PacketHandler

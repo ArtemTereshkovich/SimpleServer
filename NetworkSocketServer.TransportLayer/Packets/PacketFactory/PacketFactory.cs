@@ -116,13 +116,13 @@ namespace NetworkSocketServer.TransportLayer.Packets.PacketFactory
             };
         }
 
-        public Packet CreateRead(int position, int offset)
+        public Packet CreateRead(int offset, int size)
         {
             return new Packet
             {
                 SessionId = _sessionId,
                 Offset = offset,
-                Size = position,
+                Size = size,
                 PacketClientCommand = PacketClientCommand.Read,
                 PacketServerResponse = PacketServerResponse.Answer,
                 Payload = null,

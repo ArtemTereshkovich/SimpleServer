@@ -5,10 +5,9 @@ using NetworkSocketServer.TransportLayer.PacketHandler.NetworkCommandsHandler.Ba
 using NetworkSocketServer.TransportLayer.Packets;
 using NetworkSocketServer.TransportLayer.Packets.PacketFactory;
 using NetworkSocketServer.TransportLayer.Serializer;
-using NetworkSocketServer.TransportLayer.Server;
 using NetworkSocketServer.TransportLayer.ServiceHandlers;
 
-namespace NetworkSocketServer.TransportLayer.PacketHandler.NetworkCommandsHandler
+namespace NetworkSocketServer.TransportLayer.Server.ServerPacketHandler.NetworkCommandsHandler
 {
     internal class ExecuteBufferCommandHandler : ExecuteCommandHandler
     {

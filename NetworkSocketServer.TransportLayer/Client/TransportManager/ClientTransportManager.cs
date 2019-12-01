@@ -50,7 +50,7 @@ namespace NetworkSocketServer.TransportLayer.Client.TransportManager
 
         private async Task<Packet> ProcessExecutePacket(byte[] requestBytes)
         {
-            if (requestBytes.Length <= _clientConnectionManager.SessionContext.PacketSizeThreshold * 2)
+            if (requestBytes.Length < _clientConnectionManager.SessionContext.PacketSizeThreshold * 2)
             {
                 return _packetFactory.CreateExecutePayload(requestBytes);
             }

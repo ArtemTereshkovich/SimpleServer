@@ -36,7 +36,7 @@ namespace NetworkSocketServer.TransportLayer.PacketHandler.NetworkCommandsHandle
 
         private bool SendResult(byte[] resultExecution)
         {
-            if (resultExecution.Length > ServerSessionContext.PacketPayloadThreshold * 2)
+            if (resultExecution.Length < ServerSessionContext.PacketPayloadThreshold * 2)
             {
                 var answerPacket = _packetFactory
                     .CreateAnswerExecuteSuccessPayload(resultExecution, resultExecution.Length);

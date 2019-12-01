@@ -16,6 +16,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Files\client.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Files\client.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

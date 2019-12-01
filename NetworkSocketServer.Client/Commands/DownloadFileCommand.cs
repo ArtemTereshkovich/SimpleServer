@@ -10,7 +10,7 @@ namespace NetworkSocketServer.Client.Commands
         
         public async Task Execute(CommandExecutor executor)
         {
-            executor.Execute(this);
+            await executor.Execute(this);
         }
 
         public static DownloadFileCommand Parse(string data)

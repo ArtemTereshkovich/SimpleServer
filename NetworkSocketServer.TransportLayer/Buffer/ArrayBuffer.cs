@@ -14,6 +14,9 @@ namespace NetworkSocketServer.TransportLayer.Buffer
 
         public void Insert(byte[] array, int position)
         {
+            if (array == null)
+                throw new ArgumentNullException(nameof(array));
+                
             _buffer = _buffer.Take(position)
                 .Concat(array)
                 .Concat(_buffer.Skip(position + array.Length))
