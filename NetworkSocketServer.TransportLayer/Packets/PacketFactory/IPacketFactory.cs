@@ -16,7 +16,7 @@
 
         Packet CreateExecutePayload(byte[] requestBytes);
 
-        Packet CreateWrite(byte[] data, int position, int offset);
+        Packet CreateWrite(byte[] data, int bufferSize, int offset);
 
         Packet CreateRead(int position, int offset);
     }

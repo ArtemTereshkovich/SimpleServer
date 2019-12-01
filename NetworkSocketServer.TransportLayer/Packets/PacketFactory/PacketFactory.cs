@@ -103,13 +103,13 @@ namespace NetworkSocketServer.TransportLayer.Packets.PacketFactory
             };
         }
 
-        public Packet CreateWrite(byte[] data, int size, int offset)
+        public Packet CreateWrite(byte[] data, int bufferSize, int offset)
         {
             return new Packet
             {
                 SessionId = _sessionId,
                 Offset = offset,
-                Size = size,
+                Size = bufferSize,
                 PacketClientCommand = PacketClientCommand.Write,
                 PacketServerResponse = PacketServerResponse.Answer,
                 Payload = data

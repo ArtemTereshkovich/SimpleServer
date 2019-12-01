@@ -1,7 +1,8 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using NetworkSocketServer.TransportLayer.Buffer;
 using NetworkSocketServer.TransportLayer.Client.Logger;
 using NetworkSocketServer.TransportLayer.Client.ServiceHandlers.RequestExecutor.BytesSender;
+using NetworkSocketServer.TransportLayer.Packets;
 using NetworkSocketServer.TransportLayer.Packets.PacketFactory;
 using NetworkSocketServer.TransportLayer.Serializer;
 
@@ -31,39 +32,53 @@ namespace NetworkSocketServer.TransportLayer.Client.TransportManager.Handlers
         
         public async Task<byte[]> GetResponseFromServerBuffer(int bufferSize, int increaseStep)
         {
-            byte[] file = new byte[0];
+            using var receiveBuffer = InitializeBuffer(bufferSize);
 
-            int fileSize = bufferSize;
+            int totalReceived = 0;
 
-            int receivedBytes = 0;
+            int portionSize = _packetSizeThreshold;
 
-            int receivedBytesPortition = _packetSizeThreshold;
-            int receivedBytePortitionStep = increaseStep;
-
-            while (receivedBytes < fileSize)
+            while (totalReceived < receiveBuffer.Length)
             {
-                int offset = receivedBytes + receivedBytesPortition > fileSize
-                    ? fileSize - receivedBytes
-                    : receivedBytesPortition;
+                portionSize = GetPortionSize(receiveBuffer, totalReceived, portionSize);
 
-                var requestPacket = _packetFactory.CreateRead(receivedBytes, offset);
+                var requestPacket = _packetFactory.CreateRead(totalReceived, portionSize);
 
-                var requestSer = _byteSerializer.Serialize(requestPacket);
+                var dataPacket = await SendPacket(requestPacket);
 
-                var dataBytes = await _bytesSender.AcceptedSend(requestSer);
+                receiveBuffer.Insert(dataPacket.Payload, totalReceived);
 
-                var dataPacket = _byteSerializer.Deserialize(dataBytes);
+                totalReceived += portionSize;
+                portionSize += increaseStep;
 
-                file = file.Concat(dataPacket.Payload).ToArray();
-
-                receivedBytes += dataPacket.Payload.Length;
-
-                _clientLogger.LogProcessingBytes(receivedBytes, fileSize);
-
-                receivedBytesPortition += receivedBytePortitionStep;
+                _clientLogger.LogProcessingBytes(totalReceived, receiveBuffer.Length);
             }
 
-            return file;
+            return receiveBuffer.GetAll();
+        }
+
+        private static int GetPortionSize(IBuffer buffer, int totalReceived, int portionSize)
+        {
+            return totalReceived + portionSize > buffer.Length
+                ? buffer.Length - totalReceived
+                : portionSize;
+        }
+
+        private static IBuffer InitializeBuffer(int responseLength)
+        {
+            var buffer = new ArrayBuffer();
+            buffer.Reinitialize(responseLength);
+
+            return buffer;
+        }
+
+        private async Task<Packet> SendPacket(Packet sendPacket)
+        {
+            var dataSerializedPacket = _byteSerializer.Serialize(sendPacket);
+
+            var dataReceived = await _bytesSender.AcceptedSend(dataSerializedPacket);
+
+            return _byteSerializer.Deserialize(dataReceived);
         }
     }
 }
