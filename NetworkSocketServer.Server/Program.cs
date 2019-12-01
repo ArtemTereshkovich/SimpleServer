@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using NetworkSocketServer.NetworkLayer.Acceptors.Tcp;
+using NetworkSocketServer.NetworkLayer.Acceptors.Udp;
 using NetworkSocketServer.NetworkLayer.ServerBuilder;
 using NetworkSocketServer.NetworkLayer.SocketOptionsAccessor.KeepAlive;
 using NetworkSocketServer.TransportLayer;
@@ -36,6 +37,12 @@ namespace NetworkSocketServer.Server
                     {
                         KeepAliveInterval = 30000,
                         KeepAliveTime = 30000,
+                    })
+                .WithUdpAcceptor(
+                    new UdpNetworkAcceptorSettings
+                    {
+                        ListenIpAddress = address,
+                        ListenPort = 1488
                     })
                 .Build();
 

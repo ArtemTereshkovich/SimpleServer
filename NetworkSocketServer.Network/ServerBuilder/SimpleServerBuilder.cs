@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using NetworkSocketServer.NetworkLayer.Acceptors;
 using NetworkSocketServer.NetworkLayer.Acceptors.Tcp;
+using NetworkSocketServer.NetworkLayer.Acceptors.Udp;
 using NetworkSocketServer.NetworkLayer.Dispatchers.AcceptorDispatcher;
 using NetworkSocketServer.NetworkLayer.Server;
 using NetworkSocketServer.NetworkLayer.SocketOptionsAccessor.KeepAlive;
@@ -31,6 +32,13 @@ namespace NetworkSocketServer.NetworkLayer.ServerBuilder
             var socketOptionsAccessor = new PlatformBasedKeepAliveAccessorFactory(socketKeepAliveOptions);
 
             _acceptors.Add(new TcpKeepAliveNetworkAcceptor(acceptorSettings, socketOptionsAccessor));
+
+            return this;
+        }
+
+        public SimpleServerBuilder WithUdpAcceptor(UdpNetworkAcceptorSettings acceptorSettings)
+        {
+            _acceptors.Add(new UdpThreadNetworkAcceptor(acceptorSettings));
 
             return this;
         }
