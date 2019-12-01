@@ -31,7 +31,7 @@ namespace NetworkSocketServer.NetworkLayer.TransportHandler
             var checkBuffer = new byte[0];
             _socket.Receive(checkBuffer);
 
-            System.Threading.Thread.Sleep(500);
+            System.Threading.Thread.Sleep(50);
 
             var buffer = new byte[_socket.Available];
             _socket.Receive(buffer);
