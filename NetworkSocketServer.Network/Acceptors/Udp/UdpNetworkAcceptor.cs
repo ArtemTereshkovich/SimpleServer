@@ -46,10 +46,11 @@ namespace NetworkSocketServer.NetworkLayer.Acceptors.Udp
 
         public Task AcceptConnection(ITransportHandler transportHandler)
         {
-            
-            var udpTransportHandler = transportHandler as UDPBlockingReceiveTransportHandler;
-
-            udpTransportHandler.IpEndPointClient = ReceiveAddress();
+            if (transportHandler is UDPBlockingReceiveTransportHandler udpTransportHandler)
+            {
+                udpTransportHandler.IpEndPointClient = ReceiveAddress();
+                udpTransportHandler.EraseExceptionReceiveTimeout = true;
+            }
 
             _isBlock = true;
 

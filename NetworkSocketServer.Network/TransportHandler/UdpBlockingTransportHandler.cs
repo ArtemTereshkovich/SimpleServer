@@ -15,6 +15,8 @@ namespace NetworkSocketServer.NetworkLayer.TransportHandler
 
         public UdpNetworkAcceptor UdpNetworkAcceptor;
 
+        public bool EraseExceptionReceiveTimeout { get; set; }
+
         public void Activate(Socket socket)
         {
             _socket = socket;
@@ -28,7 +30,17 @@ namespace NetworkSocketServer.NetworkLayer.TransportHandler
             if (_socket == null)
                 throw new InvalidOperationException(nameof(_socket));
 
+            SendArrayLength(array);
+
             _socket.SendTo(array, IpEndPointClient);
+        }
+
+        private void SendArrayLength(byte[] array)
+        {
+            var arrayLength = array.Length;
+            var bytesArrayLength = BitConverter.GetBytes(arrayLength);
+
+            _socket.SendTo(bytesArrayLength, IpEndPointClient);
         }
 
         public byte[] Receive()
@@ -36,22 +48,59 @@ namespace NetworkSocketServer.NetworkLayer.TransportHandler
             if (_socket == null)
                 throw new InvalidOperationException(nameof(_socket));
 
-            WaitForPacket();
+            int packetLength = ReceivePacketSize();
 
-            var buffer = new byte[_socket.Available];
+            return ReceivePacketSize(packetLength);
+            
+        }
+
+        private byte[] ReceivePacketSize(int packetLength)
+        {
+            WaitForData(packetLength, EraseExceptionReceiveTimeout);
+            var buffer = new byte[packetLength];
             _socket.ReceiveFrom(buffer, ref IpEndPointClient);
 
             return buffer;
         }
 
-        private void WaitForPacket()
+        public void WaitForData(int length, bool isErase)
         {
-            while (_socket.Available == 0)
+            if (isErase)
             {
-                System.Threading.Thread.Sleep(100);
+                int counts = 200;
+                while (counts != 0)
+                {
+                    if(_socket.Available >= length)
+                        return;
+
+                    counts--;
+
+                    System.Threading.Thread.Sleep(10);
+                }
+
+                throw new InvalidOperationException("Receive UDP Timeout");
+            }
+            else
+            {
+                while (_socket.Available != length)
+                {
+                    System.Threading.Thread.Sleep(10);
+                }
+            }
+        }
+
+        private int ReceivePacketSize()
+        {
+            while (_socket.Available <= 4)
+            {
+                System.Threading.Thread.Sleep(10);
             }
 
-            System.Threading.Thread.Sleep(400);
+            var packetSizeBytes = new byte[4];
+
+            _socket.ReceiveFrom(packetSizeBytes, ref IpEndPointClient);
+
+            return BitConverter.ToInt32(packetSizeBytes);
         }
 
         public void Close()
