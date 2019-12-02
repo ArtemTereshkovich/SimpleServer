@@ -82,7 +82,7 @@ namespace NetworkSocketServer.NetworkLayer.TransportHandler
             }
             else
             {
-                while (_socket.Available != length)
+                while (_socket.Available >= length)
                 {
                     System.Threading.Thread.Sleep(10);
                 }

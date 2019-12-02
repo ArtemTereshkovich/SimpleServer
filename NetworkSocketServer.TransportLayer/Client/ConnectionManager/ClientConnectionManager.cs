@@ -67,6 +67,8 @@ namespace NetworkSocketServer.TransportLayer.Client.ConnectionManager
                 udpBlocking.Reconnect(SessionContext.CurrentConnectorSettings);
 
                 _logger.LogReconnectEvent(SessionContext.CurrentConnectorSettings.IpEndPointServer);
+
+                return;
             }
 
             try
