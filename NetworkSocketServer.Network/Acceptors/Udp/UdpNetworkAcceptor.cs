@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
@@ -50,6 +51,8 @@ namespace NetworkSocketServer.NetworkLayer.Acceptors.Udp
             {
                 udpTransportHandler.IpEndPointClient = ReceiveAddress();
                 udpTransportHandler.EraseExceptionReceiveTimeout = true;
+
+                Console.WriteLine("Receive udp address:" + udpTransportHandler.IpEndPointClient);
             }
 
             _isBlock = true;

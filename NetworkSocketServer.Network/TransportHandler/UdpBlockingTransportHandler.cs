@@ -15,7 +15,7 @@ namespace NetworkSocketServer.NetworkLayer.TransportHandler
 
         public UdpNetworkAcceptor UdpNetworkAcceptor;
 
-        public bool EraseExceptionReceiveTimeout { get; set; }
+        public bool EraseExceptionReceiveTimeout { get; set; } = false;
 
         public void Activate(Socket socket)
         {
@@ -70,8 +70,7 @@ namespace NetworkSocketServer.NetworkLayer.TransportHandler
                 int counts = 200;
                 while (counts != 0)
                 {
-                    if(_socket.Available >= length)
-                        return;
+                    
 
                     counts--;
 
@@ -82,9 +81,12 @@ namespace NetworkSocketServer.NetworkLayer.TransportHandler
             }
             else
             {
-                while (_socket.Available < length)
+                while (true)
                 {
                     System.Threading.Thread.Sleep(10);
+
+                    if (_socket.Available >= length)
+                        return;
                 }
             }
         }
