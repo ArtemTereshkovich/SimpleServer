@@ -70,7 +70,8 @@ namespace NetworkSocketServer.NetworkLayer.TransportHandler
                 int counts = 200;
                 while (counts != 0)
                 {
-                    
+                    if (_socket.Available >= length)
+                        return;
 
                     counts--;
 
