@@ -25,22 +25,23 @@ namespace NetworkSocketServer.TransportLayer.Server.ServerPacketHandler.NetworkC
             _packetFactory = packetFactory;
         }
 
-        public Task<bool> Handle(Packet packet)
+        public Task<bool> Handle(Packet clientPacket)
         {
             CheckTransmitBuffer();
 
 
             new ConsoleClientLogger().LogProcessingBytes(
-                packet.BufferOffset, 
+                clientPacket.BufferOffset, 
                 _serverSessionContext.TransmitBuffer.Length,
-                packet.PayloadSize);
+                clientPacket.PayloadSize);
 
-            var array = _serverSessionContext.TransmitBuffer.Get(packet.BufferOffset, packet.PayloadSize);
+            var array = _serverSessionContext.TransmitBuffer.Get(clientPacket.BufferOffset, clientPacket.PayloadSize);
 
             var answerPacket = _packetFactory.CreateAnswerSuccessRead(
+                clientPacket.PacketId,
                 array,
                 _serverSessionContext.TransmitBuffer.Length,
-                packet.BufferOffset, 
+                clientPacket.BufferOffset, 
                 array.Length);
 
             SendPacket(answerPacket);

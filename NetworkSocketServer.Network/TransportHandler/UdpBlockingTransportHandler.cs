@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
-using NetworkSocketServer.NetworkLayer.Connectors;
 
 
 namespace NetworkSocketServer.NetworkLayer.TransportHandler

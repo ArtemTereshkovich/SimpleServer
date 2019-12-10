@@ -12,6 +12,7 @@ namespace NetworkSocketServer.TransportLayer.Packets.PacketFactory
         }  
 
         public Packet CreateAnswerSuccessWrite(
+            Guid packetId,
             int receiveBufferSize,
             int receiveBufferOffset,
             int payloadSize)
@@ -29,6 +30,7 @@ namespace NetworkSocketServer.TransportLayer.Packets.PacketFactory
         }
         
         public Packet CreateAnswerSuccessRead(
+            Guid packetId,
             byte[] payload, 
             int transmitBufferSize, 
             int transmitBufferOffset, 
@@ -47,6 +49,7 @@ namespace NetworkSocketServer.TransportLayer.Packets.PacketFactory
         }
 
         public Packet CreateAnswerExecuteSuccessPayload(
+            Guid packetId,
             byte[] payload,
             int payloadSize)
         {
@@ -62,7 +65,7 @@ namespace NetworkSocketServer.TransportLayer.Packets.PacketFactory
             };
         }
 
-        public Packet CreateAnswerExecuteSuccessBuffer(int transmitBufferLength)
+        public Packet CreateAnswerExecuteSuccessBuffer(Guid packetId, int transmitBufferLength)
         {
             return new Packet
             {
@@ -86,7 +89,8 @@ namespace NetworkSocketServer.TransportLayer.Packets.PacketFactory
                 PacketClientCommand = PacketClientCommand.Close,
                 Payload = new byte[1024],
                 PayloadSize = 0,
-                SessionId = _sessionId
+                SessionId = _sessionId,
+                PacketId = Guid.NewGuid()
             };
         }
 
@@ -99,7 +103,8 @@ namespace NetworkSocketServer.TransportLayer.Packets.PacketFactory
                 SessionId = _sessionId,
                 PacketServerResponse = PacketServerResponse.Answer,
                 PacketClientCommand = PacketClientCommand.ExecuteBuffer,
-                Payload = new byte[1024]
+                Payload = new byte[1024],
+                PacketId = Guid.NewGuid()
             };
         }
 
@@ -113,7 +118,8 @@ namespace NetworkSocketServer.TransportLayer.Packets.PacketFactory
                 PacketClientCommand = PacketClientCommand.ExecutePayload,
                 Payload = payload,
                 PayloadSize = payloadSize,
-                SessionId = _sessionId
+                SessionId = _sessionId,
+                PacketId = Guid.NewGuid()
             };
         }
 
@@ -132,6 +138,7 @@ namespace NetworkSocketServer.TransportLayer.Packets.PacketFactory
                 PacketServerResponse = PacketServerResponse.Answer,
                 Payload = payload,
                 PayloadSize = payloadSize,
+                PacketId = Guid.NewGuid()
             };
         }
 
@@ -148,6 +155,7 @@ namespace NetworkSocketServer.TransportLayer.Packets.PacketFactory
                 PacketServerResponse = PacketServerResponse.Answer,
                 Payload = new byte[1024],
                 PayloadSize = 0,
+                PacketId = Guid.NewGuid()
             };
         }
     }

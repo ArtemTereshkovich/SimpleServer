@@ -23,18 +23,18 @@ namespace NetworkSocketServer.TransportLayer.Server.ServerPacketHandler.NetworkC
             _packetFactory = packetFactory;
         }
 
-        public async Task<bool> Handle(Packet packet)
+        public async Task<bool> Handle(Packet clientPacket)
         {
-            var resultBytes = await HandleCommand(packet);
+            var resultBytes = await HandleCommand(clientPacket);
 
             CleanUpBuffers();
 
-            return SendResult(resultBytes);
+            return SendResult(resultBytes, clientPacket);
         }
 
         protected abstract Task<byte[]> HandleCommand(Packet packet);
 
-        private bool SendResult(byte[] resultExecution)
+        private bool SendResult(byte[] resultExecution, Packet clientPacket)
         {
             if (resultExecution.Length <= ServerSessionContext.PacketPayloadThreshold)
             {
@@ -43,7 +43,10 @@ namespace NetworkSocketServer.TransportLayer.Server.ServerPacketHandler.NetworkC
                 Array.Resize(ref resultExecution, ServerSessionContext.PacketPayloadThreshold);
 
                 var answerPacket = _packetFactory
-                    .CreateAnswerExecuteSuccessPayload(resultExecution, resultExecutionLength);
+                    .CreateAnswerExecuteSuccessPayload(
+                        clientPacket.PacketId, 
+                        resultExecution, 
+                        resultExecutionLength);
 
                 SendPacket(answerPacket);
             }
@@ -52,7 +55,9 @@ namespace NetworkSocketServer.TransportLayer.Server.ServerPacketHandler.NetworkC
                 UpdateTransmitBuffer(resultExecution);
 
                 var answerPacket = _packetFactory
-                    .CreateAnswerExecuteSuccessBuffer(ServerSessionContext.TransmitBuffer.Length);
+                    .CreateAnswerExecuteSuccessBuffer(
+                        clientPacket.PacketId, 
+                        ServerSessionContext.TransmitBuffer.Length);
 
                 SendPacket(answerPacket);
             }

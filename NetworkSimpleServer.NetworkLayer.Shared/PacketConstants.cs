@@ -1,0 +1,11 @@
+﻿namespace NetworkSimpleServer.NetworkLayer.Core
+{
+    public static class PacketConstants
+    {
+        public static int PacketPayloadThresholdSize = 1024;
+
+        public static int RemoteEndPointSize = 10;
+
+        public static byte[] EmptyPayload = new byte[PacketPayloadThresholdSize];
+    }
+}

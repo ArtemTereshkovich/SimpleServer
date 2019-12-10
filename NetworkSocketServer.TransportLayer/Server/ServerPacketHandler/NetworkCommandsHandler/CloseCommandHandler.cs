@@ -14,7 +14,7 @@ namespace NetworkSocketServer.TransportLayer.Server.ServerPacketHandler.NetworkC
             _transportHandler = transportHandler;
         }
 
-        public Task<bool> Handle(Packet packet)
+        public Task<bool> Handle(Packet clientPacket)
         {
             _transportHandler.Close();
 

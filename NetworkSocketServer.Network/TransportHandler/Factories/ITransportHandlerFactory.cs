@@ -7,6 +7,6 @@ namespace NetworkSocketServer.NetworkLayer.TransportHandler.Factories
     {
         ITransportHandler CreateTransportHandler(INetworkAcceptor acceptor);
 
-        ITransportHandler CreateTransportHandler(ConnectionType connwctionType);
+        ITransportHandler CreateTransportHandler(ConnectionType connectionType);
     }
 }

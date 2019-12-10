@@ -5,6 +5,6 @@ namespace NetworkSocketServer.TransportLayer.Server.ServerPacketHandler.NetworkC
 {
     internal interface INetworkCommandHandler
     {
-        Task<bool> Handle(Packet packet);
+        Task<bool> Handle(Packet clientPacket);
     }
 }
