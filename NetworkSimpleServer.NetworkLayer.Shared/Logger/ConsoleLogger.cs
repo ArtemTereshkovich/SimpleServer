@@ -31,5 +31,15 @@ namespace NetworkSimpleServer.NetworkLayer.Core.Logger
         {
             Console.WriteLine($"Error happend: {exception.Message}. Exception type: {exception.GetType().Name}. StackTrace: {exception.StackTrace}");
         }
+
+        public void LogError(string text)
+        {
+            Console.WriteLine(text);
+        }
+
+        public void LogConnectEvent()
+        {
+            Console.WriteLine("Received new connection");
+        }
     }
 }

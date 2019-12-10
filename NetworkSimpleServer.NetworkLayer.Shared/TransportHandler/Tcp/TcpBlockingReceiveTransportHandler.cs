@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Net;
-using System.Net.Sockets;
 using NetworkSimpleServer.NetworkLayer.Core.Packets;
 using NetworkSimpleServer.NetworkLayer.Core.Packets.Serializer;
-using NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Context;
-using NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Tcp;
 
-namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler
+namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Tcp
 {
     public class TcpBlockingReceiveTransportHandler : ITransportHandler
     {
@@ -81,10 +77,14 @@ namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler
         {
             if (_context.AcceptedSocket.Connected)
             {
-                ClearReceiveBuffer();
-
                 _context.AcceptedSocket.Close();
             }
+
+            try
+            {
+                ClearReceiveBuffer();
+            }
+            catch { }
 
             _context.AcceptedSocket
                 .Connect(_context.RemoteEndPoint);

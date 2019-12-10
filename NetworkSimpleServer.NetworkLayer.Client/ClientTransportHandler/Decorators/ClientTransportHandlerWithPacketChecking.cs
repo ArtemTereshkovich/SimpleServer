@@ -1,5 +1,5 @@
 ﻿using NetworkSimpleServer.NetworkLayer.Core.Packets;
-using NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Context;
+using NetworkSimpleServer.NetworkLayer.Core.TransportHandler;
 
 namespace NetworkSimpleServer.NetworkLayer.Client.ClientTransportHandler.Decorators
 {

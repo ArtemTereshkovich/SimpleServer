@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Context
+namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler
 {
     public class TransportHandlerContext
     {

@@ -2,7 +2,6 @@
 using System.Net.Sockets;
 using NetworkSimpleServer.NetworkLayer.Core.Packets;
 using NetworkSimpleServer.NetworkLayer.Core.Packets.Serializer;
-using NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Context;
 
 namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Udp
 {
@@ -78,19 +77,16 @@ namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Udp
 
         public void Reconnect()
         {
+            if (_context.AcceptedSocket.Connected)
+            {
+                _context.AcceptedSocket.Close();
+            }
+
             try
             {
                 ClearReceiveBuffer();
             }
-            catch
-            {
-
-            }
-
-            _context.AcceptedSocket = new Socket(
-                _context.RemoteEndPoint.AddressFamily,
-                SocketType.Dgram, 
-                ProtocolType.Udp);
+            catch { }
 
             _context.AcceptedSocket.Connect(_context.RemoteEndPoint);
         }

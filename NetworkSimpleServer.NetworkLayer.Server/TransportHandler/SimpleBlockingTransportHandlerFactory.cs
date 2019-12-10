@@ -1,6 +1,7 @@
 ﻿using NetworkSimpleServer.NetworkLayer.Core;
 using NetworkSimpleServer.NetworkLayer.Core.Packets.Serializer;
 using NetworkSimpleServer.NetworkLayer.Core.TransportHandler;
+using NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Tcp;
 using NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Udp;
 using NetworkSimpleServer.NetworkLayer.Server.Acceptors;
 using NetworkSimpleServer.NetworkLayer.Server.Acceptors.Tcp;
@@ -16,13 +17,13 @@ namespace NetworkSimpleServer.NetworkLayer.Server.TransportHandler
             {
                 return new TcpBlockingReceiveTransportHandler(
                     new ManualPacketSerializer(), 
-                    PacketConstants.PacketPayloadThresholdSize);
+                    PacketConstants.PacketThresholdSize);
             }
             else
             {
                 return new UdpCycledCheckTransportHandler(
                     new ManualPacketSerializer(), 
-                    PacketConstants.PacketPayloadThresholdSize);
+                    PacketConstants.PacketThresholdSize);
             }
         }
     }

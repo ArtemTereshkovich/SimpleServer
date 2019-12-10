@@ -6,6 +6,10 @@
 
         public static int RemoteEndPointSize = 10;
 
+        public static int PacketHeaderSize = 52;
+
+        public static int PacketThresholdSize = PacketPayloadThresholdSize + PacketHeaderSize;
+
         public static byte[] EmptyPayload = new byte[PacketPayloadThresholdSize];
     }
 }

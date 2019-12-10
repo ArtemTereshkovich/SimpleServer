@@ -37,10 +37,10 @@ namespace NetworkSimpleServer.NetworkLayer.Core.Packets.Serializer
                 PacketClientCommand = (PacketClientCommand)BitConverter.ToInt32(array.Skip(4).Take(4).ToArray()),
                 SessionId = new Guid(array.Skip(8).Take(16).ToArray()),
                 PacketId = new Guid(array.Skip(24).Take(16).ToArray()),
-                BuffferSize = BitConverter.ToInt32(array.Skip(24).Take(4).ToArray()),
-                BufferOffset = BitConverter.ToInt32(array.Skip(28).Take(4).ToArray()),
-                PayloadSize = BitConverter.ToInt32(array.Skip(32).Take(4).ToArray()),
-                Payload = array.Skip(36).ToArray()
+                BuffferSize = BitConverter.ToInt32(array.Skip(40).Take(4).ToArray()),
+                BufferOffset = BitConverter.ToInt32(array.Skip(44).Take(4).ToArray()),
+                PayloadSize = BitConverter.ToInt32(array.Skip(48).Take(4).ToArray()),
+                Payload = array.Skip(52).ToArray()
             };
         }
     }

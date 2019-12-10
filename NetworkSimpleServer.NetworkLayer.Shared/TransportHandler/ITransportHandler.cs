@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net;
 using NetworkSimpleServer.NetworkLayer.Core.Packets;
-using NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Context;
 
 namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler
 {

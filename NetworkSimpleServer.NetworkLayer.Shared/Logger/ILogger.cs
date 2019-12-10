@@ -14,5 +14,9 @@ namespace NetworkSimpleServer.NetworkLayer.Core.Logger
         void LogProcessingBytes(int byteProcessed, int totalBytes, int packetPayloadSize);
 
         void LogErrorException(Exception exception);
+
+        void LogError(string text);
+
+        void LogConnectEvent();
     }
 }

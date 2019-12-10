@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using NetworkSimpleServer.NetworkLayer.Core.Logger;
 using NetworkSimpleServer.NetworkLayer.Server.Acceptors;
 using NetworkSimpleServer.NetworkLayer.Server.TransportHandler.Factory;
 
@@ -8,14 +9,17 @@ namespace NetworkSimpleServer.NetworkLayer.Server.AcceptorDispatcher
 {
     internal class SingleThreadAcceptorDispatcher : IAcceptorDispatcher
     {
+        private readonly ILogger _logger;
         private readonly IServiceConnectionManager _serviceConnectionManager;
         private readonly IServerTransportHandlerFactory _serverTransportHandlerFactory;
         private readonly IList<INetworkAcceptor> _acceptors;
 
         public SingleThreadAcceptorDispatcher(
+            ILogger logger,
             IServiceConnectionManager serviceConnectionManager,
             IServerTransportHandlerFactory serverTransportHandlerFactory)
         {
+            _logger = logger;
             _serviceConnectionManager = serviceConnectionManager;
             _serverTransportHandlerFactory = serverTransportHandlerFactory;
             _acceptors = new List<INetworkAcceptor>();
@@ -39,7 +43,7 @@ namespace NetworkSimpleServer.NetworkLayer.Server.AcceptorDispatcher
                 {
                     if (!acceptor.IsHaveNewConnection()) continue;
 
-                    Console.WriteLine("Receive new connection");
+                    _logger.LogConnectEvent();
 
                     try
                     {
@@ -51,7 +55,7 @@ namespace NetworkSimpleServer.NetworkLayer.Server.AcceptorDispatcher
                     }
                     catch (Exception exception)
                     {
-                        Console.WriteLine("Error happend:" + exception.Message);
+                        _logger.LogErrorException(exception);
                     }
                 }
             }
