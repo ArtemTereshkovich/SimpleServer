@@ -6,7 +6,6 @@ using NetworkSocketServer.NetworkLayer.Connectors;
 using NetworkSocketServer.NetworkLayer.Dispatchers.ConnectorDispatcher;
 using NetworkSocketServer.NetworkLayer.TransportHandler;
 using NetworkSocketServer.TransportLayer.Client.Logger;
-using NetworkSocketServer.TransportLayer.Client.RequestExecutor;
 using NetworkSocketServer.TransportLayer.Client.TransportManager;
 using NetworkSocketServer.TransportLayer.Packets.PacketFactory;
 using NetworkSocketServer.TransportLayer.Serializer;
@@ -105,9 +104,9 @@ namespace NetworkSocketServer.TransportLayer.Client.ConnectionManager
 
             try
             {
-                var requestExecutor = _clientTransportManagerFactory.Create(this);
+                var clientTransportManager = _clientTransportManagerFactory.Create(this);
 
-                return await requestExecutor.SendRequest(request);
+                return await clientTransportManager.SendRequest(request);
             }
             catch 
             {

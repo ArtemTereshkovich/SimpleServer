@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
-using NetworkSocketServer.NetworkLayer.Acceptors.Udp;
 using NetworkSocketServer.NetworkLayer.Connectors;
 
 
@@ -12,8 +11,6 @@ namespace NetworkSocketServer.NetworkLayer.TransportHandler
         private Socket _socket;
 
         public EndPoint IpEndPointClient;
-
-        public UdpNetworkAcceptor UdpNetworkAcceptor;
 
         public bool EraseExceptionReceiveTimeout { get; set; } = false;
 
@@ -29,18 +26,13 @@ namespace NetworkSocketServer.NetworkLayer.TransportHandler
 
             if (_socket == null)
                 throw new InvalidOperationException(nameof(_socket));
-
-            SendArrayLength(array);
-
+            
             _socket.SendTo(array, IpEndPointClient);
         }
 
-        private void SendArrayLength(byte[] array)
+        public void ClearReceiveBuffer()
         {
-            var arrayLength = array.Length;
-            var bytesArrayLength = BitConverter.GetBytes(arrayLength);
-
-            _socket.SendTo(bytesArrayLength, IpEndPointClient);
+            SafeClearBuffer();
         }
 
         public byte[] Receive()
@@ -48,22 +40,66 @@ namespace NetworkSocketServer.NetworkLayer.TransportHandler
             if (_socket == null)
                 throw new InvalidOperationException(nameof(_socket));
 
-            int packetLength = ReceivePacketSize();
+            var waitingBuffer = new byte[0];
+            _socket.ReceiveFrom(waitingBuffer, ref IpEndPointClient);
 
-            return ReceivePacketSize(packetLength);
-            
-        }
-
-        private byte[] ReceivePacketSize(int packetLength)
-        {
-            WaitForData(packetLength, EraseExceptionReceiveTimeout);
-            var buffer = new byte[packetLength];
+            var buffer = new byte[_socket.Available];
             _socket.ReceiveFrom(buffer, ref IpEndPointClient);
 
             return buffer;
         }
 
-        public void WaitForData(int length, bool isErase)
+        public byte[] Receive(int length, bool eraseException)
+        {
+            WaitForData(length, eraseException);
+
+            var buffer = new byte[length];
+            _socket.Receive(buffer);
+
+            return buffer;
+        }
+        public void Close()
+        {
+            SafeClearBuffer();
+
+            if (_socket == null)
+                throw new InvalidOperationException(nameof(_socket));
+
+            _socket.Close();
+        }
+
+
+        public void Reconnect(NetworkConnectorSettings connectorSettings)
+        {
+            SafeClearBuffer();
+
+            _socket = new Socket(
+                connectorSettings.IpEndPointServer.AddressFamily,
+                SocketType.Dgram, ProtocolType.Udp);
+
+            _socket.Connect(connectorSettings.IpEndPointServer);
+        }
+
+        public void Dispose()
+        {
+            SafeClearBuffer();
+            _socket?.Dispose();
+        }
+
+        private void SafeClearBuffer()
+        {
+            try
+            {
+                var buffer = new byte[_socket.Available];
+                _socket.ReceiveFrom(buffer, ref IpEndPointClient);
+            }
+            catch
+            {
+
+            }
+        }
+
+        private void WaitForData(int length, bool isErase)
         {
             if (isErase)
             {
@@ -92,43 +128,6 @@ namespace NetworkSocketServer.NetworkLayer.TransportHandler
             }
         }
 
-        private int ReceivePacketSize()
-        {
-            while (_socket.Available <= 4)
-            {
-                System.Threading.Thread.Sleep(10);
-            }
-
-            var packetSizeBytes = new byte[4];
-
-            _socket.ReceiveFrom(packetSizeBytes, ref IpEndPointClient);
-
-            return BitConverter.ToInt32(packetSizeBytes);
-        }
-
-        public void Close()
-        {
-            UdpNetworkAcceptor?.Release();
-
-            if (_socket == null)
-                throw new InvalidOperationException(nameof(_socket));
-
-            _socket.Close();
-        }
-
-        public void Dispose()
-        {
-            UdpNetworkAcceptor?.Release();
-        }
-
-        public void Reconnect(NetworkConnectorSettings connectorSettings)
-        {
-            _socket = new Socket(
-                connectorSettings.IpEndPointServer.AddressFamily,
-                SocketType.Dgram, ProtocolType.Udp);
-
-            _socket.Connect(connectorSettings.IpEndPointServer);
-        }
     }
 }
 

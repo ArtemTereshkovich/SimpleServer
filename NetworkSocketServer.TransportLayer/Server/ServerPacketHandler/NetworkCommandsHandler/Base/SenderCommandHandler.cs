@@ -2,7 +2,7 @@
 using NetworkSocketServer.TransportLayer.Packets;
 using NetworkSocketServer.TransportLayer.Serializer;
 
-namespace NetworkSocketServer.TransportLayer.PacketHandler.NetworkCommandsHandler.Base
+namespace NetworkSocketServer.TransportLayer.Server.ServerPacketHandler.NetworkCommandsHandler.Base
 {
     abstract class SenderCommandHandler
     {

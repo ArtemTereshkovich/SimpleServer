@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using NetworkSocketServer.TransportLayer.Packets;
 
-namespace NetworkSocketServer.TransportLayer.PacketHandler
+namespace NetworkSocketServer.TransportLayer.Server.ServerPacketHandler
 {
     internal interface IServerPacketHandler
     {

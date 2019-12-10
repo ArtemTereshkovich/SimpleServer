@@ -1,7 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using NetworkSocketServer.TransportLayer.Buffer;
 using NetworkSocketServer.TransportLayer.Client.Logger;
-using NetworkSocketServer.TransportLayer.Client.ServiceHandlers.RequestExecutor.BytesSender;
+using NetworkSocketServer.TransportLayer.Client.TransportManager.BytesSender;
 using NetworkSocketServer.TransportLayer.Packets;
 using NetworkSocketServer.TransportLayer.Packets.PacketFactory;
 using NetworkSocketServer.TransportLayer.Serializer;
@@ -30,7 +31,7 @@ namespace NetworkSocketServer.TransportLayer.Client.TransportManager.Handlers
             _clientLogger = clientLogger;
         }
 
-        public async Task<Packet> ProvideRequestToServerBuffer(byte[] request, int increaseStep)
+        public async Task<Packet> ProvideRequestToServerBuffer(byte[] request)
         {
             using var sendBuffer = InitializeBuffer(request);
             
@@ -44,27 +45,38 @@ namespace NetworkSocketServer.TransportLayer.Client.TransportManager.Handlers
                 
                 var bytesToSend = sendBuffer.Get(totalSend, portionSize);
 
-                var dataPacket = _packetFactory.CreateWrite(
-                    bytesToSend, 
-                    sendBuffer.Length, 
-                    totalSend);
+                var dataPacket = CreateSendPacket(bytesToSend, portionSize, sendBuffer, totalSend);
 
-                await SendPacket(dataPacket);
+                await SendPacket(dataPacket, portionSize + 36);
 
                 totalSend += portionSize;
-                portionSize += increaseStep;
 
-                _clientLogger.LogProcessingBytes(totalSend, sendBuffer.Length);
+                _clientLogger.LogProcessingBytes(totalSend, sendBuffer.Length, portionSize);
             }
 
-            return _packetFactory.CreateExecuteBuffer(sendBuffer.Length);
+            return _packetFactory.CreateExecutedInBuffer(sendBuffer.Length);
         }
 
-        private async Task SendPacket(Packet dataPacket)
+        private Packet CreateSendPacket(byte[] bytesToSend, int portionSize, IBuffer sendBuffer, int totalSend)
+        {
+            var byteToSendLength = bytesToSend.Length;
+
+            Array.Resize(ref bytesToSend, portionSize);
+
+            var dataPacket = _packetFactory.CreateWrite(
+                bytesToSend,
+                sendBuffer.Length,
+                totalSend,
+                byteToSendLength);
+
+            return dataPacket;
+        }
+
+        private async Task SendPacket(Packet dataPacket, int receivedPacketSize)
         {
             var dataSerializedPacket = _byteSerializer.Serialize(dataPacket);
 
-            await _bytesSender.AcceptedSend(dataSerializedPacket);
+            await _bytesSender.AcceptedSend(dataSerializedPacket, receivedPacketSize);
         }
 
         private static int GetPortionSize(IBuffer buffer, int totalSend, int portionSize)

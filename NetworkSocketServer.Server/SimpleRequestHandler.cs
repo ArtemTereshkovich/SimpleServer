@@ -3,9 +3,7 @@ using System.Threading.Tasks;
 using NetworkSocketServer.DTO.Requests;
 using NetworkSocketServer.DTO.Responses;
 using NetworkSocketServer.Server.CommandHandlers;
-using NetworkSocketServer.TransportLayer.Client.ServiceHandlers;
 using NetworkSocketServer.TransportLayer.Server.IRequestHandler;
-using NetworkSocketServer.TransportLayer.ServiceHandlers;
 
 namespace NetworkSocketServer.Server
 {

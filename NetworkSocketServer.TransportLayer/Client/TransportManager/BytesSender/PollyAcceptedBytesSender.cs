@@ -3,7 +3,6 @@ using System.Net.Sockets;
 using System.Threading.Tasks;
 using NetworkSocketServer.TransportLayer.Client.ConnectionManager;
 using NetworkSocketServer.TransportLayer.Client.RequestExecutor;
-using NetworkSocketServer.TransportLayer.Client.ServiceHandlers.RequestExecutor.BytesSender;
 using Polly;
 using Polly.Retry;
 using Polly.Timeout;
@@ -24,7 +23,7 @@ namespace NetworkSocketServer.TransportLayer.Client.TransportManager.BytesSender
             _retrySettings = retrySettings;
         }
 
-        public async Task<byte[]> AcceptedSend(byte[] bytes)
+        public async Task<byte[]> AcceptedSend(byte[] bytes, int receiveSize)
         {
             var sendRetry = CreateSendPolicy(_retrySettings);
 
@@ -38,7 +37,7 @@ namespace NetworkSocketServer.TransportLayer.Client.TransportManager.BytesSender
 
             byte[] receiveBytes = null;
 
-            receivePolicy.Execute(() => { receiveBytes = Receive(); });
+            receivePolicy.Execute(() => { receiveBytes = Receive(receiveSize); });
 
             return receiveBytes;
         }
@@ -55,9 +54,10 @@ namespace NetworkSocketServer.TransportLayer.Client.TransportManager.BytesSender
             _clientConnectionManager.SessionContext.TransportHandler.Send(bytes);
         }
 
-        private byte[] Receive()
+        private byte[] Receive(int receiveSize)
         {
-            return _clientConnectionManager.SessionContext.TransportHandler.Receive();
+            return _clientConnectionManager.SessionContext
+                .TransportHandler.Receive(receiveSize, false);
         }
 
         private AsyncRetryPolicy CreateSendPolicy(RetrySettings settings)

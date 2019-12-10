@@ -10,7 +10,7 @@ namespace NetworkSocketServer.TransportLayer.Server
 
         public IBuffer TransmitBuffer { get; }
 
-        protected ServerSessionContext(IBuffer receiveBuffer, IBuffer transmitBuffer)
+        private ServerSessionContext(IBuffer receiveBuffer, IBuffer transmitBuffer)
         {
             ReceiveBuffer = receiveBuffer;
             TransmitBuffer = transmitBuffer;

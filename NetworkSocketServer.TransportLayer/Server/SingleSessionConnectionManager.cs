@@ -5,6 +5,7 @@ using NetworkSocketServer.NetworkLayer.TransportHandler;
 using NetworkSocketServer.TransportLayer.PacketHandler;
 using NetworkSocketServer.TransportLayer.Packets;
 using NetworkSocketServer.TransportLayer.Serializer;
+using NetworkSocketServer.TransportLayer.Server.ServerPacketHandler;
 using NetworkSocketServer.TransportLayer.ServiceHandlers;
 
 namespace NetworkSocketServer.TransportLayer.Server
@@ -75,7 +76,7 @@ namespace NetworkSocketServer.TransportLayer.Server
 
         private Packet ReceivePacketMessage(ITransportHandler transportHandler)
         {
-            var messageBytes = transportHandler.Receive();
+            var messageBytes = transportHandler.Receive( 1024 + 36, false);
 
             return _byteSerializer.Deserialize(messageBytes);
         }

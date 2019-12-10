@@ -1,12 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using NetworkSocketServer.NetworkLayer.TransportHandler;
-using NetworkSocketServer.TransportLayer.PacketHandler.NetworkCommandsHandler.Base;
+using NetworkSocketServer.TransportLayer.Client.Logger;
 using NetworkSocketServer.TransportLayer.Packets;
 using NetworkSocketServer.TransportLayer.Packets.PacketFactory;
 using NetworkSocketServer.TransportLayer.Serializer;
-using NetworkSocketServer.TransportLayer.Server;
+using NetworkSocketServer.TransportLayer.Server.ServerPacketHandler.NetworkCommandsHandler.Base;
 
-namespace NetworkSocketServer.TransportLayer.PacketHandler.NetworkCommandsHandler
+namespace NetworkSocketServer.TransportLayer.Server.ServerPacketHandler.NetworkCommandsHandler
 {
     internal class WriteCommandHandler : SenderCommandHandler, INetworkCommandHandler
     {
@@ -26,13 +27,18 @@ namespace NetworkSocketServer.TransportLayer.PacketHandler.NetworkCommandsHandle
 
         public Task<bool> Handle(Packet packet)
         {
-            CheckReceiveBuffer(packet.Size);
+            CheckReceiveBuffer(packet.BuffferSize);
+            
+            var payload = packet.Payload.Take(packet.PayloadSize).ToArray();
+            
+            new ConsoleClientLogger().LogProcessingBytes(packet.BufferOffset, packet.BuffferSize, packet.PayloadSize);
 
-            _serverSessionContext.ReceiveBuffer.Insert(packet.Payload, packet.Offset);
+            _serverSessionContext.ReceiveBuffer.Insert(payload, packet.BufferOffset);
 
             var answerPacket = _packetFactory.CreateAnswerSuccessWrite(
                 _serverSessionContext.ReceiveBuffer.Length,
-                packet.Payload.Length);
+                packet.BufferOffset,
+                packet.PayloadSize);
 
             SendPacket(answerPacket);
 

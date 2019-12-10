@@ -1,11 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using NetworkSocketServer.NetworkLayer.TransportHandler;
 using NetworkSocketServer.TransportLayer.Packets;
 using NetworkSocketServer.TransportLayer.Packets.PacketFactory;
 using NetworkSocketServer.TransportLayer.Serializer;
-using NetworkSocketServer.TransportLayer.Server;
 
-namespace NetworkSocketServer.TransportLayer.PacketHandler.NetworkCommandsHandler.Base
+namespace NetworkSocketServer.TransportLayer.Server.ServerPacketHandler.NetworkCommandsHandler.Base
 {
     abstract class ExecuteCommandHandler : SenderCommandHandler, INetworkCommandHandler 
     {
@@ -36,10 +36,14 @@ namespace NetworkSocketServer.TransportLayer.PacketHandler.NetworkCommandsHandle
 
         private bool SendResult(byte[] resultExecution)
         {
-            if (resultExecution.Length < ServerSessionContext.PacketPayloadThreshold * 2)
+            if (resultExecution.Length <= ServerSessionContext.PacketPayloadThreshold)
             {
+                var resultExecutionLength = resultExecution.Length;
+
+                Array.Resize(ref resultExecution, ServerSessionContext.PacketPayloadThreshold);
+
                 var answerPacket = _packetFactory
-                    .CreateAnswerExecuteSuccessPayload(resultExecution, resultExecution.Length);
+                    .CreateAnswerExecuteSuccessPayload(resultExecution, resultExecutionLength);
 
                 SendPacket(answerPacket);
             }
@@ -48,7 +52,7 @@ namespace NetworkSocketServer.TransportLayer.PacketHandler.NetworkCommandsHandle
                 UpdateTransmitBuffer(resultExecution);
 
                 var answerPacket = _packetFactory
-                    .CreateAnswerExecuteSuccessBuffer(resultExecution.Length);
+                    .CreateAnswerExecuteSuccessBuffer(ServerSessionContext.TransmitBuffer.Length);
 
                 SendPacket(answerPacket);
             }

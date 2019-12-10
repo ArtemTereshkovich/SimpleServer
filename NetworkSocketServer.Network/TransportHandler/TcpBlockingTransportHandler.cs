@@ -3,7 +3,7 @@ using System.Net.Sockets;
 
 namespace NetworkSocketServer.NetworkLayer.TransportHandler
 {
-    internal class TcpBlockingReceiveTransportHandler : ITransportHandler
+    internal class TcpBlockingTransportHandler : ITransportHandler
     {
         private Socket _socket;
 
@@ -14,13 +14,18 @@ namespace NetworkSocketServer.NetworkLayer.TransportHandler
 
         public void Send(byte[] array)
         {
-            if(array == null || array.Length == 0)
+            if (array == null || array.Length == 0)
                 throw new ArgumentException(nameof(array));
 
-            if(_socket == null)
+            if (_socket == null)
                 throw new InvalidOperationException(nameof(_socket));
 
             _socket.Send(array);
+        }
+
+        public void ClearReceiveBuffer()
+        {
+            SafeClearBuffer();
         }
 
         public byte[] Receive()
@@ -31,9 +36,18 @@ namespace NetworkSocketServer.NetworkLayer.TransportHandler
             var checkBuffer = new byte[0];
             _socket.Receive(checkBuffer);
 
-            System.Threading.Thread.Sleep(100);
-
             var buffer = new byte[_socket.Available];
+            _socket.Receive(buffer);
+
+            return buffer;
+        }
+
+        public byte[] Receive(int length, bool eraseException)
+        {
+            var checkBuffer = new byte[0];
+            _socket.Receive(checkBuffer);
+            
+            var buffer = new byte[length];
             _socket.Receive(buffer);
 
             return buffer;
@@ -41,6 +55,8 @@ namespace NetworkSocketServer.NetworkLayer.TransportHandler
 
         public void Close()
         {
+            SafeClearBuffer();
+
             if (_socket == null)
                 throw new InvalidOperationException(nameof(_socket));
 
@@ -49,10 +65,24 @@ namespace NetworkSocketServer.NetworkLayer.TransportHandler
 
         public void Dispose()
         {
-            if(_socket.Connected)
+            if (_socket.Connected)
                 _socket.Close();
 
             _socket?.Dispose();
+        }
+
+        private void SafeClearBuffer()
+        {
+            try
+            {
+                var buffer = new byte[_socket.Available];
+                _socket.Receive(buffer);
+            }
+            catch
+            {
+
+
+            }
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 
 namespace NetworkSocketServer.TransportLayer.Packets.PacketFactory
 {
@@ -10,43 +9,55 @@ namespace NetworkSocketServer.TransportLayer.Packets.PacketFactory
         public PacketFactory(Guid sessionId)
         {
             _sessionId = sessionId;
-        }
+        }  
 
-        public Packet CreateAnswerSuccessWrite(int bufferSize, int bytesWrite)
+        public Packet CreateAnswerSuccessWrite(
+            int receiveBufferSize,
+            int receiveBufferOffset,
+            int payloadSize)
         {
             return new Packet
             {
                 SessionId = _sessionId,
-                Size = bufferSize,
-                Offset = bytesWrite,
+                BuffferSize = receiveBufferSize,
+                BufferOffset = receiveBufferOffset,
                 PacketClientCommand = PacketClientCommand.None,
                 PacketServerResponse = PacketServerResponse.Answer,
-                Payload = null,
+                PayloadSize = payloadSize,
+                Payload = new byte[1024],
             };
         }
         
-        public Packet CreateAnswerSuccessRead(byte[] array, int transmitBufferLength, int arrayLength)
+        public Packet CreateAnswerSuccessRead(
+            byte[] payload, 
+            int transmitBufferSize, 
+            int transmitBufferOffset, 
+            int payloadSize)
         {
             return new Packet
             {
                 SessionId = _sessionId,
                 PacketClientCommand = PacketClientCommand.None,
                 PacketServerResponse = PacketServerResponse.Answer,
-                Payload = array,
-                Offset = arrayLength,
-                Size = transmitBufferLength
+                Payload = payload,
+                BufferOffset = transmitBufferOffset,
+                BuffferSize = transmitBufferSize,
+                PayloadSize = payloadSize
             };
         }
 
-        public Packet CreateAnswerExecuteSuccessPayload(byte[] responseBytes, int responseBytesLength)
+        public Packet CreateAnswerExecuteSuccessPayload(
+            byte[] payload,
+            int payloadSize)
         {
             return new Packet
             {
-                Offset = responseBytesLength,
+                BufferOffset = 0,
                 PacketServerResponse = PacketServerResponse.ResultInPayload,
                 PacketClientCommand = PacketClientCommand.None,
-                Payload = responseBytes,
-                Size = 0,
+                Payload = payload,
+                PayloadSize = payloadSize,
+                BuffferSize = 0,
                 SessionId = _sessionId
             };
         }
@@ -55,12 +66,13 @@ namespace NetworkSocketServer.TransportLayer.Packets.PacketFactory
         {
             return new Packet
             {
-                Size = 0,
-                Offset = transmitBufferLength,
+                BuffferSize = transmitBufferLength,
+                BufferOffset = 0,
+                PayloadSize = 0,
                 PacketClientCommand = PacketClientCommand.None,
                 PacketServerResponse = PacketServerResponse.ResultInBuffer,
                 SessionId = _sessionId,
-                Payload = null,
+                Payload = new byte[1024],
             };
         }
 
@@ -68,64 +80,74 @@ namespace NetworkSocketServer.TransportLayer.Packets.PacketFactory
         {
             return new Packet
             {
-                Offset = 0,
-                Size = 0,
+                BufferOffset = 0,
+                BuffferSize = 0,
                 PacketServerResponse = PacketServerResponse.Answer,
                 PacketClientCommand = PacketClientCommand.Close,
-                Payload = null,
+                Payload = new byte[1024],
+                PayloadSize = 0,
                 SessionId = _sessionId
             };
         }
 
-        public Packet CreateExecuteBuffer(int requestByteLength)
+        public Packet CreateExecutedInBuffer(int transmitBufferSize)
         {
             return new Packet
             {
-                Size = 0,
-                Offset = requestByteLength,
+                BuffferSize = transmitBufferSize,
+                BufferOffset = 0,
                 SessionId = _sessionId,
                 PacketServerResponse = PacketServerResponse.Answer,
                 PacketClientCommand = PacketClientCommand.ExecuteBuffer,
-                Payload = null
+                Payload = new byte[1024]
             };
         }
 
-        public Packet CreateExecutePayload(byte[] requestBytes)
+        public Packet CreateExecutedInPayload(byte[] payload, int payloadSize)
         {
             return new Packet
             {
-                Offset = requestBytes.Length,
-                Size = 0,
+                BufferOffset = 0,
+                BuffferSize = 0,
                 PacketServerResponse = PacketServerResponse.Answer,
                 PacketClientCommand = PacketClientCommand.ExecutePayload,
-                Payload = requestBytes,
+                Payload = payload,
+                PayloadSize = payloadSize,
                 SessionId = _sessionId
             };
         }
 
-        public Packet CreateWrite(byte[] data, int bufferSize, int offset)
+        public Packet CreateWrite(
+            byte[] payload,
+            int receiveBufferSize,
+            int receiveBufferOffset,
+            int payloadSize)
         {
             return new Packet
             {
                 SessionId = _sessionId,
-                Offset = offset,
-                Size = bufferSize,
+                BufferOffset = receiveBufferOffset,
+                BuffferSize = receiveBufferSize,
                 PacketClientCommand = PacketClientCommand.Write,
                 PacketServerResponse = PacketServerResponse.Answer,
-                Payload = data
+                Payload = payload,
+                PayloadSize = payloadSize,
             };
         }
 
-        public Packet CreateRead(int offset, int size)
+        public Packet CreateRead(
+            int transmitBufferSize, 
+            int transmitBufferOffset)
         {
             return new Packet
             {
                 SessionId = _sessionId,
-                Offset = offset,
-                Size = size,
+                BufferOffset = transmitBufferOffset,
+                BuffferSize = transmitBufferSize,
                 PacketClientCommand = PacketClientCommand.Read,
                 PacketServerResponse = PacketServerResponse.Answer,
-                Payload = null,
+                Payload = new byte[1024],
+                PayloadSize = 0,
             };
         }
     }

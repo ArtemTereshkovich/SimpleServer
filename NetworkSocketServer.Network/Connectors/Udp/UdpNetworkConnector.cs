@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NetworkSocketServer.NetworkLayer.TransportHandler;
 
-namespace NetworkSocketServer.NetworkLayer.Connectors
+namespace NetworkSocketServer.NetworkLayer.Connectors.Udp
 {
     internal class UdpNetworkConnector : INetworkConnector
     {
@@ -34,7 +34,7 @@ namespace NetworkSocketServer.NetworkLayer.Connectors
             return Task.CompletedTask;
         }
 
-        private void SendLocalAddress(Socket socket, EndPoint sendPoint)
+        private static void SendLocalAddress(Socket socket, EndPoint sendPoint)
         {
             var endPoint = socket.LocalEndPoint;
 

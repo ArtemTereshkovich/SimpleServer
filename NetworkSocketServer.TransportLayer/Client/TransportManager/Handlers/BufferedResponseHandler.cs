@@ -1,7 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using NetworkSocketServer.TransportLayer.Buffer;
 using NetworkSocketServer.TransportLayer.Client.Logger;
-using NetworkSocketServer.TransportLayer.Client.ServiceHandlers.RequestExecutor.BytesSender;
+using NetworkSocketServer.TransportLayer.Client.TransportManager.BytesSender;
 using NetworkSocketServer.TransportLayer.Packets;
 using NetworkSocketServer.TransportLayer.Packets.PacketFactory;
 using NetworkSocketServer.TransportLayer.Serializer;
@@ -44,14 +45,17 @@ namespace NetworkSocketServer.TransportLayer.Client.TransportManager.Handlers
 
                 var requestPacket = _packetFactory.CreateRead(totalReceived, portionSize);
 
-                var dataPacket = await SendPacket(requestPacket);
+                var dataPacket = await SendPacket(requestPacket, portionSize + 36);
 
-                receiveBuffer.Insert(dataPacket.Payload, totalReceived);
+                var payload = dataPacket.Payload.Take(dataPacket.PayloadSize).ToArray();
+
+                receiveBuffer.Insert(payload, totalReceived);
 
                 totalReceived += portionSize;
-                portionSize += increaseStep;
 
-                _clientLogger.LogProcessingBytes(totalReceived, receiveBuffer.Length);
+                _clientLogger.LogProcessingBytes(totalReceived, receiveBuffer.Length, portionSize);
+                
+                portionSize += increaseStep;
             }
 
             return receiveBuffer.GetAll();
@@ -72,11 +76,11 @@ namespace NetworkSocketServer.TransportLayer.Client.TransportManager.Handlers
             return buffer;
         }
 
-        private async Task<Packet> SendPacket(Packet sendPacket)
+        private async Task<Packet> SendPacket(Packet sendPacket, int receivePacketSize)
         {
             var dataSerializedPacket = _byteSerializer.Serialize(sendPacket);
 
-            var dataReceived = await _bytesSender.AcceptedSend(dataSerializedPacket);
+            var dataReceived = await _bytesSender.AcceptedSend(dataSerializedPacket, receivePacketSize);
 
             return _byteSerializer.Deserialize(dataReceived);
         }

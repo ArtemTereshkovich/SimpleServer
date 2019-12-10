@@ -10,7 +10,7 @@ namespace NetworkSocketServer.NetworkLayer.TransportHandler.Factories
         {
             if (acceptor is TcpKeepAliveNetworkAcceptor)
             {
-                return new TcpBlockingReceiveTransportHandler();
+                return new TcpBlockingTransportHandler();
             }
             else
             {
@@ -22,7 +22,7 @@ namespace NetworkSocketServer.NetworkLayer.TransportHandler.Factories
         {
             if (connectionType == ConnectionType.Tcp)
             {
-                return  new TcpBlockingReceiveTransportHandler();
+                return  new TcpBlockingTransportHandler();
             }
             else
             {

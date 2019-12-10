@@ -11,7 +11,6 @@ namespace NetworkSocketServer.NetworkLayer.Acceptors.Udp
     {
         private readonly UdpNetworkAcceptorSettings _acceptorSettings;
         private Socket _socket;
-        private bool _isBlock;
 
         public UdpNetworkAcceptor(UdpNetworkAcceptorSettings acceptorSettings)
         {
@@ -21,8 +20,6 @@ namespace NetworkSocketServer.NetworkLayer.Acceptors.Udp
                 _acceptorSettings.ListenIpAddress.AddressFamily,
                 SocketType.Dgram, 
                 ProtocolType.Udp);
-
-            _isBlock = false;
         }
 
         public void Open()
@@ -32,17 +29,7 @@ namespace NetworkSocketServer.NetworkLayer.Acceptors.Udp
 
         public bool IsHaveNewConnection()
         {
-            var isAnyDataAvailable = false;
-
-            try
-            {
-                isAnyDataAvailable = _socket.Available != 0;
-            }
-            catch 
-            {
-            }
-
-            return isAnyDataAvailable && !_isBlock;
+            return _socket.Available != 0;
         }
 
         public Task AcceptConnection(ITransportHandler transportHandler)
@@ -51,12 +38,8 @@ namespace NetworkSocketServer.NetworkLayer.Acceptors.Udp
             {
                 udpTransportHandler.IpEndPointClient = ReceiveAddress();
                 udpTransportHandler.EraseExceptionReceiveTimeout = true;
-
-                Console.WriteLine("Receive udp address:" + udpTransportHandler.IpEndPointClient);
             }
-
-            _isBlock = true;
-
+            
             transportHandler.Activate(_socket);
 
             return Task.CompletedTask;
@@ -75,15 +58,12 @@ namespace NetworkSocketServer.NetworkLayer.Acceptors.Udp
                 ProtocolType.Udp);
 
             _socket.Bind(new IPEndPoint(_acceptorSettings.ListenIpAddress, _acceptorSettings.ListenPort));
-
-
-            _isBlock = false;
         }
 
         private IPEndPoint ReceiveAddress()
         {
             IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
-            EndPoint senderRemote = (EndPoint)sender;
+            EndPoint senderRemote = sender;
             var addressBytes = new byte[_socket.Available];
             _socket.ReceiveFrom(addressBytes, ref senderRemote);
 

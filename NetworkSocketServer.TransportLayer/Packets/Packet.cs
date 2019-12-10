@@ -7,9 +7,11 @@ namespace NetworkSocketServer.TransportLayer.Packets
     {
         public Guid SessionId { get; set; }
 
-        public int Size { get; set; }
+        public int BuffferSize { get; set; }
 
-        public int Offset { get; set; }
+        public int BufferOffset { get; set; }
+
+        public int PayloadSize { get; set; }
         
         public PacketClientCommand PacketClientCommand { get; set; }
 

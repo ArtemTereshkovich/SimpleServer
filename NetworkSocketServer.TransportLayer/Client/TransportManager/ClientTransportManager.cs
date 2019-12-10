@@ -1,10 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using NetworkSocketServer.DTO.Requests;
 using NetworkSocketServer.DTO.Responses;
 using NetworkSocketServer.TransportLayer.Client.ConnectionManager;
 using NetworkSocketServer.TransportLayer.Client.Logger;
 using NetworkSocketServer.TransportLayer.Client.RequestExecutor;
-using NetworkSocketServer.TransportLayer.Client.ServiceHandlers.RequestExecutor.BytesSender;
 using NetworkSocketServer.TransportLayer.Client.TransportManager.BytesSender;
 using NetworkSocketServer.TransportLayer.Client.TransportManager.Handlers;
 using NetworkSocketServer.TransportLayer.Packets;
@@ -41,7 +42,8 @@ namespace NetworkSocketServer.TransportLayer.Client.TransportManager
 
             var executePacket = await ProcessExecutePacket(requestBytes);
 
-            var answerPacket = await SendPacket(executePacket);
+            var answerPacket = await SendPacket(executePacket, 
+                _clientConnectionManager.SessionContext.PacketSizeThreshold + 36);
 
             var responseBytes =  await HandleExecuteAnswer(answerPacket);
 
@@ -50,9 +52,13 @@ namespace NetworkSocketServer.TransportLayer.Client.TransportManager
 
         private async Task<Packet> ProcessExecutePacket(byte[] requestBytes)
         {
-            if (requestBytes.Length < _clientConnectionManager.SessionContext.PacketSizeThreshold * 2)
+            if (requestBytes.Length <= _clientConnectionManager.SessionContext.PacketSizeThreshold)
             {
-                return _packetFactory.CreateExecutePayload(requestBytes);
+                var requestLength = requestBytes.Length;
+
+                Array.Resize(ref requestBytes, _clientConnectionManager.SessionContext.PacketSizeThreshold);
+
+                return _packetFactory.CreateExecutedInPayload(requestBytes, requestLength);
             }
             else
             {
@@ -63,15 +69,15 @@ namespace NetworkSocketServer.TransportLayer.Client.TransportManager
                     _bytesSender,
                     _clientLogger);
 
-                return await handler.ProvideRequestToServerBuffer(requestBytes, 30);
+                return await handler.ProvideRequestToServerBuffer(requestBytes);
             }
         }
 
-        private async Task<Packet> SendPacket(Packet packet)
+        private async Task<Packet> SendPacket(Packet packet, int receivedPacketSize)
         {
             var executeBytes = _byteSerializer.Serialize(packet);
 
-            var answerPacket = await _bytesSender.AcceptedSend(executeBytes);
+            var answerPacket = await _bytesSender.AcceptedSend(executeBytes, receivedPacketSize);
 
             return _byteSerializer.Deserialize(answerPacket);
         }
@@ -80,7 +86,9 @@ namespace NetworkSocketServer.TransportLayer.Client.TransportManager
         {
             if (answerPacket.PacketServerResponse == PacketServerResponse.ResultInPayload)
             {
-                return answerPacket.Payload;
+                var payload = answerPacket.Payload.Take(answerPacket.PayloadSize).ToArray();
+
+                return payload;
             }
             else
             {
@@ -91,7 +99,7 @@ namespace NetworkSocketServer.TransportLayer.Client.TransportManager
                     _bytesSender,
                     _clientLogger);
 
-                return await handler.GetResponseFromServerBuffer(answerPacket.Offset, 30);
+                return await handler.GetResponseFromServerBuffer(answerPacket.BufferOffset, 5);
             }
         }
     }

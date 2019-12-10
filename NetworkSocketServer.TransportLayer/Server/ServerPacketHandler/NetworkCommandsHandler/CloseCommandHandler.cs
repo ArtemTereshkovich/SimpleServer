@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using NetworkSocketServer.NetworkLayer.TransportHandler;
-using NetworkSocketServer.TransportLayer.PacketHandler.NetworkCommandsHandler.Base;
 using NetworkSocketServer.TransportLayer.Packets;
+using NetworkSocketServer.TransportLayer.Server.ServerPacketHandler.NetworkCommandsHandler.Base;
 
-namespace NetworkSocketServer.TransportLayer.PacketHandler.NetworkCommandsHandler
+namespace NetworkSocketServer.TransportLayer.Server.ServerPacketHandler.NetworkCommandsHandler
 {
     class CloseCommandHandler : INetworkCommandHandler
     {

@@ -20,11 +20,11 @@ namespace NetworkSocketServer.TransportLayer.Client.Logger
             Console.WriteLine($"Succesfully connected at:{address}");
         }
         
-        public void LogProcessingBytes(int byteProcessed, int totalBytes)
+        public void LogProcessingBytes(int byteProcessed, int totalBytes, int packetPayloadSize)
         {
             Console.SetCursorPosition(30, Console.CursorTop);
 
-            Console.Write($"{byteProcessed} / {totalBytes} Bytes");
+            Console.Write($"{byteProcessed} / {totalBytes} Bytes. Packet payload: {packetPayloadSize}");
         }
 
         public void LogErrorException(Exception exception)

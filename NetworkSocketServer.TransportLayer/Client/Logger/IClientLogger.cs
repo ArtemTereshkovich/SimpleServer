@@ -11,7 +11,7 @@ namespace NetworkSocketServer.TransportLayer.Client.Logger
 
         void LogConnectEvent(IPEndPoint address);
 
-        void LogProcessingBytes(int byteProcessed, int totalBytes);
+        void LogProcessingBytes(int byteProcessed, int totalBytes, int packetPayloadSize);
 
         void LogErrorException(Exception exception);
     }

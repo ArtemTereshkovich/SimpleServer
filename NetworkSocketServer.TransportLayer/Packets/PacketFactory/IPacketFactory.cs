@@ -1,23 +1,40 @@
-﻿namespace NetworkSocketServer.TransportLayer.Packets.PacketFactory
+﻿using System.ComponentModel;
+
+namespace NetworkSocketServer.TransportLayer.Packets.PacketFactory
 {
     interface IPacketFactory
     {
-        Packet CreateAnswerSuccessWrite(int bufferSize, int bytesWrite);
+        Packet CreateAnswerSuccessWrite(
+            int receiveBufferSize,
+            int receiveBufferOffset,
+            int payloadSize);
 
-        Packet CreateAnswerSuccessRead(byte[] array, int transmitBufferLength, int arrayLength);
+        Packet CreateAnswerSuccessRead(
+            byte[] payload,
+            int transmitBufferSize,
+            int transmitBufferOffset,
+            int payloadSize);
 
-        Packet CreateAnswerExecuteSuccessPayload(byte[] responseBytes, int responseBytesLength);
+        Packet CreateAnswerExecuteSuccessPayload(
+            byte[] payload,
+            int payloadSize);
 
         Packet CreateAnswerExecuteSuccessBuffer(int transmitBufferLength);
 
         Packet CreateClosePacket();
 
-        Packet CreateExecuteBuffer(int requestByteLength);
+        Packet CreateExecutedInBuffer(int transmitBufferSize);
 
-        Packet CreateExecutePayload(byte[] requestBytes);
+        Packet CreateExecutedInPayload(byte[] payload, int payloadSize);
 
-        Packet CreateWrite(byte[] data, int bufferSize, int offset);
+        Packet CreateWrite(
+            byte[] payload,
+            int receiveBufferSize,
+            int receiveBufferOffset,
+            int payloadSize);
 
-        Packet CreateRead(int offset, int size);
+        Packet CreateRead(
+            int transmitBufferSize,
+            int transmitBufferOffset);
     }
 }

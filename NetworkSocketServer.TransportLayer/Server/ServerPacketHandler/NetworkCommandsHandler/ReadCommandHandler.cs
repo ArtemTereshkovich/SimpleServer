@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
 using NetworkSocketServer.NetworkLayer.TransportHandler;
-using NetworkSocketServer.TransportLayer.PacketHandler.NetworkCommandsHandler.Base;
+using NetworkSocketServer.TransportLayer.Client.Logger;
 using NetworkSocketServer.TransportLayer.Packets;
 using NetworkSocketServer.TransportLayer.Packets.PacketFactory;
 using NetworkSocketServer.TransportLayer.Serializer;
-using NetworkSocketServer.TransportLayer.Server;
+using NetworkSocketServer.TransportLayer.Server.ServerPacketHandler.NetworkCommandsHandler.Base;
 
-namespace NetworkSocketServer.TransportLayer.PacketHandler.NetworkCommandsHandler
+namespace NetworkSocketServer.TransportLayer.Server.ServerPacketHandler.NetworkCommandsHandler
 {
     internal class ReadCommandHandler : SenderCommandHandler, INetworkCommandHandler
     {
@@ -29,11 +29,18 @@ namespace NetworkSocketServer.TransportLayer.PacketHandler.NetworkCommandsHandle
         {
             CheckTransmitBuffer();
 
-            var array = _serverSessionContext.TransmitBuffer.Get(packet.Offset, packet.Size);
+
+            new ConsoleClientLogger().LogProcessingBytes(
+                packet.BufferOffset, 
+                _serverSessionContext.TransmitBuffer.Length,
+                packet.PayloadSize);
+
+            var array = _serverSessionContext.TransmitBuffer.Get(packet.BufferOffset, packet.PayloadSize);
 
             var answerPacket = _packetFactory.CreateAnswerSuccessRead(
                 array,
                 _serverSessionContext.TransmitBuffer.Length,
+                packet.BufferOffset, 
                 array.Length);
 
             SendPacket(answerPacket);

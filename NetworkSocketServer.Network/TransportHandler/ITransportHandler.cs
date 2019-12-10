@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Net.Sockets;
-using System.Threading.Tasks;
 
 namespace NetworkSocketServer.NetworkLayer.TransportHandler
 {
@@ -10,7 +9,11 @@ namespace NetworkSocketServer.NetworkLayer.TransportHandler
 
         void Send(byte[] array);
 
+        void ClearReceiveBuffer();
+
         byte[] Receive();
+
+        byte[] Receive(int length, bool eraseException);
 
         void Close();
     }
