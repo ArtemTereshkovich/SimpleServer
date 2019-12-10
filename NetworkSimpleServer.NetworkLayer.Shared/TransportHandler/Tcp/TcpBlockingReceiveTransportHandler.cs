@@ -1,21 +1,21 @@
 ﻿using System;
 using NetworkSimpleServer.NetworkLayer.Core.Packets;
-using NetworkSimpleServer.NetworkLayer.Core.Packets.Serializer;
+using NetworkSimpleServer.NetworkLayer.Core.Packets.Formatter;
 
 namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Tcp
 {
     public class TcpBlockingReceiveTransportHandler : ITransportHandler
     {
-        private readonly IPacketSerializer _packetSerializer;
+        private readonly IPacketByteFormatter _packetByteFormatter;
         private readonly int _packetSize;
 
         private TcpTransportHandlerContext _context;
 
         public TcpBlockingReceiveTransportHandler(
-            IPacketSerializer packetSerializer, 
+            IPacketByteFormatter packetByteFormatter, 
             int packetSize)
         {
-            _packetSerializer = packetSerializer;
+            _packetByteFormatter = packetByteFormatter;
             _packetSize = packetSize;
         }
         
@@ -34,7 +34,7 @@ namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Tcp
 
         public void Send(Packet packet)
         {
-            var array = _packetSerializer.Serialize(packet);
+            var array = _packetByteFormatter.Serialize(packet);
 
             if (array == null || array.Length != _packetSize)
                 throw new ArgumentException(nameof(array));
@@ -59,7 +59,7 @@ namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Tcp
             var buffer = new byte[_packetSize];
             _context.AcceptedSocket.Receive(buffer);
 
-            return _packetSerializer.Deserialize(buffer);
+            return _packetByteFormatter.Deserialize(buffer);
         }
 
         public void Close()

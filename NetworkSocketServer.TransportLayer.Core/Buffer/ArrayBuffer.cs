@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace NetworkSimpleServer.NetworkLayer.Core.Buffer
+namespace NetworkSocketServer.TransportLayer.Core.Buffer
 {
     public class ArrayBuffer : IBuffer
     {

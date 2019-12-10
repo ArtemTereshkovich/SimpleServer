@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NetworkSimpleServer.NetworkLayer.Core.Buffer
+namespace NetworkSocketServer.TransportLayer.Core.Buffer
 {
     public interface IBuffer : IDisposable
     {

@@ -2,7 +2,7 @@
 using NetworkSimpleServer.NetworkLayer.Client.Connectors;
 using NetworkSimpleServer.NetworkLayer.Core;
 using NetworkSimpleServer.NetworkLayer.Core.Logger;
-using NetworkSimpleServer.NetworkLayer.Core.Packets.Serializer;
+using NetworkSimpleServer.NetworkLayer.Core.Packets.Formatter;
 using NetworkSimpleServer.NetworkLayer.Core.TransportHandler;
 using NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Tcp;
 using NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Udp;
@@ -24,11 +24,11 @@ namespace NetworkSimpleServer.NetworkLayer.Client.ClientTransportHandler.Factory
 
             if (connectionType == ConnectionType.Udp)
             {
-                transportHandler = new UdpCycledCheckTransportHandler(new ManualPacketSerializer(), PacketConstants.PacketThresholdSize);
+                transportHandler = new UdpCycledCheckTransportHandler(new ManualPacketByteFormatter(), PacketConstants.PacketThresholdSize);
             }
             else
             {
-                transportHandler = new TcpBlockingReceiveTransportHandler(new ManualPacketSerializer(), PacketConstants.PacketThresholdSize);
+                transportHandler = new TcpBlockingReceiveTransportHandler(new ManualPacketByteFormatter(), PacketConstants.PacketThresholdSize);
             }
 
             return new ClientTransportHandlerWithRetry(

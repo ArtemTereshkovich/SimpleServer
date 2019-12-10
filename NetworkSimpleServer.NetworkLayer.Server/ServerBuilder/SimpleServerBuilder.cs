@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using NetworkSimpleServer.NetworkLayer.Core.Logger;
 using NetworkSimpleServer.NetworkLayer.Core.SocketOptionsAccessor.KeepAlive;
 using NetworkSimpleServer.NetworkLayer.Server.AcceptorDispatcher;
 using NetworkSimpleServer.NetworkLayer.Server.Acceptors;
@@ -42,7 +43,7 @@ namespace NetworkSimpleServer.NetworkLayer.Server.ServerBuilder
 
         public IServer Build()
         {
-            var dispatcher = new SingleThreadAcceptorDispatcher(_serviceConnectionManager, _transportHandlerFactory);
+            var dispatcher = new SingleThreadAcceptorDispatcher(new ConsoleLogger(), _serviceConnectionManager, _transportHandlerFactory);
             
             foreach (var acceptor in _acceptors)
             {

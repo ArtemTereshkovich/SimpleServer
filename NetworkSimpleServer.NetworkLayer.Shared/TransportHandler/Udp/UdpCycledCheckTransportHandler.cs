@@ -1,23 +1,23 @@
 ﻿using System;
 using System.Net.Sockets;
 using NetworkSimpleServer.NetworkLayer.Core.Packets;
-using NetworkSimpleServer.NetworkLayer.Core.Packets.Serializer;
+using NetworkSimpleServer.NetworkLayer.Core.Packets.Formatter;
 
 namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Udp
 {
     public class UdpCycledCheckTransportHandler : ITransportHandler
     {
-        private readonly IPacketSerializer _packetSerializer;
+        private readonly IPacketByteFormatter _packetByteFormatter;
         private readonly int _packetSize;
 
         private UdpTransportHandlerContext _context;
 
         public UdpCycledCheckTransportHandler(
-            IPacketSerializer packetSerializer,
+            IPacketByteFormatter packetByteFormatter,
             int packetSize)
         {
             _packetSize = packetSize;
-            _packetSerializer = packetSerializer;
+            _packetByteFormatter = packetByteFormatter;
         }
 
         public void Dispose()
@@ -35,7 +35,7 @@ namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Udp
 
         public void Send(Packet packet)
         {
-            var array = _packetSerializer.Serialize(packet);
+            var array = _packetByteFormatter.Serialize(packet);
 
             if(array == null || array.Length != _packetSize)
                 throw new ArgumentException(nameof(array));
@@ -62,7 +62,7 @@ namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Udp
             var array = new byte[_packetSize];
             _context.AcceptedSocket.ReceiveFrom(array, ref remoteEndpoint);
 
-            return _packetSerializer.Deserialize(array);
+            return _packetByteFormatter.Deserialize(array);
         }
 
         public void Close()

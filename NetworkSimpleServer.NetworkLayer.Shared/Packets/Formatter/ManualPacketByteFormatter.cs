@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 
-namespace NetworkSimpleServer.NetworkLayer.Core.Packets.Serializer
+namespace NetworkSimpleServer.NetworkLayer.Core.Packets.Formatter
 {
-    public class ManualPacketSerializer : IPacketSerializer
+    public class ManualPacketByteFormatter : IPacketByteFormatter
     {
         public byte[] Serialize(Packet packet)
         {
@@ -15,8 +15,6 @@ namespace NetworkSimpleServer.NetworkLayer.Core.Packets.Serializer
             byte[] bufferOffset = BitConverter.GetBytes(packet.BufferOffset);
             byte[] payloadSize = BitConverter.GetBytes(packet.PayloadSize);
             byte[] payload = packet.Payload;
-
-
 
             return server
                 .Concat(client)

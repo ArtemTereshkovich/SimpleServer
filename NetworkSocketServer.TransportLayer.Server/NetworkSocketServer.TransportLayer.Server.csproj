@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NetworkSimpleServer.NetworkLayer.Server\NetworkSimpleServer.NetworkLayer.Server.csproj" />
+    <ProjectReference Include="..\NetworkSocketServer.TransportLayer.Core\NetworkSocketServer.TransportLayer.Core.csproj" />
+  </ItemGroup>
+
+</Project>

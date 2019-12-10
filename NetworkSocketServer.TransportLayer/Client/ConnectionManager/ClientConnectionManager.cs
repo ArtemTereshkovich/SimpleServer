@@ -55,38 +55,7 @@ namespace NetworkSocketServer.TransportLayer.Client.ConnectionManager
                 SessionContext = null;
             }
         }
-
-        public async Task Reconnect()
-        {
-            if (SessionContext == null)
-                throw new InvalidOperationException("No session context");
-
-            if (SessionContext.TransportHandler is UDPBlockingReceiveTransportHandler udpBlocking)
-            {
-                udpBlocking.Reconnect(SessionContext.CurrentConnectorSettings);
-
-                _logger.LogReconnectEvent(SessionContext.CurrentConnectorSettings.IpEndPointServer);
-
-                return;
-            }
-
-            try
-            {
-                SessionContext.TransportHandler.Close();
-            }
-            catch (Exception exception)
-            {
-                _logger.LogErrorException(exception);
-            }
-
-            var transportHandler = await _dispatcher.CreateTransportHandler(
-                SessionContext.CurrentConnectorSettings);
-
-            SessionContext.ChangeTransportHandler(transportHandler);
-
-            _logger.LogReconnectEvent(SessionContext.CurrentConnectorSettings.IpEndPointServer);
-        }
-
+        
         public Task Disconnect()
         {
             CheckSessionContext();
