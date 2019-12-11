@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using NetworkSimpleServer.NetworkLayer.Core.Packets;
 using NetworkSimpleServer.NetworkLayer.Core.Packets.Formatter;
 
@@ -55,9 +56,25 @@ namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Udp
 
         public Packet Receive()
         {
-            WaitForData(_packetSize);
+            //WaitForData(_packetSize);
 
             var remoteEndpoint = _context.RemoteEndPoint;
+
+            var checkArray = new byte[0];
+            _context.AcceptedSocket.ReceiveFrom(checkArray, ref remoteEndpoint);
+
+            if (_context.AcceptedSocket.Available < _packetSize)
+                Thread.Sleep(5);
+
+            if (_context.AcceptedSocket.Available < _packetSize)
+                Thread.Sleep(10);
+
+            if (_context.AcceptedSocket.Available < _packetSize)
+                Thread.Sleep(15);
+
+            if (_context.AcceptedSocket.Available < _packetSize)
+                Thread.Sleep(50);
+
             var array = new byte[_packetSize];
             _context.AcceptedSocket.ReceiveFrom(array, ref remoteEndpoint);
 
@@ -66,9 +83,25 @@ namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Udp
 
         public Packet ReceiveSpecifiedSize(int specifiedPacketSize)
         {
-            WaitForData(specifiedPacketSize);
-
+            //WaitForData(specifiedPacketSize);
+            
             var remoteEndpoint = _context.RemoteEndPoint;
+
+            var checkArray = new byte[0];
+            _context.AcceptedSocket.ReceiveFrom(checkArray, ref remoteEndpoint);
+
+            if (_context.AcceptedSocket.Available < specifiedPacketSize)
+                Thread.Sleep(5);
+
+            if (_context.AcceptedSocket.Available < specifiedPacketSize)
+                Thread.Sleep(10);
+
+            if (_context.AcceptedSocket.Available < specifiedPacketSize)
+                Thread.Sleep(15);
+
+            if (_context.AcceptedSocket.Available < specifiedPacketSize)
+                Thread.Sleep(50);
+
             var array = new byte[specifiedPacketSize];
             _context.AcceptedSocket.ReceiveFrom(array, ref remoteEndpoint);
 

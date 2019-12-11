@@ -61,6 +61,9 @@ namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Tcp
             var checkBuffer = new byte[0];
             _context.AcceptedSocket.Receive(checkBuffer);
 
+            if (_context.AcceptedSocket.Available < _packetSize)
+                Thread.Sleep(15);
+
             var buffer = new byte[_packetSize];
             _context.AcceptedSocket.Receive(buffer);
 
@@ -73,6 +76,12 @@ namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Tcp
             _context.AcceptedSocket.Receive(checkBuffer);
 
             if(_context.AcceptedSocket.Available < specifiedPacketSize)
+                Thread.Sleep(5);
+
+            if (_context.AcceptedSocket.Available < specifiedPacketSize)
+                Thread.Sleep(10);
+
+            if (_context.AcceptedSocket.Available < specifiedPacketSize)
                 Thread.Sleep(15);
 
             var buffer = new byte[specifiedPacketSize];
