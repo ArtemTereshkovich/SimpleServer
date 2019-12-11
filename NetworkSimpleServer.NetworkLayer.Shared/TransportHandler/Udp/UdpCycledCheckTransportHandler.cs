@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Sockets;
 using System.Threading;
 using NetworkSimpleServer.NetworkLayer.Core.Packets;
 using NetworkSimpleServer.NetworkLayer.Core.Packets.Formatter;
@@ -31,6 +32,14 @@ namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Udp
         public void Activate(TransportHandlerContext context)
         {
             _context = context as UdpTransportHandlerContext;
+
+            _context.AcceptedSocket = new Socket(
+                _context.RemoteEndPoint.AddressFamily,
+                SocketType.Dgram,
+                ProtocolType.Udp);
+
+            _context.AcceptedSocket
+                .Connect(_context.RemoteEndPoint);
         }
 
         public void Send(Packet packet)
@@ -131,7 +140,21 @@ namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Udp
             }
             catch { }
 
-            _context.AcceptedSocket.Connect(_context.RemoteEndPoint);
+            try
+            {
+                _context.AcceptedSocket
+                    .Connect(_context.RemoteEndPoint);
+            }
+            catch (ObjectDisposedException)
+            {
+                _context.AcceptedSocket = new Socket(
+                    _context.RemoteEndPoint.AddressFamily,
+                    SocketType.Dgram,
+                    ProtocolType.Udp);
+
+                _context.AcceptedSocket
+                    .Connect(_context.RemoteEndPoint);
+            }
         }
 
         private void WaitForData(int packetSize)
