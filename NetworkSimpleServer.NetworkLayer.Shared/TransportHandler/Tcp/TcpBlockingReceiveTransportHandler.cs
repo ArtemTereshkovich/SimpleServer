@@ -36,7 +36,7 @@ namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Tcp
         {
             var array = _packetByteFormatter.Serialize(packet);
 
-            if (array == null || array.Length != _packetSize)
+            if (array == null || array.Length == 0)
                 throw new ArgumentException(nameof(array));
 
             if (_context.AcceptedSocket == null)
