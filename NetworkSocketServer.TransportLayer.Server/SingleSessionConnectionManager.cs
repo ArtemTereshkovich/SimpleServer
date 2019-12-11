@@ -45,6 +45,11 @@ namespace NetworkSocketServer.TransportLayer.Server
             }
         }
 
+        public Task ProcessRegistered()
+        {
+            throw new NotImplementedException();
+        }
+
         private async Task ContinueProcessingPacket(
             IServerPacketHandler serverPacketHandler,
             ITransportHandler transportHandler)
@@ -74,7 +79,6 @@ namespace NetworkSocketServer.TransportLayer.Server
 
             _serverSessionContext = 
                 ServerSessionContext.CreateArrayBuffersContext(packet.SessionId);
-
         }
 
         private IServerPacketHandler CreatePacketHandler(

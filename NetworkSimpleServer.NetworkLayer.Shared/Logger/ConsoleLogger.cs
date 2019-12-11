@@ -29,13 +29,12 @@ namespace NetworkSimpleServer.NetworkLayer.Core.Logger
 
         public void LogErrorException(Exception exception)
         {
-            Console.WriteLine($"Error happend: {exception.Message}. Exception type: {exception.GetType().Name}. StackTrace: {exception.StackTrace}");
+            Console.WriteLine($"Error happend. Exception type: {exception.GetType().Name}. StackTrace: {exception.StackTrace}");
         }
 
         public void LogError(string text)
         {
-            //Console.WriteLine(text);
-            Console.WriteLine("Error happend");
+            Console.WriteLine(text);
         }
 
         public void LogConnectEvent()

@@ -56,6 +56,10 @@ namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Udp
                 _context.AcceptedSocket.Receive(buffer);
             }
         }
+        public bool IsHaveNewPackets()
+        {
+            return _context.AcceptedSocket.Available != 0;
+        }
 
         public Packet Receive()
         {

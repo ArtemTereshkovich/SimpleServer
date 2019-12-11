@@ -6,5 +6,7 @@ namespace NetworkSimpleServer.NetworkLayer.Server
     public interface IServiceConnectionManager
     {
         Task HandleNewConnection(ITransportHandler transportHandler);
+
+        Task ProcessRegistered();
     }
 }

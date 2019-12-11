@@ -21,7 +21,7 @@ namespace NetworkSocketServer.Server
 
             var factory = new SimpleRequestHandlerFactory();
 
-            var connectionHandler = new SingleSessionConnectionManager(factory);
+            var connectionHandler = new MultiplexingConnectionManager(factory);
 
             var host = new SimpleServerBuilder(connectionHandler)
                 .WithTcpKeepAliveAcceptor(

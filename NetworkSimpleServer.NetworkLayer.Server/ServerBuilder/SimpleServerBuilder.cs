@@ -47,7 +47,7 @@ namespace NetworkSimpleServer.NetworkLayer.Server.ServerBuilder
 
         public IServer Build()
         {
-            var dispatcher = new SingleThreadAcceptorDispatcher(new ConsoleLogger(), _serviceConnectionManager, _transportHandlerFactory);
+            var dispatcher = new MultiplexingAcceptorDispatcher(new ConsoleLogger(), _serviceConnectionManager, _transportHandlerFactory);
             
             foreach (var acceptor in _acceptors)
             {

@@ -29,6 +29,11 @@ namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Tcp
             _context.AcceptedSocket?.Dispose();
         }
 
+        public bool IsHaveNewPackets()
+        {
+            return _context.AcceptedSocket.Available != 0;
+        }
+
         public void Activate(TransportHandlerContext context)
         {
             _context = context as TcpTransportHandlerContext;
