@@ -24,7 +24,7 @@ namespace NetworkSimpleServer.NetworkLayer.Client.ClientTransportHandler.Factory
 
             if (connectionType == ConnectionType.Udp)
             {
-                transportHandler = new UdpCycledCheckTransportHandler(new ManualPacketByteFormatter(), PacketConstants.PacketThresholdSize);
+                transportHandler = new UdpCycledChecTransportHandler(new ManualPacketByteFormatter(), PacketConstants.PacketThresholdSize);
             }
             else
             {

@@ -23,7 +23,7 @@ namespace NetworkSimpleServer.NetworkLayer.Client.Connectors.Factory
             else
             {
 
-                return new UdpNetworkConnector(settings);
+                return new UDPNetworkConnector(settings);
             }
         }
     }

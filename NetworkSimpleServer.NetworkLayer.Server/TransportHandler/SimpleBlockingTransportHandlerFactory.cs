@@ -15,7 +15,7 @@ namespace NetworkSimpleServer.NetworkLayer.Server.TransportHandler
         {
             if (acceptor is TcpKeepAliveNetworkAcceptor)
             {
-                return new TcpBlockingReceiveTransportHandler(
+                return new UdpCycledChecTransportHandler(
                     new ManualPacketByteFormatter(), 
                     PacketConstants.PacketThresholdSize);
             }

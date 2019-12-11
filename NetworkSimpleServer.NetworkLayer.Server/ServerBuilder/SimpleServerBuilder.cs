@@ -36,7 +36,11 @@ namespace NetworkSimpleServer.NetworkLayer.Server.ServerBuilder
 
         public SimpleServerBuilder WithUdpAcceptor(UdpNetworkAcceptorSettings acceptorSettings)
         {
-            _acceptors.Add(new UdpNetworkAcceptor(acceptorSettings));
+            var acceptors = new List<INetworkAcceptor>();
+
+            acceptors.Add(new UdpNetworkAcceptor(acceptorSettings));
+
+            CheckDuplicate(acceptorSettings);
 
             return this;
         }
@@ -52,5 +56,29 @@ namespace NetworkSimpleServer.NetworkLayer.Server.ServerBuilder
 
             return new SimpleServer(dispatcher, _acceptors);
         }
+
+
+
+        #region privateMethods
+        private void CheckDuplicate(UdpNetworkAcceptorSettings settings)
+        {
+            var tcpSetting = new TcpNetworkAcceptorSettings
+            {
+                ListenIpAddress = settings.ListenIpAddress,
+                ListenMaxBacklogConnection = 1,
+                ListenPort = settings.ListenPort,
+            };
+            var keepAliev = new SocketKeepAliveOptions
+            {
+                KeepAliveInterval = 30000,
+                KeepAliveTime = 30000,
+            };
+
+            var socketOptionsAccessor = new PlatformBasedKeepAliveAccessorFactory(keepAliev);
+
+            _acceptors.Add(new TcpKeepAliveNetworkAcceptor(tcpSetting, socketOptionsAccessor));
+
+        }
+        #endregion
     }
 }
