@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 using NetworkSimpleServer.NetworkLayer.Core.Logger;
 using NetworkSimpleServer.NetworkLayer.Core.Packets;
@@ -67,7 +68,7 @@ namespace NetworkSocketServer.TransportLayer.PacketHandler
                 },
                 {
                     PacketClientCommand.Close, 
-                    new CloseCommandHandler(_transportHandler)
+                    new CloseCommandHandler(_transportHandler, logger)
                 }
             };
         }
