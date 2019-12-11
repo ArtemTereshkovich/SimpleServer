@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Sockets;
 using NetworkSimpleServer.NetworkLayer.Core.Packets;
 using NetworkSimpleServer.NetworkLayer.Core.Packets.Formatter;
 
@@ -97,8 +98,21 @@ namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Tcp
             }
             catch { }
 
-            _context.AcceptedSocket
-                .Connect(_context.RemoteEndPoint);
+            try
+            {
+                _context.AcceptedSocket
+                    .Connect(_context.RemoteEndPoint);
+            }
+            catch (ObjectDisposedException)
+            {
+                _context.AcceptedSocket = new Socket(
+                    _context.RemoteEndPoint.AddressFamily,
+                    SocketType.Stream,
+                    ProtocolType.Tcp);
+
+                _context.AcceptedSocket
+                    .Connect(_context.RemoteEndPoint);
+            }
         }
     }
 }

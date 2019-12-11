@@ -20,8 +20,8 @@ namespace NetworkSocketServer.Client
             var retrySettings = new ClientTransportHandlerRetrySettings
             {
                 CountReconnect = 5,
-                ReconnectPeriod = TimeSpan.FromSeconds(2),
-                TimeOutAnswer = TimeSpan.FromSeconds(4)
+                ReconnectPeriod = TimeSpan.FromSeconds(7),
+                TimeOutAnswer = TimeSpan.FromSeconds(2)
             };
 
             var networkClientManagerFactory = new ClientConnectionManagerFactory(
