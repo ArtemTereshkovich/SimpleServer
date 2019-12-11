@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Sockets;
+using System.Threading;
 using NetworkSimpleServer.NetworkLayer.Core.Packets;
 using NetworkSimpleServer.NetworkLayer.Core.Packets.Formatter;
 
@@ -70,6 +71,9 @@ namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Tcp
         {
             var checkBuffer = new byte[0];
             _context.AcceptedSocket.Receive(checkBuffer);
+
+            if(_context.AcceptedSocket.Available < specifiedPacketSize)
+                Thread.Sleep(15);
 
             var buffer = new byte[specifiedPacketSize];
             _context.AcceptedSocket.Receive(buffer);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using NetworkSimpleServer.NetworkLayer.Core;
 using NetworkSimpleServer.NetworkLayer.Core.Logger;
 using NetworkSimpleServer.NetworkLayer.Core.Packets;
 using NetworkSimpleServer.NetworkLayer.Core.TransportHandler;
@@ -38,12 +39,19 @@ namespace NetworkSocketServer.TransportLayer.Server.ServerPacketHandler.NetworkC
 
             var array = _serverSessionContext.TransmitBuffer.Get(clientPacket.BufferOffset, clientPacket.PayloadSize);
 
+            var arrayLength = array.Length;
+
+            if (arrayLength < PacketConstants.PacketPayloadThresholdSize)
+            {
+                Array.Resize(ref array, PacketConstants.PacketPayloadThresholdSize);
+            }
+
             var answerPacket = _packetFactory.CreateAnswerSuccessRead(
                 clientPacket.PacketId,
                 array,
                 _serverSessionContext.TransmitBuffer.Length,
-                clientPacket.BufferOffset, 
-                array.Length);
+                clientPacket.BufferOffset,
+                arrayLength);
 
             _transportHandler.Send(answerPacket);
 
