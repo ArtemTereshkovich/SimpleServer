@@ -34,7 +34,8 @@ namespace NetworkSimpleServer.NetworkLayer.Core.Logger
 
         public void LogError(string text)
         {
-            Console.WriteLine(text);
+            //Console.WriteLine(text);
+            Console.WriteLine("Error happend");
         }
 
         public void LogConnectEvent()

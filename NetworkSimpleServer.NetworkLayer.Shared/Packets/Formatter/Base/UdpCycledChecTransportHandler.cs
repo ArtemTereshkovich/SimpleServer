@@ -76,12 +76,6 @@ namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Udp
             var checkBuffer = new byte[0];
             _context.AcceptedSocket.Receive(checkBuffer);
 
-            if(_context.AcceptedSocket.Available < specifiedPacketSize)
-                Thread.Sleep(5);
-
-            if (_context.AcceptedSocket.Available < specifiedPacketSize)
-                Thread.Sleep(10);
-
             if (_context.AcceptedSocket.Available < specifiedPacketSize)
                 Thread.Sleep(15);
 
@@ -122,6 +116,9 @@ namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Udp
             }
             catch (ObjectDisposedException)
             {
+                #region reconnect
+
+
                 _context.AcceptedSocket = new Socket(
                     _context.RemoteEndPoint.AddressFamily,
                     SocketType.Stream,
@@ -129,6 +126,8 @@ namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Udp
 
                 _context.AcceptedSocket
                     .Connect(_context.RemoteEndPoint);
+
+                #endregion
             }
         }
     }
