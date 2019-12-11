@@ -67,6 +67,8 @@ namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Tcp
             var buffer = new byte[_packetSize];
             _context.AcceptedSocket.Receive(buffer);
 
+            Thread.Sleep(15);
+
             return _packetByteFormatter.Deserialize(buffer);
         }
 
@@ -75,13 +77,15 @@ namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Tcp
             var checkBuffer = new byte[0];
             _context.AcceptedSocket.Receive(checkBuffer);
             
-            Thread.Sleep(40);
+            Thread.Sleep(15);
 
             if (_context.AcceptedSocket.Available < specifiedPacketSize)
                 Thread.Sleep(15);
 
             var buffer = new byte[specifiedPacketSize];
             _context.AcceptedSocket.Receive(buffer);
+            
+            Thread.Sleep(15);
 
             return _packetByteFormatter.Deserialize(buffer);
         }
