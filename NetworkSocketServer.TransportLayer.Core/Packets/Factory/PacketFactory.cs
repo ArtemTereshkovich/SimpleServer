@@ -150,18 +150,18 @@ namespace NetworkSocketServer.TransportLayer.Core.Packets.Factory
         }
 
         public Packet CreateRead(
-            int transmitBufferSize, 
-            int transmitBufferOffset)
+            int transmitBufferOffset,
+            int portionSize)
         {
             return new Packet
             {
                 SessionId = _sessionId,
                 BufferOffset = transmitBufferOffset,
-                BuffferSize = transmitBufferSize,
+                BuffferSize = 0,
                 PacketClientCommand = PacketClientCommand.Read,
                 PacketServerResponse = PacketServerResponse.Answer,
                 Payload = PacketConstants.EmptyPayload,
-                PayloadSize = 0,
+                PayloadSize = portionSize,
                 PacketId = Guid.NewGuid()
             };
         }

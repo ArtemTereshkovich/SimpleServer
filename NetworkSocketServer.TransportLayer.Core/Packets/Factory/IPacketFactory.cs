@@ -38,7 +38,7 @@ namespace NetworkSocketServer.TransportLayer.Core.Packets.Factory
             int payloadSize);
 
         Packet CreateRead(
-            int transmitBufferSize,
-            int transmitBufferOffset);
+            int transmitBufferOffset,
+            int portionSize);
     }
 }
