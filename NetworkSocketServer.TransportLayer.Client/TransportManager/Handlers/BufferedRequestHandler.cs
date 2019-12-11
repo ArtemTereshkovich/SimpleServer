@@ -9,18 +9,18 @@ namespace NetworkSocketServer.TransportLayer.Client.TransportManager.Handlers
 {
     class BufferedRequestHandler
     {
-        private readonly int _packetSizeThreshold;
+        private readonly int _packetPayloadSize;
         private readonly IPacketFactory _packetFactory;
         private readonly IClientTransportHandler _clientTransportHandler;
         private readonly ILogger _logger;
 
         public BufferedRequestHandler(
-            int packetSizeThreshold, 
+            int packetPayloadSize, 
             IPacketFactory packetFactory, 
             IClientTransportHandler clientTransportHandler,
             ILogger logger)
         {
-            _packetSizeThreshold = packetSizeThreshold;
+            _packetPayloadSize = packetPayloadSize;
             _packetFactory = packetFactory;
             _clientTransportHandler = clientTransportHandler;
             _logger = logger;
@@ -32,7 +32,7 @@ namespace NetworkSocketServer.TransportLayer.Client.TransportManager.Handlers
             
             int totalSend = 0;
 
-            int portionSize = _packetSizeThreshold;
+            int portionSize = _packetPayloadSize;
 
             while (totalSend < sendBuffer.Length)
             {
@@ -56,7 +56,7 @@ namespace NetworkSocketServer.TransportLayer.Client.TransportManager.Handlers
         {
             var byteToSendLength = bytesToSend.Length;
 
-            Array.Resize(ref bytesToSend, portionSize);
+            Array.Resize(ref bytesToSend, _packetPayloadSize);
 
             var dataPacket = _packetFactory.CreateWrite(
                 bytesToSend,
