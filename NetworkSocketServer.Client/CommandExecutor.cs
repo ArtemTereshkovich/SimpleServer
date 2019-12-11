@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using NetworkSocketServer.Client.Commands;
 using NetworkSocketServer.DTO.Requests;
 using NetworkSocketServer.DTO.Responses;
-using NetworkSocketServer.TransportLayer.Client.ConnectionManager;
 
 namespace NetworkSocketServer.Client
 {

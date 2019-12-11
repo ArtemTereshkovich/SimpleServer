@@ -5,6 +5,6 @@ namespace NetworkSimpleServer.NetworkLayer.Client.ConnectorDispatcher
 {
     public interface IConnectorDispatcher
     {
-        IClientTransportHandler CreateTransportHandler(NetworkConnectorSettings settings);
+        IClientTransportHandler CreateClientTransportHandler(NetworkConnectorSettings settings);
     }
 }

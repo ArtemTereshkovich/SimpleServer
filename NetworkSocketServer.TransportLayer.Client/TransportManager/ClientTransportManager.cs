@@ -1,82 +1,72 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using NetworkSimpleServer.NetworkLayer.Client.ClientTransportHandler;
+using NetworkSimpleServer.NetworkLayer.Core;
 using NetworkSimpleServer.NetworkLayer.Core.Logger;
 using NetworkSimpleServer.NetworkLayer.Core.Packets;
 using NetworkSocketServer.DTO.Requests;
 using NetworkSocketServer.DTO.Responses;
-using NetworkSocketServer.TransportLayer.Client.ConnectionManager;
 using NetworkSocketServer.TransportLayer.Client.TransportManager.Handlers;
 using NetworkSocketServer.TransportLayer.Core.Packets.Factory;
+using NetworkSocketServer.TransportLayer.Core.Serializer;
 
 namespace NetworkSocketServer.TransportLayer.Client.TransportManager
 {
     class ClientTransportManager : IClientTransportManager
     {
         private readonly ILogger _logger;
-        private readonly ClientConnectionManager _clientConnectionManager;
         private readonly IPacketFactory _packetFactory;
-        private readonly IByteSerializer _byteSerializer;
-        private readonly IBytesSender _bytesSender;
+        private readonly IClientTransportHandler _clientTransportHandler;
+        private readonly IBytesSerializer _bytesSerializer;
 
         public ClientTransportManager(
             ILogger logger,
-            ClientConnectionManager clientConnectionManager, 
-            IByteSerializer byteSerializer,
-            IPacketFactory packetFactory)
+            IPacketFactory packetFactory,
+            IClientTransportHandler clientTransportHandler, 
+            IBytesSerializer bytesSerializer)
         {
             _logger = logger;
-            _clientConnectionManager = clientConnectionManager;
-            _byteSerializer = byteSerializer;
             _packetFactory = packetFactory;
+            _clientTransportHandler = clientTransportHandler;
+            _bytesSerializer = bytesSerializer;
         }
 
         public async Task<Response> SendRequest(Request request)
         {
-            var requestBytes = _byteSerializer.Serialize(request);
+            var requestBytes = _bytesSerializer.Serialize(request);
 
             var executePacket = await ProcessExecutePacket(requestBytes);
 
-            var answerPacket = await SendPacket(executePacket, 
-                _clientConnectionManager.SessionContext.PacketSizeThreshold + 36);
+            var answerPacket = _clientTransportHandler.AcceptedSend(executePacket);
 
             var responseBytes =  await HandleExecuteAnswer(answerPacket);
 
-            return _byteSerializer.Deserialize<Response>(responseBytes);
+            return _bytesSerializer.Deserialize<Response>(responseBytes);
         }
 
         private async Task<Packet> ProcessExecutePacket(byte[] requestBytes)
         {
-            if (requestBytes.Length <= _clientConnectionManager.SessionContext.PacketSizeThreshold)
+            if (requestBytes.Length <= PacketConstants.PacketPayloadThresholdSize)
             {
                 var requestLength = requestBytes.Length;
 
-                Array.Resize(ref requestBytes, _clientConnectionManager.SessionContext.PacketSizeThreshold);
+                Array.Resize(ref requestBytes, PacketConstants.PacketPayloadThresholdSize);
 
                 return _packetFactory.CreateExecutedInPayload(requestBytes, requestLength);
             }
             else
             {
                 var handler = new BufferedRequestHandler(
-                    _clientConnectionManager.SessionContext.PacketSizeThreshold,
+                    PacketConstants.PacketPayloadThresholdSize,
                     _packetFactory,
-                    _byteSerializer,
-                    _bytesSender,
+                    _clientTransportHandler,
                     _logger);
 
                 return await handler.ProvideRequestToServerBuffer(requestBytes);
             }
         }
-
-        private async Task<Packet> SendPacket(Packet packet, int receivedPacketSize)
-        {
-            var executeBytes = _byteSerializer.Serialize(packet);
-
-            var answerPacket = await _bytesSender.AcceptedSend(executeBytes, receivedPacketSize);
-
-            return _byteSerializer.Deserialize(answerPacket);
-        }
-
+        
         private async Task<byte[]> HandleExecuteAnswer(Packet answerPacket)
         {
             if (answerPacket.PacketServerResponse == PacketServerResponse.ResultInPayload)

@@ -18,7 +18,7 @@ namespace NetworkSimpleServer.NetworkLayer.Client.ConnectorDispatcher
             _networkConnectorFactory = networkConnectorFactory;
         }
 
-        public IClientTransportHandler CreateTransportHandler(NetworkConnectorSettings settings)
+        public IClientTransportHandler CreateClientTransportHandler(NetworkConnectorSettings settings)
         {
             var transportHandler = _clientTransportHandlerFactory.CreateTransportHandler(settings.ConnectionType);
 

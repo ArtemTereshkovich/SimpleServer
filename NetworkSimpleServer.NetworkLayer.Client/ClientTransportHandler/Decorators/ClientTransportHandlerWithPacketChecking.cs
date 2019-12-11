@@ -22,6 +22,11 @@ namespace NetworkSimpleServer.NetworkLayer.Client.ClientTransportHandler.Decorat
             _origin.Activate(context);
         }
 
+        public void UnAcceptedSend(Packet packet)
+        {
+            _origin.UnAcceptedSend(packet);
+        }
+
         public void ClearReceiveBuffer()
         {
             _origin.ClearReceiveBuffer();

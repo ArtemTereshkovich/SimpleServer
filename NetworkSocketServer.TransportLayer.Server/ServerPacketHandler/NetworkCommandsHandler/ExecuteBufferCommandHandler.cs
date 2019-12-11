@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
+using NetworkSimpleServer.NetworkLayer.Core.Packets;
+using NetworkSimpleServer.NetworkLayer.Core.TransportHandler;
 using NetworkSocketServer.DTO.Requests;
-using NetworkSocketServer.NetworkLayer.TransportHandler;
-using NetworkSocketServer.TransportLayer.Packets;
-using NetworkSocketServer.TransportLayer.Packets.PacketFactory;
-using NetworkSocketServer.TransportLayer.Serializer;
+using NetworkSocketServer.TransportLayer.Core.Packets.Factory;
+using NetworkSocketServer.TransportLayer.Core.Serializer;
 using NetworkSocketServer.TransportLayer.Server.IRequestHandler;
 using NetworkSocketServer.TransportLayer.Server.ServerPacketHandler.NetworkCommandsHandler.Base;
 
@@ -12,33 +12,34 @@ namespace NetworkSocketServer.TransportLayer.Server.ServerPacketHandler.NetworkC
     internal class ExecuteBufferCommandHandler : ExecuteCommandHandler
     {
         private readonly IRequestHandlerFactory _requestHandlerFactory;
+        private readonly IBytesSerializer _bytesSerializer;
 
         public ExecuteBufferCommandHandler(
             ServerSessionContext serverSessionContext, 
             IRequestHandlerFactory requestHandlerFactory,
             IPacketFactory packetFactory, 
-            IByteSerializer byteSerializer, 
+            IBytesSerializer bytesSerializer,
             ITransportHandler transportHandler) 
             : base(
                 serverSessionContext, 
                 packetFactory, 
-                byteSerializer, 
                 transportHandler)
         {
             _requestHandlerFactory = requestHandlerFactory;
+            _bytesSerializer = bytesSerializer;
         }
 
         protected override async Task<byte[]> HandleCommand(Packet packet)
         {
             var requestBytes = ServerSessionContext.ReceiveBuffer.GetAll();
 
-            var request = ByteSerializer.Deserialize<Request>(requestBytes);
+            var request = _bytesSerializer.Deserialize<Request>(requestBytes);
 
             var response = await _requestHandlerFactory
                 .CreateRequestHandler()
                 .HandleRequest(request);
             
-            return ByteSerializer.Serialize(response);
+            return _bytesSerializer.Serialize(response);
         }
     }
 }

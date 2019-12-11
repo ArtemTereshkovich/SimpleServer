@@ -1,82 +1,76 @@
-﻿using System;
-using System.Linq;
-using System.Net;
-using System.Net.NetworkInformation;
-using System.Net.Sockets;
-using NetworkSocketServer.NetworkLayer.Acceptors.Tcp;
-using NetworkSocketServer.NetworkLayer.Acceptors.Udp;
-using NetworkSocketServer.NetworkLayer.ServerBuilder;
-using NetworkSocketServer.NetworkLayer.SocketOptionsAccessor.KeepAlive;
-using NetworkSocketServer.TransportLayer;
-using NetworkSocketServer.TransportLayer.Server;
+﻿//using System;
+//using System.Linq;
+//using System.Net;
+//using System.Net.NetworkInformation;
+//using System.Net.Sockets;
 
-namespace NetworkSocketServer.Server
-{
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            var address = GetAddress();
+//namespace NetworkSocketServer.Server
+//{
+//    class Program
+//    {
+//        static void Main(string[] args)
+//        {
+//            var address = GetAddress();
             
-            Console.WriteLine(address.ToString());
+//            Console.WriteLine(address.ToString());
 
-            var factory = new SimpleRequestHandlerFactory();
+//            var factory = new SimpleRequestHandlerFactory();
 
-            var connectionHandler = new SingleSessionConnectionManager(factory);
+//            var connectionHandler = new SingleSessionConnectionManager(factory);
 
-            var host = new SimpleServerBuilder(connectionHandler)
-                .WithTcpKeepAliveAcceptor(
-                    new TcpNetworkAcceptorSettings
-                    {
-                        ListenIpAddress = address,
-                        ListenMaxBacklogConnection = 1,
+//            var host = new SimpleServerBuilder(connectionHandler)
+//                .WithTcpKeepAliveAcceptor(
+//                    new TcpNetworkAcceptorSettings
+//                    {
+//                        ListenIpAddress = address,
+//                        ListenMaxBacklogConnection = 1,
 
-                        ListenPort = 1337,
-                    },
-                    new SocketKeepAliveOptions
-                    {
-                        KeepAliveInterval = 30000,
-                        KeepAliveTime = 30000,
-                    })
-                .WithUdpAcceptor(
-                    new UdpNetworkAcceptorSettings
-                    {
-                        ListenIpAddress = address,
-                        ListenPort = 1488
-                    })
-                .Build();
+//                        ListenPort = 1337,
+//                    },
+//                    new SocketKeepAliveOptions
+//                    {
+//                        KeepAliveInterval = 30000,
+//                        KeepAliveTime = 30000,
+//                    })
+//                .WithUdpAcceptor(
+//                    new UdpNetworkAcceptorSettings
+//                    {
+//                        ListenIpAddress = address,
+//                        ListenPort = 1488
+//                    })
+//                .Build();
 
-            host.StartHost();
+//            host.StartHost();
 
-            host.StopHost();
-        }
+//            host.StopHost();
+//        }
 
-        private static IPAddress GetAddress()
-        {
-            var firstUpInterface = NetworkInterface.GetAllNetworkInterfaces()
-                .FirstOrDefault(IsAddressSuitable);
+//        private static IPAddress GetAddress()
+//        {
+//            var firstUpInterface = NetworkInterface.GetAllNetworkInterfaces()
+//                .FirstOrDefault(IsAddressSuitable);
 
-            if (firstUpInterface != null)
-            {
-                IPInterfaceProperties props = firstUpInterface.GetIPProperties();
-                IPAddress firstIpV4Address = props.UnicastAddresses
-                    .Where(c => c.Address.AddressFamily == AddressFamily.InterNetwork)
-                    .Select(c => c.Address)
-                    .FirstOrDefault();
+//            if (firstUpInterface != null)
+//            {
+//                IPInterfaceProperties props = firstUpInterface.GetIPProperties();
+//                IPAddress firstIpV4Address = props.UnicastAddresses
+//                    .Where(c => c.Address.AddressFamily == AddressFamily.InterNetwork)
+//                    .Select(c => c.Address)
+//                    .FirstOrDefault();
 
-                if (firstIpV4Address != null)
-                {
-                    return firstIpV4Address;
-                }
-            }
+//                if (firstIpV4Address != null)
+//                {
+//                    return firstIpV4Address;
+//                }
+//            }
 
-            throw new InvalidOperationException("There are no InterNetwork addresses set");
-        }
+//            throw new InvalidOperationException("There are no InterNetwork addresses set");
+//        }
 
-        private static bool IsAddressSuitable(NetworkInterface networkInterface)
-        {
-            return networkInterface.NetworkInterfaceType != NetworkInterfaceType.Loopback &&
-                   networkInterface.OperationalStatus == OperationalStatus.Up;
-        }
-    }
-}
+//        private static bool IsAddressSuitable(NetworkInterface networkInterface)
+//        {
+//            return networkInterface.NetworkInterfaceType != NetworkInterfaceType.Loopback &&
+//                   networkInterface.OperationalStatus == OperationalStatus.Up;
+//        }
+//    }
+//}

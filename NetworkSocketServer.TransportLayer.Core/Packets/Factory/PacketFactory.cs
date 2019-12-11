@@ -1,11 +1,10 @@
 ﻿using System;
 using NetworkSimpleServer.NetworkLayer.Core;
 using NetworkSimpleServer.NetworkLayer.Core.Packets;
-using NetworkSocketServer.TransportLayer.Core.Packets.Factory;
 
-namespace NetworkSocketServer.TransportLayer.Packets.PacketFactory
+namespace NetworkSocketServer.TransportLayer.Core.Packets.Factory
 {
-    class PacketFactory : IPacketFactory
+    public class PacketFactory : IPacketFactory
     {
         private readonly Guid _sessionId;
 

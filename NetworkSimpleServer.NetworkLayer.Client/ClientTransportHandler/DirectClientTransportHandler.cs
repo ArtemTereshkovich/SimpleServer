@@ -24,6 +24,11 @@ namespace NetworkSimpleServer.NetworkLayer.Client.ClientTransportHandler
             return _transportHandler.Receive();
         }
 
+        public void UnAcceptedSend(Packet packet)
+        {
+            _transportHandler.Send(packet);
+        }
+
         public void ClearReceiveBuffer()
         {
             _transportHandler.ClearReceiveBuffer();

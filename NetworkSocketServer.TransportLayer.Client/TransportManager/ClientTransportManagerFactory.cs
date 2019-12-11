@@ -1,8 +1,6 @@
-﻿using NetworkSocketServer.TransportLayer.Client.ConnectionManager;
-using NetworkSocketServer.TransportLayer.Client.Logger;
-using NetworkSocketServer.TransportLayer.Client.RequestExecutor;
-using NetworkSocketServer.TransportLayer.Packets.PacketFactory;
-using NetworkSocketServer.TransportLayer.Serializer;
+﻿using NetworkSimpleServer.NetworkLayer.Core.Logger;
+using NetworkSocketServer.TransportLayer.Client.ConnectionManager;
+using NetworkSocketServer.TransportLayer.Core.Packets.Factory;
 
 namespace NetworkSocketServer.TransportLayer.Client.TransportManager
 {
@@ -19,14 +17,9 @@ namespace NetworkSocketServer.TransportLayer.Client.TransportManager
         {
             var byteSerializer = new BinaryFormatterByteSerializer();
             var packetFactory = new PacketFactory(clientConnectionManager.SessionContext.SessionId);
-            var logger = new ConsoleClientLogger();
+            var logger = new ConsoleLogger();
 
-            return new ClientTransportManager(
-                    logger,
-                    clientConnectionManager, 
-                    byteSerializer,
-                    packetFactory,
-                    _retrySettings);
+            return new ClientTransportManager(logger, packetFactory, );
         }
     }
 }

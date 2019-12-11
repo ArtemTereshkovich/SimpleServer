@@ -13,7 +13,6 @@ namespace NetworkSocketServer.TransportLayer.Client.ConnectionManager
     public class ClientConnectionManager : IClientConnectionManager
     {
         private readonly ILogger _logger;
-        private readonly IByteSerializer _byteSerializer;
         private readonly IConnectorDispatcher _dispatcher;
         private readonly IClientTransportManagerFactory _clientTransportManagerFactory;
         public ClientSessionContext SessionContext { get; private set; }
@@ -23,7 +22,6 @@ namespace NetworkSocketServer.TransportLayer.Client.ConnectionManager
             IClientTransportManagerFactory clientTransportManagerFactory,
             ILogger logger)
         {
-            _byteSerializer = new BinaryFormatterByteSerializer();;
             _dispatcher = dispatcher;
             _clientTransportManagerFactory = clientTransportManagerFactory;
             _logger = logger;
@@ -31,19 +29,16 @@ namespace NetworkSocketServer.TransportLayer.Client.ConnectionManager
 
         public bool IsConnected => SessionContext != null;
 
-        public async Task Connect(NetworkConnectorSettings connectSettings)
+        public void Connect(NetworkConnectorSettings connectSettings)
         {
             if (SessionContext != null)
                 throw new InvalidOperationException("Session already exist");
 
             try
             {
-                var transportHandler = await _dispatcher.CreateTransportHandler(connectSettings);
+                var clientTransportHandler = _dispatcher.CreateClientTransportHandler(connectSettings);
 
-                SessionContext = new ClientSessionContext(
-                    transportHandler,
-                    Guid.NewGuid(),
-                    connectSettings);
+                SessionContext = new ClientSessionContext(clientTransportHandler, Guid.NewGuid());
 
                 _logger.LogConnectEvent(connectSettings.IpEndPointServer);
             }
@@ -54,15 +49,13 @@ namespace NetworkSocketServer.TransportLayer.Client.ConnectionManager
             }
         }
         
-        public Task Disconnect()
+        public void Disconnect()
         {
             CheckSessionContext();
 
             SafeCloseSession();
 
             _logger.LogDisconnectEvent();
-
-            return Task.CompletedTask;
         }
 
         public async Task<Response> SendRequest(Request request)
@@ -87,16 +80,15 @@ namespace NetworkSocketServer.TransportLayer.Client.ConnectionManager
         {
             IPacketFactory packetFactory = new PacketFactory(SessionContext.SessionId);
 
-            var packet = packetFactory.CreateClosePacket();
+            var closePacket = packetFactory.CreateClosePacket();
 
             try
             {
-                SessionContext.ClientTransportHandler.Send(_byteSerializer.Serialize(packet));
+                SessionContext.ClientTransportHandler.UnAcceptedSend(closePacket);
             }
             catch (Exception exception)
             {
                 _logger.LogErrorException(exception);
-                SessionContext = null;
             }
 
             try
@@ -106,7 +98,6 @@ namespace NetworkSocketServer.TransportLayer.Client.ConnectionManager
             catch (Exception exception)
             {
                 _logger.LogErrorException(exception);
-                SessionContext = null;
             }
 
             SessionContext = null;

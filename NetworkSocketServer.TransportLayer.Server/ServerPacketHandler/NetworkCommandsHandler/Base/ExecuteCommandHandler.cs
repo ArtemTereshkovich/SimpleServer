@@ -1,25 +1,26 @@
 ﻿using System;
 using System.Threading.Tasks;
+using NetworkSimpleServer.NetworkLayer.Core;
 using NetworkSimpleServer.NetworkLayer.Core.Packets;
 using NetworkSimpleServer.NetworkLayer.Core.TransportHandler;
 using NetworkSocketServer.TransportLayer.Core.Packets.Factory;
 
 namespace NetworkSocketServer.TransportLayer.Server.ServerPacketHandler.NetworkCommandsHandler.Base
 {
-    abstract class ExecuteCommandHandler : SenderCommandHandler, INetworkCommandHandler 
+    abstract class ExecuteCommandHandler : INetworkCommandHandler 
     {
         protected readonly ServerSessionContext ServerSessionContext;
         private readonly IPacketFactory _packetFactory;
+        private readonly ITransportHandler _transportHandler;
 
         protected ExecuteCommandHandler(
             ServerSessionContext serverSessionContext,
             IPacketFactory packetFactory,
-            IByteSerializer byteSerializer, 
             ITransportHandler transportHandler)
-            :base(transportHandler, byteSerializer)
         {
             ServerSessionContext = serverSessionContext;
             _packetFactory = packetFactory;
+            _transportHandler = transportHandler;
         }
 
         public async Task<bool> Handle(Packet clientPacket)
@@ -35,11 +36,11 @@ namespace NetworkSocketServer.TransportLayer.Server.ServerPacketHandler.NetworkC
 
         private bool SendResult(byte[] resultExecution, Packet clientPacket)
         {
-            if (resultExecution.Length <= ServerSessionContext.PacketPayloadThreshold)
+            if (resultExecution.Length <= PacketConstants.PacketPayloadThresholdSize)
             {
                 var resultExecutionLength = resultExecution.Length;
 
-                Array.Resize(ref resultExecution, ServerSessionContext.PacketPayloadThreshold);
+                Array.Resize(ref resultExecution, PacketConstants.PacketPayloadThresholdSize);
 
                 var answerPacket = _packetFactory
                     .CreateAnswerExecuteSuccessPayload(
@@ -47,7 +48,7 @@ namespace NetworkSocketServer.TransportLayer.Server.ServerPacketHandler.NetworkC
                         resultExecution, 
                         resultExecutionLength);
 
-                SendPacket(answerPacket);
+                _transportHandler.Send(answerPacket);
             }
             else
             {
@@ -58,7 +59,7 @@ namespace NetworkSocketServer.TransportLayer.Server.ServerPacketHandler.NetworkC
                         clientPacket.PacketId, 
                         ServerSessionContext.TransmitBuffer.Length);
 
-                SendPacket(answerPacket);
+                _transportHandler.Send(answerPacket);
             }
 
             return true;

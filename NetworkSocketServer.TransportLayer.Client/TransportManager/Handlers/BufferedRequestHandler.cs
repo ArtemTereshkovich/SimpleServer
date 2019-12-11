@@ -1,5 +1,9 @@
 ﻿using System;
-using System.Threading.Tasks;
+using NetworkSimpleServer.NetworkLayer.Client.ClientTransportHandler;
+using NetworkSimpleServer.NetworkLayer.Core.Logger;
+using NetworkSimpleServer.NetworkLayer.Core.Packets;
+using NetworkSocketServer.TransportLayer.Core.Buffer;
+using NetworkSocketServer.TransportLayer.Core.Packets.Factory;
 
 namespace NetworkSocketServer.TransportLayer.Client.TransportManager.Handlers
 {
@@ -7,25 +11,22 @@ namespace NetworkSocketServer.TransportLayer.Client.TransportManager.Handlers
     {
         private readonly int _packetSizeThreshold;
         private readonly IPacketFactory _packetFactory;
-        private readonly IByteSerializer _byteSerializer;
-        private readonly IBytesSender _bytesSender;
-        private readonly IClientLogger _clientLogger;
+        private readonly IClientTransportHandler _clientTransportHandler;
+        private readonly ILogger _logger;
 
         public BufferedRequestHandler(
             int packetSizeThreshold, 
             IPacketFactory packetFactory, 
-            IByteSerializer byteSerializer, 
-            IBytesSender bytesSender, 
-            IClientLogger clientLogger)
+            IClientTransportHandler clientTransportHandler,
+            ILogger logger)
         {
             _packetSizeThreshold = packetSizeThreshold;
             _packetFactory = packetFactory;
-            _byteSerializer = byteSerializer;
-            _bytesSender = bytesSender;
-            _clientLogger = clientLogger;
+            _clientTransportHandler = clientTransportHandler;
+            _logger = logger;
         }
 
-        public async Task<Packet> ProvideRequestToServerBuffer(byte[] request)
+        public Packet ProvideRequestToServerBuffer(byte[] request)
         {
             using var sendBuffer = InitializeBuffer(request);
             
@@ -39,13 +40,13 @@ namespace NetworkSocketServer.TransportLayer.Client.TransportManager.Handlers
                 
                 var bytesToSend = sendBuffer.Get(totalSend, portionSize);
 
-                var dataPacket = CreateSendPacket(bytesToSend, portionSize, sendBuffer, totalSend);
+                var writePacket = CreateSendPacket(bytesToSend, portionSize, sendBuffer, totalSend);
 
-                await SendPacket(dataPacket, portionSize + 36);
+                _clientTransportHandler.AcceptedSend(writePacket);
 
                 totalSend += portionSize;
 
-                _clientLogger.LogProcessingBytes(totalSend, sendBuffer.Length, portionSize);
+                _logger.LogProcessingBytes(totalSend, sendBuffer.Length, portionSize);
             }
 
             return _packetFactory.CreateExecutedInBuffer(sendBuffer.Length);
@@ -64,13 +65,6 @@ namespace NetworkSocketServer.TransportLayer.Client.TransportManager.Handlers
                 byteToSendLength);
 
             return dataPacket;
-        }
-
-        private async Task SendPacket(Packet dataPacket, int receivedPacketSize)
-        {
-            var dataSerializedPacket = _byteSerializer.Serialize(dataPacket);
-
-            await _bytesSender.AcceptedSend(dataSerializedPacket, receivedPacketSize);
         }
 
         private static int GetPortionSize(IBuffer buffer, int totalSend, int portionSize)

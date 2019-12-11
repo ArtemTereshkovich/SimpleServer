@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using NetworkSimpleServer.NetworkLayer.Core.Logger;
 using NetworkSimpleServer.NetworkLayer.Core.Packets;
 using NetworkSimpleServer.NetworkLayer.Core.TransportHandler;
 using NetworkSocketServer.TransportLayer.Core.Packets.Factory;
+using NetworkSocketServer.TransportLayer.Core.Serializer;
 using NetworkSocketServer.TransportLayer.Server;
 using NetworkSocketServer.TransportLayer.Server.IRequestHandler;
 using NetworkSocketServer.TransportLayer.Server.ServerPacketHandler;
@@ -18,57 +20,54 @@ namespace NetworkSocketServer.TransportLayer.PacketHandler
         private readonly ITransportHandler _transportHandler;
  
         public ServerPredictBasedServerPacketHandler(
-            Guid sessionId,
             IRequestHandlerFactory requestHandlerFactory,
             ITransportHandler transportHandler,
+            IPacketFactory packetFactory,
+            IBytesSerializer bytesSerializer,
+            ILogger logger,
             ServerSessionContext serverSessionContext)
         {
-            IPacketFactory packetFactory = new PacketFactory(sessionId);
-            IByteSerializer byteSerializer = new BinaryFormatterByteSerializer();
-
-            var requestHandlerFactory1 = requestHandlerFactory;
-            var transportHandler1 = transportHandler;
-            var serverSessionContext1 = serverSessionContext;
+            _transportHandler = transportHandler;
 
             _handlers = new Dictionary<PacketClientCommand, INetworkCommandHandler>
             {
                 {
                     PacketClientCommand.Read,
                     new ReadCommandHandler(
-                        serverSessionContext1, 
-                        packetFactory, 
-                        transportHandler1, 
-                        byteSerializer)
+                        logger,
+                        serverSessionContext,
+                        packetFactory,
+                        _transportHandler)
                 },
                 {
                     PacketClientCommand.Write, 
                     new WriteCommandHandler(
-                        serverSessionContext1, 
-                        packetFactory, 
-                        transportHandler1, 
-                        byteSerializer)
+                        serverSessionContext,
+                        packetFactory,
+                        _transportHandler,
+                        logger)
                 },
                 {
                     PacketClientCommand.ExecuteBuffer, 
                     new ExecuteBufferCommandHandler(
-                        serverSessionContext1,
-                        requestHandlerFactory1,
-                        packetFactory, 
-                        byteSerializer, 
-                        transportHandler1)
+                        serverSessionContext,
+                        requestHandlerFactory,
+                        packetFactory,
+                        bytesSerializer,
+                        _transportHandler)
                 },
                 {
                     PacketClientCommand.ExecutePayload, 
                     new ExecutePayloadCommandHandler(
-                        serverSessionContext1, 
-                        requestHandlerFactory1, 
-                        packetFactory, 
-                        byteSerializer, 
-                        transportHandler1)
+                        serverSessionContext,
+                        requestHandlerFactory,
+                        packetFactory,
+                        bytesSerializer,
+                        _transportHandler)
                 },
                 {
                     PacketClientCommand.Close, 
-                    new CloseCommandHandler(transportHandler1)
+                    new CloseCommandHandler(_transportHandler)
                 }
             };
         }

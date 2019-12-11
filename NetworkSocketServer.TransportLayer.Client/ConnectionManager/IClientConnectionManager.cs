@@ -9,10 +9,10 @@ namespace NetworkSocketServer.TransportLayer.Client.ConnectionManager
     {
         bool IsConnected { get; }
 
-        Task Connect(NetworkConnectorSettings connectSettings);
+        void Connect(NetworkConnectorSettings connectSettings);
 
         Task<Response> SendRequest(Request request);
 
-        Task Disconnect();
+        void Disconnect();
     }
 }

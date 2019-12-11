@@ -10,6 +10,8 @@ namespace NetworkSimpleServer.NetworkLayer.Client.ClientTransportHandler
 
         Packet AcceptedSend(Packet packet);
 
+        void UnAcceptedSend(Packet packet);
+
         void ClearReceiveBuffer();
 
         void Close();

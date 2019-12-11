@@ -1,36 +1,37 @@
 ﻿using System;
 using System.Threading.Tasks;
-using NetworkSocketServer.NetworkLayer.TransportHandler;
-using NetworkSocketServer.TransportLayer.Client.Logger;
-using NetworkSocketServer.TransportLayer.Packets;
-using NetworkSocketServer.TransportLayer.Packets.PacketFactory;
-using NetworkSocketServer.TransportLayer.Serializer;
+using NetworkSimpleServer.NetworkLayer.Core.Logger;
+using NetworkSimpleServer.NetworkLayer.Core.Packets;
+using NetworkSimpleServer.NetworkLayer.Core.TransportHandler;
+using NetworkSocketServer.TransportLayer.Core.Packets.Factory;
 using NetworkSocketServer.TransportLayer.Server.ServerPacketHandler.NetworkCommandsHandler.Base;
 
 namespace NetworkSocketServer.TransportLayer.Server.ServerPacketHandler.NetworkCommandsHandler
 {
-    internal class ReadCommandHandler : SenderCommandHandler, INetworkCommandHandler
+    internal class ReadCommandHandler : INetworkCommandHandler
     {
+        private readonly ILogger _logger;
         private readonly ServerSessionContext _serverSessionContext;
         private readonly IPacketFactory _packetFactory;
+        private readonly ITransportHandler _transportHandler;
 
         public ReadCommandHandler(
+            ILogger logger,
             ServerSessionContext serverSessionContext,
             IPacketFactory packetFactory,
-            ITransportHandler transportHandler,
-            IByteSerializer byteSerializer) 
-            : base(transportHandler, byteSerializer)
+            ITransportHandler transportHandler) 
         {
+            _logger = logger;
             _serverSessionContext = serverSessionContext;
             _packetFactory = packetFactory;
+            _transportHandler = transportHandler;
         }
 
         public Task<bool> Handle(Packet clientPacket)
         {
             CheckTransmitBuffer();
 
-
-            new ConsoleClientLogger().LogProcessingBytes(
+            _logger.LogProcessingBytes(
                 clientPacket.BufferOffset, 
                 _serverSessionContext.TransmitBuffer.Length,
                 clientPacket.PayloadSize);
@@ -44,7 +45,7 @@ namespace NetworkSocketServer.TransportLayer.Server.ServerPacketHandler.NetworkC
                 clientPacket.BufferOffset, 
                 array.Length);
 
-            SendPacket(answerPacket);
+            _transportHandler.Send(answerPacket);
 
             return Task.FromResult(true);
         }

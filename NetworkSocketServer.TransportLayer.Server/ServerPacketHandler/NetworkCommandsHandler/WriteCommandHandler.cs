@@ -1,28 +1,30 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using NetworkSocketServer.NetworkLayer.TransportHandler;
-using NetworkSocketServer.TransportLayer.Client.Logger;
-using NetworkSocketServer.TransportLayer.Packets;
-using NetworkSocketServer.TransportLayer.Packets.PacketFactory;
-using NetworkSocketServer.TransportLayer.Serializer;
+using NetworkSimpleServer.NetworkLayer.Core.Logger;
+using NetworkSimpleServer.NetworkLayer.Core.Packets;
+using NetworkSimpleServer.NetworkLayer.Core.TransportHandler;
+using NetworkSocketServer.TransportLayer.Core.Packets.Factory;
 using NetworkSocketServer.TransportLayer.Server.ServerPacketHandler.NetworkCommandsHandler.Base;
 
 namespace NetworkSocketServer.TransportLayer.Server.ServerPacketHandler.NetworkCommandsHandler
 {
-    internal class WriteCommandHandler : SenderCommandHandler, INetworkCommandHandler
+    internal class WriteCommandHandler : INetworkCommandHandler
     {
         private readonly ServerSessionContext _serverSessionContext;
         private readonly IPacketFactory _packetFactory;
+        private readonly ITransportHandler _transportHandler;
+        private readonly ILogger _logger;
 
         public WriteCommandHandler(
             ServerSessionContext serverSessionContext,
             IPacketFactory packetFactory,
-            ITransportHandler transportHandler, 
-            IByteSerializer byteSerializer) 
-            : base(transportHandler, byteSerializer)
+            ITransportHandler transportHandler,
+            ILogger logger) 
         {
             _serverSessionContext = serverSessionContext;
             _packetFactory = packetFactory;
+            _transportHandler = transportHandler;
+            _logger = logger;
         }
 
         public Task<bool> Handle(Packet clientPacket)
@@ -31,7 +33,7 @@ namespace NetworkSocketServer.TransportLayer.Server.ServerPacketHandler.NetworkC
             
             var payload = clientPacket.Payload.Take(clientPacket.PayloadSize).ToArray();
             
-            new ConsoleClientLogger().LogProcessingBytes(clientPacket.BufferOffset, clientPacket.BuffferSize, clientPacket.PayloadSize);
+            _logger.LogProcessingBytes(clientPacket.BufferOffset, clientPacket.BuffferSize, clientPacket.PayloadSize);
 
             _serverSessionContext.ReceiveBuffer.Insert(payload, clientPacket.BufferOffset);
 
@@ -41,7 +43,7 @@ namespace NetworkSocketServer.TransportLayer.Server.ServerPacketHandler.NetworkC
                 clientPacket.BufferOffset,
                 clientPacket.PayloadSize);
 
-            SendPacket(answerPacket);
+            _transportHandler.Send(answerPacket);
 
             return Task.FromResult(true);
         }

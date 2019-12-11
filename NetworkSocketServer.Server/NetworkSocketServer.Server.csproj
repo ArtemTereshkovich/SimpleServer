@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NetworkSocketServer.Shared\NetworkSocketServer.DTO.csproj" />
+    <ProjectReference Include="..\NetworkSocketServer.TransportLayer.Server\NetworkSocketServer.TransportLayer.Server.csproj" />
   </ItemGroup>
 
   <ItemGroup>

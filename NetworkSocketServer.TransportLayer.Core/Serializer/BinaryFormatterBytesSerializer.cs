@@ -3,7 +3,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace NetworkSocketServer.TransportLayer.Core.Serializer
 {
-    class BinaryFormatterBytesSerializer : IBytesSerializer
+    public class BinaryFormatterBytesSerializer : IBytesSerializer
     {
         public BinaryFormatterBytesSerializer()
         {
