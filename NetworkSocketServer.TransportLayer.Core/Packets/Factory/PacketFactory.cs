@@ -21,6 +21,7 @@ namespace NetworkSocketServer.TransportLayer.Core.Packets.Factory
         {
             return new Packet
             {
+                PacketId =  packetId,
                 SessionId = _sessionId,
                 BuffferSize = receiveBufferSize,
                 BufferOffset = receiveBufferOffset,
@@ -40,6 +41,7 @@ namespace NetworkSocketServer.TransportLayer.Core.Packets.Factory
         {
             return new Packet
             {
+                PacketId = packetId,
                 SessionId = _sessionId,
                 PacketClientCommand = PacketClientCommand.None,
                 PacketServerResponse = PacketServerResponse.Answer,
@@ -57,6 +59,7 @@ namespace NetworkSocketServer.TransportLayer.Core.Packets.Factory
         {
             return new Packet
             {
+                PacketId = packetId,
                 BufferOffset = 0,
                 PacketServerResponse = PacketServerResponse.ResultInPayload,
                 PacketClientCommand = PacketClientCommand.None,
@@ -67,10 +70,12 @@ namespace NetworkSocketServer.TransportLayer.Core.Packets.Factory
             };
         }
 
-        public Packet CreateAnswerExecuteSuccessBuffer(Guid packetId, int transmitBufferLength)
+        public Packet CreateAnswerExecuteSuccessBuffer(
+            Guid packetId, int transmitBufferLength)
         {
             return new Packet
             {
+                PacketId = packetId,
                 BuffferSize = transmitBufferLength,
                 BufferOffset = 0,
                 PayloadSize = 0,
