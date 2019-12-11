@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.Sockets;
 using NetworkSimpleServer.NetworkLayer.Core.Packets;
 using NetworkSimpleServer.NetworkLayer.Core.Packets.Formatter;
 
@@ -56,10 +55,21 @@ namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Udp
 
         public Packet Receive()
         {
-            WaitForData();
+            WaitForData(_packetSize);
 
             var remoteEndpoint = _context.RemoteEndPoint;
             var array = new byte[_packetSize];
+            _context.AcceptedSocket.ReceiveFrom(array, ref remoteEndpoint);
+
+            return _packetByteFormatter.Deserialize(array);
+        }
+
+        public Packet ReceiveSpecifiedSize(int specifiedPacketSize)
+        {
+            WaitForData(specifiedPacketSize);
+
+            var remoteEndpoint = _context.RemoteEndPoint;
+            var array = new byte[specifiedPacketSize];
             _context.AcceptedSocket.ReceiveFrom(array, ref remoteEndpoint);
 
             return _packetByteFormatter.Deserialize(array);
@@ -91,13 +101,13 @@ namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Udp
             _context.AcceptedSocket.Connect(_context.RemoteEndPoint);
         }
 
-        private void WaitForData()
+        private void WaitForData(int packetSize)
         {
             while (true)
             {
                 System.Threading.Thread.Sleep(10);
 
-                if (_context.AcceptedSocket.Available >= _packetSize)
+                if (_context.AcceptedSocket.Available == packetSize)
                     return;
             }
         }

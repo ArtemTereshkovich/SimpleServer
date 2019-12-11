@@ -24,6 +24,13 @@ namespace NetworkSimpleServer.NetworkLayer.Client.ClientTransportHandler
             return _transportHandler.Receive();
         }
 
+        public Packet AcceptedSend(Packet packet, int packetSize)
+        {
+            _transportHandler.Send(packet);
+
+            return _transportHandler.ReceiveSpecifiedSize(packetSize);
+        }
+
         public void UnAcceptedSend(Packet packet)
         {
             _transportHandler.Send(packet);

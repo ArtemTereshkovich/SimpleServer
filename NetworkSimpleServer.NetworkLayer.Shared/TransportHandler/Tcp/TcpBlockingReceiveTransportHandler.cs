@@ -62,6 +62,17 @@ namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Tcp
             return _packetByteFormatter.Deserialize(buffer);
         }
 
+        public Packet ReceiveSpecifiedSize(int specifiedPacketSize)
+        {
+            var checkBuffer = new byte[0];
+            _context.AcceptedSocket.Receive(checkBuffer);
+
+            var buffer = new byte[specifiedPacketSize];
+            _context.AcceptedSocket.Receive(buffer);
+
+            return _packetByteFormatter.Deserialize(buffer);
+        }
+
         public void Close()
         {
             if (_context.AcceptedSocket == null || !_context.AcceptedSocket.Connected)

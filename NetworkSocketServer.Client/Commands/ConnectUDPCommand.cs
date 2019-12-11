@@ -12,9 +12,11 @@ namespace NetworkSocketServer.Client.Commands
         public IPEndPoint EndPoint { get; private set; }
 
 
-        public async Task Execute(CommandExecutor executor)
+        public Task Execute(CommandExecutor executor)
         {
-           await executor.Execute(this);
+           executor.Execute(this);
+
+           return Task.CompletedTask;
         }
 
         public static ConnectUDPCommand Parse(string data)

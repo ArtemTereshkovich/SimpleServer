@@ -22,6 +22,16 @@ namespace NetworkSimpleServer.NetworkLayer.Client.ClientTransportHandler.Decorat
             _origin.Activate(context);
         }
 
+        public Packet AcceptedSend(Packet packet, int acceptedPacketSize)
+        {
+            var answerPacket = _origin.AcceptedSend(packet, acceptedPacketSize);
+
+            if (answerPacket.PacketId != packet.PacketId)
+                throw new UnacceptedPacketException("Receive unaccepted packet:" + answerPacket.PacketId);
+
+            return answerPacket;
+        }
+
         public void UnAcceptedSend(Packet packet)
         {
             _origin.UnAcceptedSend(packet);

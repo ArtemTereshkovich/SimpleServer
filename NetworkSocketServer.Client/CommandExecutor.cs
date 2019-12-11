@@ -3,9 +3,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using NetworkSimpleServer.NetworkLayer.Client.Connectors;
 using NetworkSocketServer.Client.Commands;
 using NetworkSocketServer.DTO.Requests;
 using NetworkSocketServer.DTO.Responses;
+using NetworkSocketServer.TransportLayer.Client.ConnectionManager;
 
 namespace NetworkSocketServer.Client
 {
@@ -30,7 +32,7 @@ namespace NetworkSocketServer.Client
             Console.WriteLine("-download [file]");
         }
 
-        public async Task Execute(ConnectTCPCommand connectTcpCommand)
+        public void Execute(ConnectTCPCommand connectTcpCommand)
         {
             if (_clientConnectionManager.IsConnected)
             {
@@ -38,7 +40,7 @@ namespace NetworkSocketServer.Client
             }
             else
             {
-                await _clientConnectionManager.Connect(new NetworkConnectorSettings
+                _clientConnectionManager.Connect(new NetworkConnectorSettings
                 {
                     ConnectionType = ConnectionType.Tcp,
                     IpEndPointServer = connectTcpCommand.EndPoint
@@ -46,7 +48,7 @@ namespace NetworkSocketServer.Client
             }
         }
 
-        public async Task Execute(ConnectUDPCommand connectUdpCommand)
+        public void Execute(ConnectUDPCommand connectUdpCommand)
         {
             if (_clientConnectionManager.IsConnected)
             {
@@ -54,7 +56,7 @@ namespace NetworkSocketServer.Client
             }
             else
             {
-                await _clientConnectionManager.Connect(new NetworkConnectorSettings
+                _clientConnectionManager.Connect(new NetworkConnectorSettings
                 {
                     ConnectionType = ConnectionType.Udp,
                     IpEndPointServer = connectUdpCommand.EndPoint
@@ -62,7 +64,7 @@ namespace NetworkSocketServer.Client
             }
         }
 
-        public async Task Execute(TextCommand command)
+        public void Execute(TextCommand command)
         {
             if (!_clientConnectionManager.IsConnected)
             {
@@ -76,14 +78,14 @@ namespace NetworkSocketServer.Client
                 Text = command.Message
             };
 
-            var response = await _clientConnectionManager.SendRequest(request);
+            var response = _clientConnectionManager.SendRequest(request);
 
             var textResponse = response as TextResponse;
 
             Console.WriteLine($"Execute text command ({textResponse.ResponseId}):{textResponse.Text}");
         }
 
-        public async Task Execute(DateCommand dateCommand)
+        public void Execute(DateCommand dateCommand)
         {
             if (!_clientConnectionManager.IsConnected)
             {
@@ -97,13 +99,13 @@ namespace NetworkSocketServer.Client
                 ClientDate = dateCommand.ClientDateTime
             };
 
-            var response = await _clientConnectionManager.SendRequest(request);
+            var response = _clientConnectionManager.SendRequest(request);
 
             var dateResponse = response as DateResponse;
 
             Console.WriteLine($"Execute date command ({dateResponse.ResponseId}):{dateResponse.ServerTime}. Time offset: {dateResponse.Offset}");
         }
-        public async Task Execute(UploadFileCommand fileCommand)
+        public void Execute(UploadFileCommand fileCommand)
         {
             if (!_clientConnectionManager.IsConnected)
             {
@@ -133,7 +135,7 @@ namespace NetworkSocketServer.Client
                 Size = fileInfo.Length
             };
 
-            var response = await _clientConnectionManager.SendRequest(request);
+            var response = _clientConnectionManager.SendRequest(request);
 
             var uploadResponse = response as UploadFileResponse;
 
@@ -160,7 +162,7 @@ namespace NetworkSocketServer.Client
             var stopwatch = new Stopwatch();
             stopwatch.Restart();
 
-            var response = await _clientConnectionManager.SendRequest(request) as DownloadFileResponse;
+            var response = _clientConnectionManager.SendRequest(request) as DownloadFileResponse;
 
             var localFileName = $"Files{Path.DirectorySeparatorChar}{response.Filename}";
 
@@ -178,7 +180,7 @@ namespace NetworkSocketServer.Client
                 $"Average upload speed is {((double)response.FileSize / (1024 * 1024)) / (((double)stopwatch.ElapsedMilliseconds + 1) / 1000)} Mbps.");
         }
 
-        public async Task Execute(DisconnectCommand _)
+        public void Execute(DisconnectCommand _)
         {
             if (!_clientConnectionManager.IsConnected)
             {
@@ -186,7 +188,7 @@ namespace NetworkSocketServer.Client
             }
             else
             {
-                await _clientConnectionManager.Disconnect();
+                _clientConnectionManager.Disconnect();
             }
         }
     }

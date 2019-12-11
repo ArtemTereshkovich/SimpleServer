@@ -1,25 +1,26 @@
-﻿using NetworkSimpleServer.NetworkLayer.Core.Logger;
-using NetworkSocketServer.TransportLayer.Client.ConnectionManager;
+﻿using System;
+using NetworkSimpleServer.NetworkLayer.Client.ClientTransportHandler;
+using NetworkSimpleServer.NetworkLayer.Core.Logger;
 using NetworkSocketServer.TransportLayer.Core.Packets.Factory;
+using NetworkSocketServer.TransportLayer.Core.Serializer;
 
 namespace NetworkSocketServer.TransportLayer.Client.TransportManager
 {
     public class ClientTransportManagerFactory : IClientTransportManagerFactory
     {
-        private readonly RetrySettings _retrySettings;
-
-        public ClientTransportManagerFactory(RetrySettings retrySettings)
+        public IClientTransportManager Create(
+            IClientTransportHandler clientTransportHandler,
+            ILogger logger,
+            Guid sessionId)
         {
-            _retrySettings = retrySettings;
-        }
+            var byteSerializer = new BinaryFormatterBytesSerializer();
+            var packetFactory = new PacketFactory(sessionId);
 
-        public IClientTransportManager Create(ClientConnectionManager clientConnectionManager)
-        {
-            var byteSerializer = new BinaryFormatterByteSerializer();
-            var packetFactory = new PacketFactory(clientConnectionManager.SessionContext.SessionId);
-            var logger = new ConsoleLogger();
-
-            return new ClientTransportManager(logger, packetFactory, );
+            return new ClientTransportManager(
+                logger, 
+                packetFactory,
+                clientTransportHandler,
+                byteSerializer);
         }
     }
 }

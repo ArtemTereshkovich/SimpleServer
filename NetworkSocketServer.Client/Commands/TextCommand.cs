@@ -14,9 +14,11 @@ namespace NetworkSocketServer.Client.Commands
             };
         }
 
-        public async Task Execute(CommandExecutor executor)
+        public Task Execute(CommandExecutor executor)
         {
-            await executor.Execute(this);
+            executor.Execute(this);
+
+            return Task.CompletedTask;
         }
 
         public override string ToString()

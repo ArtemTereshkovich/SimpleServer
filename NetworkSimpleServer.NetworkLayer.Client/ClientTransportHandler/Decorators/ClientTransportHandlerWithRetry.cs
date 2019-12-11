@@ -49,6 +49,20 @@ namespace NetworkSimpleServer.NetworkLayer.Client.ClientTransportHandler.Decorat
             return receivedPacket;
         }
 
+        public Packet AcceptedSend(Packet packet, int acceptedPacketSize)
+        {
+            var retryPolicy = CreatePolicy();
+
+            Packet receivedPacket = null;
+
+            retryPolicy.Execute(() => { receivedPacket = _origin.AcceptedSend(packet, acceptedPacketSize); });
+
+            if (receivedPacket == null)
+                throw new ArgumentNullException(nameof(receivedPacket));
+
+            return receivedPacket;
+        }
+
         public void UnAcceptedSend(Packet packet)
         {
             _origin.UnAcceptedSend(packet);

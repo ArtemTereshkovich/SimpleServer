@@ -14,6 +14,8 @@ namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler
 
         Packet Receive();
 
+        Packet ReceiveSpecifiedSize(int packetSize);
+
         void Close();
 
         void Reconnect();

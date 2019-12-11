@@ -6,9 +6,11 @@ namespace NetworkSocketServer.Client.Commands
     {
         public const string Command = "-disconnect";
 
-        public async Task Execute(CommandExecutor executor)
+        public Task Execute(CommandExecutor executor)
         {
-            await executor.Execute(this);
+            executor.Execute(this);
+
+            return Task.CompletedTask;
         }
 
         public static DisconnectCommand Parse(string _)

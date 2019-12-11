@@ -20,9 +20,11 @@ namespace NetworkSocketServer.Client.Commands
             return new DateCommand();
         }
 
-        public async Task Execute(CommandExecutor executor)
+        public Task Execute(CommandExecutor executor)
         {
-            await executor.Execute(this);
+            executor.Execute(this);
+
+            return Task.CompletedTask;
         }
 
         public override string ToString()

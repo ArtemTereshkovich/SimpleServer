@@ -20,7 +20,9 @@ namespace NetworkSimpleServer.NetworkLayer.Client.ConnectorDispatcher
 
             var networkConnectorFactory = new TransportProtocolTypeConnectorFactory(socketOptionAccessor);
 
-            return new SynchronousConnectorDispatcher(new AcceptedRetryClientTransportHandlerFactory(_retrySettings), networkConnectorFactory);
+            return new SynchronousConnectorDispatcher(
+                new AcceptedRetryClientTransportHandlerFactory(_retrySettings),
+                networkConnectorFactory);
         }
     }
 }

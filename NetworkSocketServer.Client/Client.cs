@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
+using NetworkSimpleServer.NetworkLayer.Core.SocketOptionsAccessor.KeepAlive;
 using NetworkSocketServer.Client.Inputs;
+using NetworkSocketServer.TransportLayer.Client.ClientManager;
 
 namespace NetworkSocketServer.Client
 {

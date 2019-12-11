@@ -9,9 +9,11 @@ namespace NetworkSocketServer.Client.Commands
         public string FileName { get; set; }
 
 
-        public async Task Execute(CommandExecutor executor)
+        public Task Execute(CommandExecutor executor)
         {
-            await executor.Execute(this);
+            executor.Execute(this);
+
+            return Task.CompletedTask;
         }
 
         public static UploadFileCommand Parse(string data)

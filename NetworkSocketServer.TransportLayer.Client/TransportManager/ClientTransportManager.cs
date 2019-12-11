@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
 using NetworkSimpleServer.NetworkLayer.Client.ClientTransportHandler;
 using NetworkSimpleServer.NetworkLayer.Core;
 using NetworkSimpleServer.NetworkLayer.Core.Logger;
@@ -32,20 +31,20 @@ namespace NetworkSocketServer.TransportLayer.Client.TransportManager
             _bytesSerializer = bytesSerializer;
         }
 
-        public async Task<Response> SendRequest(Request request)
+        public Response SendRequest(Request request)
         {
             var requestBytes = _bytesSerializer.Serialize(request);
 
-            var executePacket = await ProcessExecutePacket(requestBytes);
+            var executePacket = ProcessExecutePacket(requestBytes);
 
             var answerPacket = _clientTransportHandler.AcceptedSend(executePacket);
 
-            var responseBytes =  await HandleExecuteAnswer(answerPacket);
+            var responseBytes =  HandleExecuteAnswer(answerPacket);
 
             return _bytesSerializer.Deserialize<Response>(responseBytes);
         }
 
-        private async Task<Packet> ProcessExecutePacket(byte[] requestBytes)
+        private Packet ProcessExecutePacket(byte[] requestBytes)
         {
             if (requestBytes.Length <= PacketConstants.PacketPayloadThresholdSize)
             {
@@ -63,11 +62,11 @@ namespace NetworkSocketServer.TransportLayer.Client.TransportManager
                     _clientTransportHandler,
                     _logger);
 
-                return await handler.ProvideRequestToServerBuffer(requestBytes);
+                return handler.ProvideRequestToServerBuffer(requestBytes);
             }
         }
         
-        private async Task<byte[]> HandleExecuteAnswer(Packet answerPacket)
+        private byte[] HandleExecuteAnswer(Packet answerPacket)
         {
             if (answerPacket.PacketServerResponse == PacketServerResponse.ResultInPayload)
             {
@@ -78,13 +77,12 @@ namespace NetworkSocketServer.TransportLayer.Client.TransportManager
             else
             {
                 var handler = new BufferedResponseHandler(
-                    _clientConnectionManager.SessionContext.PacketSizeThreshold,
+                    PacketConstants.PacketPayloadThresholdSize,
                     _packetFactory,
-                    _byteSerializer,
-                    _bytesSender,
-                    _logger);
+                    _logger,
+                    _clientTransportHandler);
 
-                return await handler.GetResponseFromServerBuffer(answerPacket.BufferOffset, 5);
+                return handler.GetResponseFromServerBuffer(answerPacket.BufferOffset, 2);
             }
         }
     }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using NetworkSimpleServer.NetworkLayer.Client.ConnectorDispatcher;
 using NetworkSimpleServer.NetworkLayer.Client.Connectors;
 using NetworkSimpleServer.NetworkLayer.Core.Logger;
@@ -15,7 +14,8 @@ namespace NetworkSocketServer.TransportLayer.Client.ConnectionManager
         private readonly ILogger _logger;
         private readonly IConnectorDispatcher _dispatcher;
         private readonly IClientTransportManagerFactory _clientTransportManagerFactory;
-        public ClientSessionContext SessionContext { get; private set; }
+
+        private ClientSessionContext SessionContext { get; set; }
 
         public ClientConnectionManager(
             IConnectorDispatcher dispatcher,
@@ -58,15 +58,18 @@ namespace NetworkSocketServer.TransportLayer.Client.ConnectionManager
             _logger.LogDisconnectEvent();
         }
 
-        public async Task<Response> SendRequest(Request request)
+        public Response SendRequest(Request request)
         {
             CheckSessionContext();
 
             try
             {
-                var clientTransportManager = _clientTransportManagerFactory.Create(this);
+                var clientTransportManager = _clientTransportManagerFactory.Create(
+                    SessionContext.ClientTransportHandler,
+                    _logger,
+                    SessionContext.SessionId);
 
-                return await clientTransportManager.SendRequest(request);
+                return clientTransportManager.SendRequest(request);
             }
             catch 
             {

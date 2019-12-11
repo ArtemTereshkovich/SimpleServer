@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using NetworkSimpleServer.NetworkLayer.Client.ClientTransportHandler;
+using NetworkSimpleServer.NetworkLayer.Core;
 using NetworkSimpleServer.NetworkLayer.Core.Logger;
 using NetworkSocketServer.TransportLayer.Core.Buffer;
 using NetworkSocketServer.TransportLayer.Core.Packets.Factory;
@@ -39,7 +40,9 @@ namespace NetworkSocketServer.TransportLayer.Client.TransportManager.Handlers
 
                 var readPacket = _packetFactory.CreateRead(totalReceived, portionSize);
 
-                var dataPacket = _clientTransportHandler.AcceptedSend(readPacket);
+                var dataPacket = _clientTransportHandler.AcceptedSend(
+                    readPacket, 
+                    portionSize + PacketConstants.PacketHeaderSize);
 
                 var payload = dataPacket.Payload.Take(dataPacket.PayloadSize).ToArray();
 
