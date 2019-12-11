@@ -1,8 +1,9 @@
 ﻿using System;
+using NetworkSimpleServer.NetworkLayer.Core.Packets;
 
-namespace NetworkSimpleServer.NetworkLayer.Core.Packets.Factory
+namespace NetworkSocketServer.TransportLayer.Core.Packets.Factory
 {
-    interface IPacketFactory
+    public interface IPacketFactory
     {
         Packet CreateAnswerSuccessWrite(
             Guid packetId,

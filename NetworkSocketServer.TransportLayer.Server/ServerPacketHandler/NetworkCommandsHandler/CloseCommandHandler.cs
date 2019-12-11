@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using NetworkSocketServer.NetworkLayer.TransportHandler;
-using NetworkSocketServer.TransportLayer.Packets;
+using NetworkSimpleServer.NetworkLayer.Core.Packets;
+using NetworkSimpleServer.NetworkLayer.Core.TransportHandler;
 using NetworkSocketServer.TransportLayer.Server.ServerPacketHandler.NetworkCommandsHandler.Base;
 
 namespace NetworkSocketServer.TransportLayer.Server.ServerPacketHandler.NetworkCommandsHandler

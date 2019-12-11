@@ -1,7 +1,7 @@
 ﻿using System;
 using NetworkSimpleServer.NetworkLayer.Core;
 using NetworkSimpleServer.NetworkLayer.Core.Packets;
-using NetworkSimpleServer.NetworkLayer.Core.Packets.Factory;
+using NetworkSocketServer.TransportLayer.Core.Packets.Factory;
 
 namespace NetworkSocketServer.TransportLayer.Packets.PacketFactory
 {

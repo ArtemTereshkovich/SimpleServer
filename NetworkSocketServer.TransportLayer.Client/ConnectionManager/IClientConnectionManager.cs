@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
+using NetworkSimpleServer.NetworkLayer.Client.Connectors;
 using NetworkSocketServer.DTO.Requests;
 using NetworkSocketServer.DTO.Responses;
-using NetworkSocketServer.NetworkLayer.Connectors;
 
 namespace NetworkSocketServer.TransportLayer.Client.ConnectionManager
 {

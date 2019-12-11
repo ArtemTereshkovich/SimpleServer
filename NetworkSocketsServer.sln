@@ -9,19 +9,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkSocketServer.Client"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkSocketServer.DTO", "NetworkSocketServer.Shared\NetworkSocketServer.DTO.csproj", "{2B39B536-4961-416B-8CE4-3E75D4E47E00}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkSocketServer.TransportLayer", "NetworkSocketServer.TransportLayer\NetworkSocketServer.TransportLayer.csproj", "{3CF16875-55AC-40B5-AF2D-5CB4153F5783}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkSimpleServer.NetworkLayer.Core", "NetworkSimpleServer.NetworkLayer.Shared\NetworkSimpleServer.NetworkLayer.Core.csproj", "{5F11EF68-548E-498B-8458-4065802EDEB9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkSimpleServer.NetworkLayer.Server", "NetworkSimpleServer.NetworkLayer.Server\NetworkSimpleServer.NetworkLayer.Server.csproj", "{EB428D9C-6790-457E-9146-EEB074C06CD8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkSimpleServer.NetworkLayer.Client", "NetworkSimpleServer.NetworkLayer.Client\NetworkSimpleServer.NetworkLayer.Client.csproj", "{8754C170-CA4E-44B2-9C3E-00A15F3C436D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkSocketServer.TransportLayer.Core", "NetworkSocketServer.TransportLayer.Core\NetworkSocketServer.TransportLayer.Core.csproj", "{F26ADAA3-02C2-4B8C-B8D1-4B934C97FDC1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkSocketServer.TransportLayer.Core", "NetworkSocketServer.TransportLayer.Core\NetworkSocketServer.TransportLayer.Core.csproj", "{F26ADAA3-02C2-4B8C-B8D1-4B934C97FDC1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkSocketServer.TransportLayer.Server", "NetworkSocketServer.TransportLayer.Server\NetworkSocketServer.TransportLayer.Server.csproj", "{F4325517-0B80-43FB-BF52-38C574EC7C1E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkSocketServer.TransportLayer.Server", "NetworkSocketServer.TransportLayer.Server\NetworkSocketServer.TransportLayer.Server.csproj", "{F4325517-0B80-43FB-BF52-38C574EC7C1E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkSocketServer.TransportLayer.Client", "NetworkSocketServer.TransportLayer.Client\NetworkSocketServer.TransportLayer.Client.csproj", "{5F1FFA8E-D291-4E24-B209-DD3A775D1618}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkSocketServer.TransportLayer.Client", "NetworkSocketServer.TransportLayer.Client\NetworkSocketServer.TransportLayer.Client.csproj", "{5F1FFA8E-D291-4E24-B209-DD3A775D1618}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,18 +67,6 @@ Global
 		{2B39B536-4961-416B-8CE4-3E75D4E47E00}.Release|x64.Build.0 = Release|Any CPU
 		{2B39B536-4961-416B-8CE4-3E75D4E47E00}.Release|x86.ActiveCfg = Release|Any CPU
 		{2B39B536-4961-416B-8CE4-3E75D4E47E00}.Release|x86.Build.0 = Release|Any CPU
-		{3CF16875-55AC-40B5-AF2D-5CB4153F5783}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3CF16875-55AC-40B5-AF2D-5CB4153F5783}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3CF16875-55AC-40B5-AF2D-5CB4153F5783}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{3CF16875-55AC-40B5-AF2D-5CB4153F5783}.Debug|x64.Build.0 = Debug|Any CPU
-		{3CF16875-55AC-40B5-AF2D-5CB4153F5783}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{3CF16875-55AC-40B5-AF2D-5CB4153F5783}.Debug|x86.Build.0 = Debug|Any CPU
-		{3CF16875-55AC-40B5-AF2D-5CB4153F5783}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3CF16875-55AC-40B5-AF2D-5CB4153F5783}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3CF16875-55AC-40B5-AF2D-5CB4153F5783}.Release|x64.ActiveCfg = Release|Any CPU
-		{3CF16875-55AC-40B5-AF2D-5CB4153F5783}.Release|x64.Build.0 = Release|Any CPU
-		{3CF16875-55AC-40B5-AF2D-5CB4153F5783}.Release|x86.ActiveCfg = Release|Any CPU
-		{3CF16875-55AC-40B5-AF2D-5CB4153F5783}.Release|x86.Build.0 = Release|Any CPU
 		{5F11EF68-548E-498B-8458-4065802EDEB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5F11EF68-548E-498B-8458-4065802EDEB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F11EF68-548E-498B-8458-4065802EDEB9}.Debug|x64.ActiveCfg = Debug|Any CPU

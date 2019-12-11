@@ -1,11 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using NetworkSocketServer.TransportLayer.Buffer;
-using NetworkSocketServer.TransportLayer.Client.Logger;
-using NetworkSocketServer.TransportLayer.Client.TransportManager.BytesSender;
-using NetworkSocketServer.TransportLayer.Packets;
-using NetworkSocketServer.TransportLayer.Packets.PacketFactory;
-using NetworkSocketServer.TransportLayer.Serializer;
 
 namespace NetworkSocketServer.TransportLayer.Client.TransportManager.Handlers
 {

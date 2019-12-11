@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using NetworkSocketServer.NetworkLayer.TransportHandler;
-using NetworkSocketServer.TransportLayer.Packets;
-using NetworkSocketServer.TransportLayer.Packets.PacketFactory;
-using NetworkSocketServer.TransportLayer.Serializer;
+using NetworkSimpleServer.NetworkLayer.Core.Packets;
+using NetworkSimpleServer.NetworkLayer.Core.TransportHandler;
+using NetworkSocketServer.TransportLayer.Core.Packets.Factory;
 
 namespace NetworkSocketServer.TransportLayer.Server.ServerPacketHandler.NetworkCommandsHandler.Base
 {

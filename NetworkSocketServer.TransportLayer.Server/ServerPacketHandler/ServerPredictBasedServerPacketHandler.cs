@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using NetworkSocketServer.NetworkLayer.TransportHandler;
-using NetworkSocketServer.TransportLayer.Packets;
-using NetworkSocketServer.TransportLayer.Packets.PacketFactory;
-using NetworkSocketServer.TransportLayer.Serializer;
+using NetworkSimpleServer.NetworkLayer.Core.Packets;
+using NetworkSimpleServer.NetworkLayer.Core.TransportHandler;
+using NetworkSocketServer.TransportLayer.Core.Packets.Factory;
 using NetworkSocketServer.TransportLayer.Server;
+using NetworkSocketServer.TransportLayer.Server.IRequestHandler;
 using NetworkSocketServer.TransportLayer.Server.ServerPacketHandler;
 using NetworkSocketServer.TransportLayer.Server.ServerPacketHandler.NetworkCommandsHandler;
 using NetworkSocketServer.TransportLayer.Server.ServerPacketHandler.NetworkCommandsHandler.Base;
-using NetworkSocketServer.TransportLayer.ServiceHandlers;
 
 namespace NetworkSocketServer.TransportLayer.PacketHandler
 {

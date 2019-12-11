@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Threading.Tasks;
-using NetworkSocketServer.NetworkLayer;
-using NetworkSocketServer.NetworkLayer.TransportHandler;
+using NetworkSimpleServer.NetworkLayer.Core.Packets;
+using NetworkSimpleServer.NetworkLayer.Core.TransportHandler;
+using NetworkSimpleServer.NetworkLayer.Server;
 using NetworkSocketServer.TransportLayer.PacketHandler;
-using NetworkSocketServer.TransportLayer.Packets;
-using NetworkSocketServer.TransportLayer.Serializer;
+using NetworkSocketServer.TransportLayer.Server.IRequestHandler;
 using NetworkSocketServer.TransportLayer.Server.ServerPacketHandler;
-using NetworkSocketServer.TransportLayer.ServiceHandlers;
 
 namespace NetworkSocketServer.TransportLayer.Server
 {
-    public class SingleSessionConnectionManager : IConnectionManager
+    public class SingleSessionConnectionManager : IServiceConnectionManager
     {
         private readonly IRequestHandlerFactory _requestHandlerFactory;
         private ServerSessionContext _serverSessionContext;

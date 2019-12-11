@@ -1,4 +1,4 @@
-﻿using NetworkSocketServer.NetworkLayer.SocketOptionsAccessor.KeepAlive;
+﻿using NetworkSimpleServer.NetworkLayer.Core.SocketOptionsAccessor.KeepAlive;
 using NetworkSocketServer.TransportLayer.Client.ConnectionManager;
 
 namespace NetworkSocketServer.TransportLayer.Client.ClientManager

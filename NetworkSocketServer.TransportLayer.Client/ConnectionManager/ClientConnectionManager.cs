@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Threading.Tasks;
+using NetworkSimpleServer.NetworkLayer.Client.ConnectorDispatcher;
+using NetworkSimpleServer.NetworkLayer.Client.Connectors;
+using NetworkSimpleServer.NetworkLayer.Core.Logger;
 using NetworkSocketServer.DTO.Requests;
 using NetworkSocketServer.DTO.Responses;
-using NetworkSocketServer.NetworkLayer.Connectors;
-using NetworkSocketServer.NetworkLayer.Dispatchers.ConnectorDispatcher;
-using NetworkSocketServer.NetworkLayer.TransportHandler;
-using NetworkSocketServer.TransportLayer.Client.Logger;
 using NetworkSocketServer.TransportLayer.Client.TransportManager;
-using NetworkSocketServer.TransportLayer.Packets.PacketFactory;
-using NetworkSocketServer.TransportLayer.Serializer;
+using NetworkSocketServer.TransportLayer.Core.Packets.Factory;
 
 namespace NetworkSocketServer.TransportLayer.Client.ConnectionManager
 {
     public class ClientConnectionManager : IClientConnectionManager
     {
-        private readonly IClientLogger _logger;
+        private readonly ILogger _logger;
         private readonly IByteSerializer _byteSerializer;
         private readonly IConnectorDispatcher _dispatcher;
         private readonly IClientTransportManagerFactory _clientTransportManagerFactory;
@@ -22,8 +20,8 @@ namespace NetworkSocketServer.TransportLayer.Client.ConnectionManager
 
         public ClientConnectionManager(
             IConnectorDispatcher dispatcher,
-            IClientTransportManagerFactory clientTransportManagerFactory, 
-            IClientLogger logger)
+            IClientTransportManagerFactory clientTransportManagerFactory,
+            ILogger logger)
         {
             _byteSerializer = new BinaryFormatterByteSerializer();;
             _dispatcher = dispatcher;
@@ -93,7 +91,7 @@ namespace NetworkSocketServer.TransportLayer.Client.ConnectionManager
 
             try
             {
-                SessionContext.TransportHandler.Send(_byteSerializer.Serialize(packet));
+                SessionContext.ClientTransportHandler.Send(_byteSerializer.Serialize(packet));
             }
             catch (Exception exception)
             {
@@ -103,7 +101,7 @@ namespace NetworkSocketServer.TransportLayer.Client.ConnectionManager
 
             try
             {
-                SessionContext.TransportHandler.Close();
+                SessionContext.ClientTransportHandler.Close();
             }
             catch (Exception exception)
             {

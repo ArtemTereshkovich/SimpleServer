@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NetworkSimpleServer.NetworkLayer.Client.ClientTransportHandler
+namespace NetworkSimpleServer.NetworkLayer.Client.ClientTransportHandler.Decorators
 {
     public class UnacceptedPacketException : Exception
     {

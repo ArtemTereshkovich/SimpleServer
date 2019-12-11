@@ -1,8 +1,8 @@
-﻿using NetworkSocketServer.NetworkLayer.Dispatchers.ConnectorDispatcher;
-using NetworkSocketServer.NetworkLayer.SocketOptionsAccessor.KeepAlive;
+﻿using System.Linq.Expressions;
+using NetworkSimpleServer.NetworkLayer.Client.ConnectorDispatcher;
+using NetworkSimpleServer.NetworkLayer.Core.Logger;
+using NetworkSimpleServer.NetworkLayer.Core.SocketOptionsAccessor.KeepAlive;
 using NetworkSocketServer.TransportLayer.Client.ClientManager;
-using NetworkSocketServer.TransportLayer.Client.Logger;
-using NetworkSocketServer.TransportLayer.Client.RequestExecutor;
 using NetworkSocketServer.TransportLayer.Client.TransportManager;
 
 namespace NetworkSocketServer.TransportLayer.Client.ConnectionManager
@@ -24,7 +24,10 @@ namespace NetworkSocketServer.TransportLayer.Client.ConnectionManager
         {
             var dispatcher = _connectorDispatcherFactory.CreateConnectorDispatcher(socketKeepAliveOptions);
 
-            return new ClientConnectionManager(dispatcher, _clientTransportManagerFactory, new ConsoleClientLogger());
+            return new ClientConnectionManager(
+                dispatcher, 
+                _clientTransportManagerFactory, 
+                new ConsoleLogger());
         }
     }
 }

@@ -1,11 +1,9 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using NetworkSocketServer.TransportLayer.Buffer;
-using NetworkSocketServer.TransportLayer.Client.Logger;
-using NetworkSocketServer.TransportLayer.Client.TransportManager.BytesSender;
-using NetworkSocketServer.TransportLayer.Packets;
-using NetworkSocketServer.TransportLayer.Packets.PacketFactory;
-using NetworkSocketServer.TransportLayer.Serializer;
+using NetworkSimpleServer.NetworkLayer.Core.Logger;
+using NetworkSimpleServer.NetworkLayer.Core.Packets;
+using NetworkSocketServer.TransportLayer.Core.Buffer;
+using NetworkSocketServer.TransportLayer.Core.Packets.Factory;
 
 namespace NetworkSocketServer.TransportLayer.Client.TransportManager.Handlers
 {
@@ -15,20 +13,20 @@ namespace NetworkSocketServer.TransportLayer.Client.TransportManager.Handlers
         private readonly IPacketFactory _packetFactory;
         private readonly IByteSerializer _byteSerializer;
         private readonly IBytesSender _bytesSender;
-        private readonly IClientLogger _clientLogger;
+        private readonly ILogger _logger;
 
         public BufferedResponseHandler(
             int packetSizeThreshold, 
             IPacketFactory packetFactory, 
             IByteSerializer byteSerializer, 
-            IBytesSender bytesSender, 
-            IClientLogger clientLogger)
+            IBytesSender bytesSender,
+            ILogger logger)
         {
             _packetSizeThreshold = packetSizeThreshold;
             _packetFactory = packetFactory;
             _byteSerializer = byteSerializer;
             _bytesSender = bytesSender;
-            _clientLogger = clientLogger;
+            _logger = logger;
         }
         
         public async Task<byte[]> GetResponseFromServerBuffer(int bufferSize, int increaseStep)
@@ -53,7 +51,7 @@ namespace NetworkSocketServer.TransportLayer.Client.TransportManager.Handlers
 
                 totalReceived += portionSize;
 
-                _clientLogger.LogProcessingBytes(totalReceived, receiveBuffer.Length, portionSize);
+                _logger.LogProcessingBytes(totalReceived, receiveBuffer.Length, portionSize);
                 
                 portionSize += increaseStep;
             }

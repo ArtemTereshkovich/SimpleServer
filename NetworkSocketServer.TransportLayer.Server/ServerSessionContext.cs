@@ -1,4 +1,4 @@
-﻿using NetworkSocketServer.TransportLayer.Buffer;
+﻿using NetworkSocketServer.TransportLayer.Core.Buffer;
 
 namespace NetworkSocketServer.TransportLayer.Server
 {

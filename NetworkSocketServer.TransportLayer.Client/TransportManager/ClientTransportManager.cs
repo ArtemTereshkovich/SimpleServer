@@ -1,36 +1,31 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using NetworkSimpleServer.NetworkLayer.Core.Logger;
+using NetworkSimpleServer.NetworkLayer.Core.Packets;
 using NetworkSocketServer.DTO.Requests;
 using NetworkSocketServer.DTO.Responses;
 using NetworkSocketServer.TransportLayer.Client.ConnectionManager;
-using NetworkSocketServer.TransportLayer.Client.Logger;
-using NetworkSocketServer.TransportLayer.Client.RequestExecutor;
-using NetworkSocketServer.TransportLayer.Client.TransportManager.BytesSender;
 using NetworkSocketServer.TransportLayer.Client.TransportManager.Handlers;
-using NetworkSocketServer.TransportLayer.Packets;
-using NetworkSocketServer.TransportLayer.Packets.PacketFactory;
-using NetworkSocketServer.TransportLayer.Serializer;
+using NetworkSocketServer.TransportLayer.Core.Packets.Factory;
 
 namespace NetworkSocketServer.TransportLayer.Client.TransportManager
 {
     class ClientTransportManager : IClientTransportManager
     {
-        private readonly IClientLogger _clientLogger;
+        private readonly ILogger _logger;
         private readonly ClientConnectionManager _clientConnectionManager;
         private readonly IPacketFactory _packetFactory;
         private readonly IByteSerializer _byteSerializer;
         private readonly IBytesSender _bytesSender;
 
         public ClientTransportManager(
-            IClientLogger clientLogger,
+            ILogger logger,
             ClientConnectionManager clientConnectionManager, 
             IByteSerializer byteSerializer,
-            IPacketFactory packetFactory,
-            RetrySettings retrySettings)
+            IPacketFactory packetFactory)
         {
-            _bytesSender = new PollyAcceptedBytesSender(clientConnectionManager, retrySettings);
-            _clientLogger = clientLogger;
+            _logger = logger;
             _clientConnectionManager = clientConnectionManager;
             _byteSerializer = byteSerializer;
             _packetFactory = packetFactory;
@@ -67,7 +62,7 @@ namespace NetworkSocketServer.TransportLayer.Client.TransportManager
                     _packetFactory,
                     _byteSerializer,
                     _bytesSender,
-                    _clientLogger);
+                    _logger);
 
                 return await handler.ProvideRequestToServerBuffer(requestBytes);
             }
@@ -97,7 +92,7 @@ namespace NetworkSocketServer.TransportLayer.Client.TransportManager
                     _packetFactory,
                     _byteSerializer,
                     _bytesSender,
-                    _clientLogger);
+                    _logger);
 
                 return await handler.GetResponseFromServerBuffer(answerPacket.BufferOffset, 5);
             }

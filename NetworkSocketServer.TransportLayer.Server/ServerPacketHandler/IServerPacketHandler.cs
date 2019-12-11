@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using NetworkSocketServer.TransportLayer.Packets;
+using NetworkSimpleServer.NetworkLayer.Core.Packets;
 
 namespace NetworkSocketServer.TransportLayer.Server.ServerPacketHandler
 {
