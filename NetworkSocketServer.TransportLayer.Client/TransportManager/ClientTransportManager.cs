@@ -82,7 +82,7 @@ namespace NetworkSocketServer.TransportLayer.Client.TransportManager
                     _logger,
                     _clientTransportHandler);
 
-                return handler.GetResponseFromServerBuffer(answerPacket.BufferOffset, 2);
+                return handler.GetResponseFromServerBuffer(answerPacket.BuffferSize, 2);
             }
         }
     }
