@@ -48,8 +48,11 @@ namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Tcp
 
         public void ClearReceiveBuffer()
         {
-            var buffer = new byte[_context.AcceptedSocket.Available];
-            _context.AcceptedSocket.Receive(buffer);
+            if (_context.AcceptedSocket.Available != 0)
+            {
+                var buffer = new byte[_context.AcceptedSocket.Available];
+                _context.AcceptedSocket.Receive(buffer);
+            }
         }
 
         public Packet Receive()
