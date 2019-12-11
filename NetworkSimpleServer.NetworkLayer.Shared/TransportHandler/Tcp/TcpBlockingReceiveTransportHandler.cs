@@ -36,7 +36,7 @@ namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Tcp
 
         public void Send(Packet packet)
         {
-            Thread.Sleep(15);
+            Thread.Sleep(5);
 
 
             var array = _packetByteFormatter.Serialize(packet);
