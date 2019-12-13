@@ -5,6 +5,6 @@ namespace NetworkSimpleServer.NetworkLayer.Server.TransportHandler.Factory
 {
     interface IServerTransportHandlerFactory
     {
-        ITransportHandler CreateTransportHandler(INetworkAcceptor acceptor);
+        ITransportHandler CreateTransportHandler();
     }
 }

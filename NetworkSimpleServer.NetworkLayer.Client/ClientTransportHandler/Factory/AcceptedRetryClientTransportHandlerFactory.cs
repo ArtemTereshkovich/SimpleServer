@@ -1,11 +1,8 @@
 ﻿using NetworkSimpleServer.NetworkLayer.Client.ClientTransportHandler.Decorators;
-using NetworkSimpleServer.NetworkLayer.Client.Connectors;
 using NetworkSimpleServer.NetworkLayer.Core;
 using NetworkSimpleServer.NetworkLayer.Core.Logger;
 using NetworkSimpleServer.NetworkLayer.Core.Packets.Formatter;
-using NetworkSimpleServer.NetworkLayer.Core.TransportHandler;
 using NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Tcp;
-using NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Udp;
 
 namespace NetworkSimpleServer.NetworkLayer.Client.ClientTransportHandler.Factory
 {
@@ -18,21 +15,15 @@ namespace NetworkSimpleServer.NetworkLayer.Client.ClientTransportHandler.Factory
             _retrySettings = retrySettings;
         }
 
-        public IClientTransportHandler CreateTransportHandler(ConnectionType connectionType)
+        public IClientTransportHandler CreateTransportHandler()
         {
-            ITransportHandler transportHandler = null;
-
-            if (connectionType == ConnectionType.Udp)
-            {
-                transportHandler = new UdpCycledChecTransportHandler(new ManualPacketByteFormatter(), PacketConstants.PacketThresholdSize);
-            }
-            else
-            {
-                transportHandler = new TcpBlockingReceiveTransportHandler(new ManualPacketByteFormatter(), PacketConstants.PacketThresholdSize);
-            }
+            var transportHandler = new TcpBlockingReceiveTransportHandler(
+                new ManualPacketByteFormatter(), 
+                PacketConstants.PacketThresholdSize);
 
             return new ClientTransportHandlerWithRetry(
-                new ClientTransportHandlerWithPacketChecking(new DirectClientTransportHandler(transportHandler)),
+                new ClientTransportHandlerWithPacketChecking(
+                    new DirectClientTransportHandler(transportHandler)),
                 _retrySettings,
                 new ConsoleLogger());
         }

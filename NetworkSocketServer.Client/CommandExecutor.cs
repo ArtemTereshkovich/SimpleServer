@@ -23,8 +23,7 @@ namespace NetworkSocketServer.Client
         public void Execute(HelpCommand _)
         {
             Console.WriteLine("Supported commands:");
-            Console.WriteLine("-connecttcp [ip]:[port]");
-            Console.WriteLine("-connectudp [ip]:[port]");
+            Console.WriteLine("-connect [ip]:[port]");
             Console.WriteLine("-disconnect");
             Console.WriteLine("-date");
             Console.WriteLine("-text [message]");
@@ -32,7 +31,7 @@ namespace NetworkSocketServer.Client
             Console.WriteLine("-download [file]");
         }
 
-        public void Execute(ConnectTCPCommand connectTcpCommand)
+        public void Execute(ConnectCommand connectTcpCommand)
         {
             if (_clientConnectionManager.IsConnected)
             {
@@ -42,28 +41,11 @@ namespace NetworkSocketServer.Client
             {
                 _clientConnectionManager.Connect(new NetworkConnectorSettings
                 {
-                    ConnectionType = ConnectionType.Tcp,
                     IpEndPointServer = connectTcpCommand.EndPoint
                 });
             }
         }
-
-        public void Execute(ConnectUDPCommand connectUdpCommand)
-        {
-            if (_clientConnectionManager.IsConnected)
-            {
-                Console.WriteLine("Already connected!");
-            }
-            else
-            {
-                _clientConnectionManager.Connect(new NetworkConnectorSettings
-                {
-                    ConnectionType = ConnectionType.Udp,
-                    IpEndPointServer = connectUdpCommand.EndPoint
-                });
-            }
-        }
-
+        
         public void Execute(TextCommand command)
         {
             if (!_clientConnectionManager.IsConnected)

@@ -20,7 +20,7 @@ namespace NetworkSimpleServer.NetworkLayer.Client.ConnectorDispatcher
 
         public IClientTransportHandler CreateClientTransportHandler(NetworkConnectorSettings settings)
         {
-            var transportHandler = _clientTransportHandlerFactory.CreateTransportHandler(settings.ConnectionType);
+            var transportHandler = _clientTransportHandlerFactory.CreateTransportHandler();
 
             var connector = _networkConnectorFactory.CreateNetworkConnector(settings);
 

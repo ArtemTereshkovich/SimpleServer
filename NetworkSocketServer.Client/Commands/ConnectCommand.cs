@@ -5,21 +5,21 @@ using System.Threading.Tasks;
 
 namespace NetworkSocketServer.Client.Commands
 {
-    public class ConnectUDPCommand : ICommand
+    public class ConnectCommand : ICommand
     {
-        public const string Command = "-connectudp";
+        public const string Command = "-connect";
 
         public IPEndPoint EndPoint { get; private set; }
 
 
         public Task Execute(CommandExecutor executor)
         {
-           executor.Execute(this);
+            executor.Execute(this);
 
-           return Task.CompletedTask;
+            return Task.CompletedTask;
         }
 
-        public static ConnectUDPCommand Parse(string data)
+        public static ConnectCommand Parse(string data)
         {
             var endPointData = data.Split(':').Select(value => value.TrimEnd(' ', '\0', '\n')).ToList();
             if (endPointData.Count != 2) throw new Exception("Wrong command format");
@@ -30,7 +30,7 @@ namespace NetworkSocketServer.Client.Commands
             var isPortValid = int.TryParse(endPointData[1], out var port);
             if (!isPortValid) throw new Exception("Wrong command format");
 
-            return new ConnectUDPCommand()
+            return new ConnectCommand()
             {
                 EndPoint = new IPEndPoint(address, port)
             };

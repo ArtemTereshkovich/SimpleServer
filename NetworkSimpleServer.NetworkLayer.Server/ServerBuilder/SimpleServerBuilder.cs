@@ -4,7 +4,6 @@ using NetworkSimpleServer.NetworkLayer.Core.SocketOptionsAccessor.KeepAlive;
 using NetworkSimpleServer.NetworkLayer.Server.AcceptorDispatcher;
 using NetworkSimpleServer.NetworkLayer.Server.Acceptors;
 using NetworkSimpleServer.NetworkLayer.Server.Acceptors.Tcp;
-using NetworkSimpleServer.NetworkLayer.Server.Acceptors.Udp;
 using NetworkSimpleServer.NetworkLayer.Server.TransportHandler;
 using NetworkSimpleServer.NetworkLayer.Server.TransportHandler.Factory;
 
@@ -33,18 +32,7 @@ namespace NetworkSimpleServer.NetworkLayer.Server.ServerBuilder
 
             return this;
         }
-
-        public SimpleServerBuilder WithUdpAcceptor(UdpNetworkAcceptorSettings acceptorSettings)
-        {
-            var acceptors = new List<INetworkAcceptor>();
-
-            acceptors.Add(new UdpNetworkAcceptor(acceptorSettings));
-
-            CheckDuplicate(acceptorSettings);
-
-            return this;
-        }
-
+        
         public IServer Build()
         {
             var dispatcher = new MultiplexingAcceptorDispatcher(new ConsoleLogger(), _serviceConnectionManager, _transportHandlerFactory);
@@ -56,29 +44,5 @@ namespace NetworkSimpleServer.NetworkLayer.Server.ServerBuilder
 
             return new SimpleServer(dispatcher, _acceptors);
         }
-
-
-
-        #region privateMethods
-        private void CheckDuplicate(UdpNetworkAcceptorSettings settings)
-        {
-            var tcpSetting = new TcpNetworkAcceptorSettings
-            {
-                ListenIpAddress = settings.ListenIpAddress,
-                ListenMaxBacklogConnection = 1,
-                ListenPort = settings.ListenPort,
-            };
-            var keepAliev = new SocketKeepAliveOptions
-            {
-                KeepAliveInterval = 30000,
-                KeepAliveTime = 30000,
-            };
-
-            var socketOptionsAccessor = new PlatformBasedKeepAliveAccessorFactory(keepAliev);
-
-            _acceptors.Add(new TcpKeepAliveNetworkAcceptor(tcpSetting, socketOptionsAccessor));
-
-        }
-        #endregion
     }
 }

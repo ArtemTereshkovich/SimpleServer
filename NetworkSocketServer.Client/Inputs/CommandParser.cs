@@ -33,13 +33,9 @@ namespace NetworkSocketServer.Client.Inputs
                     {
                         return DownloadFileCommand.Parse(data);
                     }
-                case ConnectTCPCommand.Command:
+                case ConnectCommand.Command:
                     {
-                        return ConnectTCPCommand.Parse(data);
-                    }
-                case ConnectUDPCommand.Command:
-                    {
-                        return ConnectUDPCommand.Parse(data);
+                        return ConnectCommand.Parse(data);
                     }
                 case DisconnectCommand.Command:
                     {
