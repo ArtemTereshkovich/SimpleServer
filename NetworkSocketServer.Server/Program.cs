@@ -17,10 +17,9 @@ namespace NetworkSocketServer.Server
             var address = GetAddress();
 
             Console.WriteLine(address.ToString());
-
-            var factory = new SimpleRequestHandlerFactory();
-
-            var connectionManagerFactory = new SingleSessionConnectionManagerFactory();
+            
+            var connectionManagerFactory = new SingleSessionConnectionManagerFactory(
+                new SimpleRequestHandlerFactory());
 
             var host = new SimpleServerBuilder(connectionManagerFactory)
                 .WithTcpKeepAliveAcceptor(
