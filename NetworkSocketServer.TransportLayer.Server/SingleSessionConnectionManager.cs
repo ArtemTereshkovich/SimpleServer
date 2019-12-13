@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using NetworkSimpleServer.NetworkLayer.Core.Logger;
 using NetworkSimpleServer.NetworkLayer.Core.Packets;
 using NetworkSimpleServer.NetworkLayer.Core.TransportHandler;
-using NetworkSimpleServer.NetworkLayer.Server;
+using NetworkSocketServer.NetworkLayer.Server;
 using NetworkSocketServer.TransportLayer.Core.Packets.Factory;
 using NetworkSocketServer.TransportLayer.Core.Serializer;
 using NetworkSocketServer.TransportLayer.PacketHandler;
@@ -29,7 +29,7 @@ namespace NetworkSocketServer.TransportLayer.Server
             CheckContext(packet);
 
             var packetHandler = CreatePacketHandler(
-                transportHandler, 
+                transportHandler,
                 _serverSessionContext);
 
             if (await packetHandler.HandlePacket(packet))
@@ -43,11 +43,6 @@ namespace NetworkSocketServer.TransportLayer.Server
 
                 Console.WriteLine("Connection disconnected");
             }
-        }
-
-        public Task ProcessRegistered()
-        {
-            throw new NotImplementedException();
         }
 
         private async Task ContinueProcessingPacket(
@@ -77,8 +72,9 @@ namespace NetworkSocketServer.TransportLayer.Server
                 return;
             }
 
-            _serverSessionContext = 
+            _serverSessionContext =
                 ServerSessionContext.CreateArrayBuffersContext(packet.SessionId);
+
         }
 
         private IServerPacketHandler CreatePacketHandler(

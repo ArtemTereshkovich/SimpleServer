@@ -1,23 +1,24 @@
 ﻿using System.Collections.Generic;
 using NetworkSimpleServer.NetworkLayer.Core.Logger;
 using NetworkSimpleServer.NetworkLayer.Core.SocketOptionsAccessor.KeepAlive;
-using NetworkSimpleServer.NetworkLayer.Server.AcceptorDispatcher;
+using NetworkSimpleServer.NetworkLayer.Server;
 using NetworkSimpleServer.NetworkLayer.Server.Acceptors;
 using NetworkSimpleServer.NetworkLayer.Server.Acceptors.Tcp;
-using NetworkSimpleServer.NetworkLayer.Server.TransportHandler;
 using NetworkSimpleServer.NetworkLayer.Server.TransportHandler.Factory;
+using NetworkSocketServer.NetworkLayer.Server.AcceptorDispatcher;
+using NetworkSocketServer.NetworkLayer.Server.TransportHandler;
 
-namespace NetworkSimpleServer.NetworkLayer.Server.ServerBuilder
+namespace NetworkSocketServer.NetworkLayer.Server.ServerBuilder
 {
     public class SimpleServerBuilder
     {
-        private readonly IServiceConnectionManager _serviceConnectionManager;
+        private readonly IServiceConnectionManagerFactory _serviceConnectionManagerFactory;
         private readonly IServerTransportHandlerFactory _transportHandlerFactory;
         private readonly IList<INetworkAcceptor> _acceptors;
 
-        public SimpleServerBuilder(IServiceConnectionManager serviceConnectionManager)
+        public SimpleServerBuilder(IServiceConnectionManagerFactory serviceConnectionManagerFactory)
         {
-            _serviceConnectionManager = serviceConnectionManager;
+            _serviceConnectionManagerFactory = serviceConnectionManagerFactory;
             _transportHandlerFactory = new SimpleBlockingTransportHandlerFactory();
             _acceptors = new List<INetworkAcceptor>();
         }
@@ -35,7 +36,10 @@ namespace NetworkSimpleServer.NetworkLayer.Server.ServerBuilder
         
         public IServer Build()
         {
-            var dispatcher = new MultiplexingAcceptorDispatcher(new ConsoleLogger(), _serviceConnectionManager, _transportHandlerFactory);
+            var dispatcher = new MultiThreadAcceptorDispatcher(
+                _transportHandlerFactory,
+                new ConsoleLogger(), 
+                _serviceConnectionManagerFactory);
             
             foreach (var acceptor in _acceptors)
             {

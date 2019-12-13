@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using NetworkSimpleServer.NetworkLayer.Core.Logger;
+using NetworkSimpleServer.NetworkLayer.Server;
+using NetworkSimpleServer.NetworkLayer.Server.AcceptorDispatcher;
 using NetworkSimpleServer.NetworkLayer.Server.Acceptors;
 using NetworkSimpleServer.NetworkLayer.Server.TransportHandler.Factory;
 
-namespace NetworkSimpleServer.NetworkLayer.Server.AcceptorDispatcher
+namespace NetworkSocketServer.NetworkLayer.Server.AcceptorDispatcher
 {
     internal class SingleThreadAcceptorDispatcher : IAcceptorDispatcher
     {

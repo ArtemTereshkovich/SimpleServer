@@ -9,11 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkSocketServer.Client"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkSocketServer.DTO", "NetworkSocketServer.Shared\NetworkSocketServer.DTO.csproj", "{2B39B536-4961-416B-8CE4-3E75D4E47E00}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkSimpleServer.NetworkLayer.Core", "NetworkSimpleServer.NetworkLayer.Shared\NetworkSimpleServer.NetworkLayer.Core.csproj", "{5F11EF68-548E-498B-8458-4065802EDEB9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkSocketServer.NetworkLayer.Core", "NetworkSimpleServer.NetworkLayer.Shared\NetworkSocketServer.NetworkLayer.Core.csproj", "{5F11EF68-548E-498B-8458-4065802EDEB9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkSimpleServer.NetworkLayer.Server", "NetworkSimpleServer.NetworkLayer.Server\NetworkSimpleServer.NetworkLayer.Server.csproj", "{EB428D9C-6790-457E-9146-EEB074C06CD8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkSocketServer.NetworkLayer.Server", "NetworkSimpleServer.NetworkLayer.Server\NetworkSocketServer.NetworkLayer.Server.csproj", "{EB428D9C-6790-457E-9146-EEB074C06CD8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkSimpleServer.NetworkLayer.Client", "NetworkSimpleServer.NetworkLayer.Client\NetworkSimpleServer.NetworkLayer.Client.csproj", "{8754C170-CA4E-44B2-9C3E-00A15F3C436D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkSocketServer.NetworkLayer.Client", "NetworkSimpleServer.NetworkLayer.Client\NetworkSocketServer.NetworkLayer.Client.csproj", "{8754C170-CA4E-44B2-9C3E-00A15F3C436D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkSocketServer.TransportLayer.Core", "NetworkSocketServer.TransportLayer.Core\NetworkSocketServer.TransportLayer.Core.csproj", "{F26ADAA3-02C2-4B8C-B8D1-4B934C97FDC1}"
 EndProject

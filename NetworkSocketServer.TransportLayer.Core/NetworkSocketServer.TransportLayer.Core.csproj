@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NetworkSimpleServer.NetworkLayer.Shared\NetworkSimpleServer.NetworkLayer.Core.csproj" />
+    <ProjectReference Include="..\NetworkSimpleServer.NetworkLayer.Shared\NetworkSocketServer.NetworkLayer.Core.csproj" />
     <ProjectReference Include="..\NetworkSocketServer.Shared\NetworkSocketServer.DTO.csproj" />
   </ItemGroup>
 

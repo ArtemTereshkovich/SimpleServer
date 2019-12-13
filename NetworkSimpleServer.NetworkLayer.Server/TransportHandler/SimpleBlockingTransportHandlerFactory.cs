@@ -4,7 +4,7 @@ using NetworkSimpleServer.NetworkLayer.Core.TransportHandler;
 using NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Tcp;
 using NetworkSimpleServer.NetworkLayer.Server.TransportHandler.Factory;
 
-namespace NetworkSimpleServer.NetworkLayer.Server.TransportHandler
+namespace NetworkSocketServer.NetworkLayer.Server.TransportHandler
 {
     class SimpleBlockingTransportHandlerFactory : IServerTransportHandlerFactory
     {

@@ -5,7 +5,7 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using NetworkSimpleServer.NetworkLayer.Core.SocketOptionsAccessor.KeepAlive;
 using NetworkSimpleServer.NetworkLayer.Server.Acceptors.Tcp;
-using NetworkSimpleServer.NetworkLayer.Server.ServerBuilder;
+using NetworkSocketServer.NetworkLayer.Server.ServerBuilder;
 using NetworkSocketServer.TransportLayer.Server;
 
 namespace NetworkSocketServer.Server
@@ -20,9 +20,9 @@ namespace NetworkSocketServer.Server
 
             var factory = new SimpleRequestHandlerFactory();
 
-            var connectionHandler = new MultiplexingConnectionManager(factory);
+            var connectionManagerFactory = new SingleSessionConnectionManagerFactory();
 
-            var host = new SimpleServerBuilder(connectionHandler)
+            var host = new SimpleServerBuilder(connectionManagerFactory)
                 .WithTcpKeepAliveAcceptor(
                     new TcpNetworkAcceptorSettings
                     {
