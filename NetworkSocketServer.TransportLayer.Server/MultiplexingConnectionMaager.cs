@@ -55,7 +55,7 @@ namespace NetworkSocketServer.TransportLayer.Server
                         await HandleNewPacket(transportHandler);
                     }
                 }
-                catch
+                catch(Exception exception)
                 {
                     DeleteTransportHandler(transportHandler);
                 }

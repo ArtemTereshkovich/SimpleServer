@@ -47,7 +47,7 @@ namespace NetworkSimpleServer.NetworkLayer.Server.AcceptorDispatcher
 
                     try
                     {
-                        using var transportHandler = _serverTransportHandlerFactory.CreateTransportHandler(acceptor);
+                        var transportHandler = _serverTransportHandlerFactory.CreateTransportHandler(acceptor);
 
                         await acceptor.AcceptConnection(transportHandler);
 
