@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 using NetworkSimpleServer.NetworkLayer.Core.SocketOptionsAccessor.KeepAlive;
 using NetworkSimpleServer.NetworkLayer.Server.Acceptors.Tcp;
 using NetworkSocketServer.NetworkLayer.Server.ServerBuilder;
@@ -12,7 +13,7 @@ namespace NetworkSocketServer.Server
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             var address = GetAddress();
 
@@ -37,7 +38,7 @@ namespace NetworkSocketServer.Server
                     })
                 .Build();
 
-            host.StartHost();
+            await host.StartHost();
 
             host.StopHost();
         }

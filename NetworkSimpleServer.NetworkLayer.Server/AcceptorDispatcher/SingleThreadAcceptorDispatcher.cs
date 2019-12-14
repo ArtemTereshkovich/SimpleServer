@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using NetworkSimpleServer.NetworkLayer.Core.Logger;
-using NetworkSimpleServer.NetworkLayer.Server;
-using NetworkSimpleServer.NetworkLayer.Server.AcceptorDispatcher;
 using NetworkSimpleServer.NetworkLayer.Server.Acceptors;
 using NetworkSimpleServer.NetworkLayer.Server.TransportHandler.Factory;
 
@@ -32,9 +30,9 @@ namespace NetworkSocketServer.NetworkLayer.Server.AcceptorDispatcher
             _acceptors.Add(acceptor);
         }
 
-        public void StartListen()
+        public async Task StartListen()
         {
-            InternalStart().Wait();
+            await InternalStart();
         }
 
         private async Task InternalStart()

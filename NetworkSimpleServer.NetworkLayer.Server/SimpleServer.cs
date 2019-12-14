@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using NetworkSimpleServer.NetworkLayer.Server.AcceptorDispatcher;
+using System.Threading.Tasks;
 using NetworkSimpleServer.NetworkLayer.Server.Acceptors;
 using NetworkSocketServer.NetworkLayer.Server.AcceptorDispatcher;
 
-namespace NetworkSimpleServer.NetworkLayer.Server
+namespace NetworkSocketServer.NetworkLayer.Server
 {
     class SimpleServer : IServer
     {
@@ -18,14 +18,14 @@ namespace NetworkSimpleServer.NetworkLayer.Server
             _networkAcceptors = networkAcceptors;
         }
 
-        public void StartHost()
+        public async Task StartHost()
         {
             foreach (var acceptor in _networkAcceptors)
             {
                 acceptor.Open();
             }
 
-            _acceptorDispatcher.StartListen();
+            await _acceptorDispatcher.StartListen();
         }
 
         public void StopHost()

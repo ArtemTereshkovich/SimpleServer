@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using NetworkSimpleServer.NetworkLayer.Core.Logger;
+using NetworkSimpleServer.NetworkLayer.Core.TransportHandler;
 using NetworkSimpleServer.NetworkLayer.Server.Acceptors;
 using NetworkSimpleServer.NetworkLayer.Server.TransportHandler.Factory;
 
@@ -33,7 +34,7 @@ namespace NetworkSocketServer.NetworkLayer.Server.AcceptorDispatcher
             _acceptors.Add(acceptor);
         }
 
-        public void StartListen()
+        public async Task StartListen()
         {
             while (true)
             {
@@ -43,8 +44,12 @@ namespace NetworkSocketServer.NetworkLayer.Server.AcceptorDispatcher
 
                     _logger.LogConnectEvent();
 
+                    var transportHandler = _serverTransportHandlerFactory.CreateTransportHandler();
+
+                    await acceptor.AcceptConnection(transportHandler);
+
                     var thread = new Thread(() => 
-                        HandleNewConnection(acceptor, _serviceConnectionManagerFactory)
+                        HandleNewConnection(transportHandler, _serviceConnectionManagerFactory)
                             .Wait());
 
                     _threads.Add(thread);
@@ -55,16 +60,19 @@ namespace NetworkSocketServer.NetworkLayer.Server.AcceptorDispatcher
         }
 
         private async Task HandleNewConnection(
-            INetworkAcceptor acceptor,
+            ITransportHandler transportHandler,
             IServiceConnectionManagerFactory factory)
         {
-            var transportHandler = _serverTransportHandlerFactory.CreateTransportHandler();
+            try
+            {
+                var connectionManager = factory.CreateConnectionManager();
 
-            await acceptor.AcceptConnection(transportHandler);
-
-            var connectionManager =  factory.CreateConnectionManager();
-
-            await connectionManager.HandleNewConnection(transportHandler);
+                await connectionManager.HandleNewConnection(transportHandler);
+            }
+            catch (Exception exception)
+            {
+                _logger.LogErrorException(exception);
+            }
         }
 
         public void StopListen()

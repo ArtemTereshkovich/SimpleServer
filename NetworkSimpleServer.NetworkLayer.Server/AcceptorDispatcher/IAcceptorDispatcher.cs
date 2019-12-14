@@ -5,7 +5,7 @@ namespace NetworkSocketServer.NetworkLayer.Server.AcceptorDispatcher
 {
     internal interface IAcceptorDispatcher : INetworkAcceptorSubscriber
     {
-        void StartListen();
+        Task StartListen();
 
         void StopListen();
     }

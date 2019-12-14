@@ -1,8 +1,10 @@
-﻿namespace NetworkSimpleServer.NetworkLayer.Server
+﻿using System.Threading.Tasks;
+
+namespace NetworkSocketServer.NetworkLayer.Server
 {
     public interface IServer
     {
-        void StartHost();
+        Task StartHost();
 
         void StopHost();
     }
