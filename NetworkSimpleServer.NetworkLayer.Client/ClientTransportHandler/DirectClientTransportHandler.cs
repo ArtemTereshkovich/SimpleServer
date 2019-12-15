@@ -1,5 +1,6 @@
 ﻿using NetworkSimpleServer.NetworkLayer.Core.Packets;
 using NetworkSimpleServer.NetworkLayer.Core.TransportHandler;
+using NetworkSocketServer.NetworkLayer.Core.TransportHandler;
 
 namespace NetworkSimpleServer.NetworkLayer.Client.ClientTransportHandler
 {

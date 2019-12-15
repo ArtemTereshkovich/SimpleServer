@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using NetworkSimpleServer.NetworkLayer.Core.Logger;
 using NetworkSimpleServer.NetworkLayer.Core.Packets;
 using NetworkSimpleServer.NetworkLayer.Core.TransportHandler;
+using NetworkSocketServer.NetworkLayer.Core.TransportHandler;
 using NetworkSocketServer.TransportLayer.Core.Packets.Factory;
 using NetworkSocketServer.TransportLayer.Server.ServerPacketHandler.NetworkCommandsHandler.Base;
 

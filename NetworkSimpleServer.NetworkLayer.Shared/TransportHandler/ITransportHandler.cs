@@ -1,10 +1,13 @@
 ﻿using System;
 using NetworkSimpleServer.NetworkLayer.Core.Packets;
+using NetworkSimpleServer.NetworkLayer.Core.TransportHandler;
 
-namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler
+namespace NetworkSocketServer.NetworkLayer.Core.TransportHandler
 {
     public interface ITransportHandler : IDisposable
     {
+        int ServiceId { get; }
+
         bool IsHaveNewPackets();
 
         void Activate(TransportHandlerContext context);

@@ -5,7 +5,7 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using NetworkSimpleServer.NetworkLayer.Core.SocketOptionsAccessor.KeepAlive;
-using NetworkSimpleServer.NetworkLayer.Server.Acceptors.Tcp;
+using NetworkSocketServer.NetworkLayer.Server.Acceptors.Tcp;
 using NetworkSocketServer.NetworkLayer.Server.ServerBuilder;
 using NetworkSocketServer.TransportLayer.Server;
 
@@ -20,16 +20,59 @@ namespace NetworkSocketServer.Server
             Console.WriteLine(address.ToString());
             
             var connectionManagerFactory = new SingleSessionConnectionManagerFactory(
-                new SimpleRequestHandlerFactory());
+                new IdBasedRequestHandlerFactory());
 
             var host = new SimpleServerBuilder(connectionManagerFactory)
+
                 .WithTcpKeepAliveAcceptor(
                     new TcpNetworkAcceptorSettings
                     {
                         ListenIpAddress = address,
                         ListenMaxBacklogConnection = 1,
-
                         ListenPort = 1337,
+                        ServiceId = 1,
+                    },
+                    new SocketKeepAliveOptions
+                    {
+                        KeepAliveInterval = 30000,
+                        KeepAliveTime = 30000,
+                    })
+                
+                .WithTcpKeepAliveAcceptor(
+                    new TcpNetworkAcceptorSettings
+                    {
+                        ListenIpAddress = address,
+                        ListenMaxBacklogConnection = 1,
+                        ListenPort = 1338,
+                        ServiceId = 2,
+                    },
+                    new SocketKeepAliveOptions
+                    {
+                        KeepAliveInterval = 30000,
+                        KeepAliveTime = 30000,
+                    })
+
+                .WithTcpKeepAliveAcceptor(
+                    new TcpNetworkAcceptorSettings
+                    {
+                        ListenIpAddress = address,
+                        ListenMaxBacklogConnection = 1,
+                        ListenPort = 1339,
+                        ServiceId = 3,
+                    },
+                    new SocketKeepAliveOptions
+                    {
+                        KeepAliveInterval = 30000,
+                        KeepAliveTime = 30000,
+                    })
+
+                .WithTcpKeepAliveAcceptor(
+                    new TcpNetworkAcceptorSettings
+                    {
+                        ListenIpAddress = address,
+                        ListenMaxBacklogConnection = 1,
+                        ListenPort = 1340,
+                        ServiceId = 4,
                     },
                     new SocketKeepAliveOptions
                     {

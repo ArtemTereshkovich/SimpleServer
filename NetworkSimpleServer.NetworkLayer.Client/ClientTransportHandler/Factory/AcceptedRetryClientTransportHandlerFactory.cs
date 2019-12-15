@@ -2,7 +2,7 @@
 using NetworkSimpleServer.NetworkLayer.Core;
 using NetworkSimpleServer.NetworkLayer.Core.Logger;
 using NetworkSimpleServer.NetworkLayer.Core.Packets.Formatter;
-using NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Tcp;
+using NetworkSocketServer.NetworkLayer.Core.TransportHandler.Tcp;
 
 namespace NetworkSimpleServer.NetworkLayer.Client.ClientTransportHandler.Factory
 {

@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace NetworkSimpleServer.NetworkLayer.Server.Acceptors.Tcp
+namespace NetworkSocketServer.NetworkLayer.Server.Acceptors.Tcp
 {
     public class TcpNetworkAcceptorSettings
     {
@@ -9,5 +9,7 @@ namespace NetworkSimpleServer.NetworkLayer.Server.Acceptors.Tcp
         public int ListenPort { get; set; }
 
         public int ListenMaxBacklogConnection { get; set; }
+
+        public int ServiceId { get; set; }
     }
 }

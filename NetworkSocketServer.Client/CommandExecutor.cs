@@ -62,6 +62,12 @@ namespace NetworkSocketServer.Client
 
             var response = _clientConnectionManager.SendRequest(request);
 
+            if (response is ErrorResponse errorResponse)
+            {
+                HandlerError(errorResponse);
+                return;
+            }
+
             var textResponse = response as TextResponse;
 
             Console.WriteLine($"Execute text command ({textResponse.ResponseId}):{textResponse.Text}");
@@ -82,6 +88,12 @@ namespace NetworkSocketServer.Client
             };
 
             var response = _clientConnectionManager.SendRequest(request);
+
+            if (response is ErrorResponse errorResponse)
+            {
+                HandlerError(errorResponse);
+                return;
+            }
 
             var dateResponse = response as DateResponse;
 
@@ -119,6 +131,12 @@ namespace NetworkSocketServer.Client
 
             var response = _clientConnectionManager.SendRequest(request);
 
+            if (response is ErrorResponse errorResponse)
+            {
+                HandlerError(errorResponse);
+                return;
+            }
+
             var uploadResponse = response as UploadFileResponse;
 
             stopwatch.Stop();
@@ -144,22 +162,28 @@ namespace NetworkSocketServer.Client
             var stopwatch = new Stopwatch();
             stopwatch.Restart();
 
-            var response = _clientConnectionManager.SendRequest(request) as DownloadFileResponse;
+            var response = _clientConnectionManager.SendRequest(request);
 
-            var localFileName = $"Files{Path.DirectorySeparatorChar}{response.Filename}";
+            if (response is ErrorResponse errorResponse)
+            {
+                HandlerError(errorResponse);
+                return;
+            }
+                
+            var downloadFileResponseresponse = (DownloadFileResponse)response;
 
-            var fileInfo = new FileInfo(localFileName);
+            var localFileName = $"Files{Path.DirectorySeparatorChar}{downloadFileResponseresponse.Filename}";
 
             await using (var fileStream = File.OpenWrite(localFileName))
             await using (var binaryWriter = new BinaryWriter(fileStream))
             {
-                binaryWriter.Write(response.File);
+                binaryWriter.Write(downloadFileResponseresponse.File);
                 binaryWriter.Flush();
             }
 
             stopwatch.Stop();
             Console.WriteLine($"File successfully downloaded! " +
-                $"Average upload speed is {((double)response.FileSize / (1024 * 1024)) / (((double)stopwatch.ElapsedMilliseconds + 1) / 1000)} Mbps.");
+                $"Average upload speed is {((double)downloadFileResponseresponse.FileSize / (1024 * 1024)) / (((double)stopwatch.ElapsedMilliseconds + 1) / 1000)} Mbps.");
         }
 
         public void Execute(DisconnectCommand _)
@@ -172,6 +196,11 @@ namespace NetworkSocketServer.Client
             {
                 _clientConnectionManager.Disconnect();
             }
+        }
+
+        private void HandlerError(ErrorResponse errorResponse)
+        {
+            Console.WriteLine("Server:" + errorResponse.ErrorText);
         }
     }
 }

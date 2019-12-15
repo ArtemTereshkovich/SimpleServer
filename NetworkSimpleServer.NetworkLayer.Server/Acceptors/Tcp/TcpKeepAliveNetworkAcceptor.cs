@@ -1,10 +1,11 @@
 ﻿using System.Net.Sockets;
 using System.Threading.Tasks;
 using NetworkSimpleServer.NetworkLayer.Core.SocketOptionsAccessor;
-using NetworkSimpleServer.NetworkLayer.Core.TransportHandler;
-using NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Tcp;
+using NetworkSimpleServer.NetworkLayer.Server.Acceptors;
+using NetworkSocketServer.NetworkLayer.Core.TransportHandler;
+using NetworkSocketServer.NetworkLayer.Core.TransportHandler.Tcp;
 
-namespace NetworkSimpleServer.NetworkLayer.Server.Acceptors.Tcp
+namespace NetworkSocketServer.NetworkLayer.Server.Acceptors.Tcp
 {
     internal class TcpKeepAliveNetworkAcceptor : INetworkAcceptor
     {
@@ -37,7 +38,8 @@ namespace NetworkSimpleServer.NetworkLayer.Server.Acceptors.Tcp
             networkTransportHandler.Activate(new TcpTransportHandlerContext
             {
                 AcceptedSocket = acceptedSocket,
-                RemoteEndPoint = acceptedSocket.RemoteEndPoint
+                RemoteEndPoint = acceptedSocket.RemoteEndPoint,
+                ServiceId = _acceptorSettings.ServiceId,
             });
         }
 

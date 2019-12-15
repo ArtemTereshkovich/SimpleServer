@@ -1,7 +1,7 @@
 ﻿using System.Net.Sockets;
 using NetworkSimpleServer.NetworkLayer.Client.ClientTransportHandler;
 using NetworkSimpleServer.NetworkLayer.Core.SocketOptionsAccessor;
-using NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Tcp;
+using NetworkSocketServer.NetworkLayer.Core.TransportHandler.Tcp;
 
 namespace NetworkSimpleServer.NetworkLayer.Client.Connectors.Tcp
 {

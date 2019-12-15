@@ -3,8 +3,9 @@ using System.Net.Sockets;
 using System.Threading;
 using NetworkSimpleServer.NetworkLayer.Core.Packets;
 using NetworkSimpleServer.NetworkLayer.Core.Packets.Formatter;
+using NetworkSimpleServer.NetworkLayer.Core.TransportHandler;
 
-namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Tcp
+namespace NetworkSocketServer.NetworkLayer.Core.TransportHandler.Tcp
 {
     public class TcpBlockingReceiveTransportHandler : ITransportHandler
     {
@@ -28,6 +29,8 @@ namespace NetworkSimpleServer.NetworkLayer.Core.TransportHandler.Tcp
 
             _context.AcceptedSocket?.Dispose();
         }
+
+        public int ServiceId => _context.ServiceId;
 
         public bool IsHaveNewPackets()
         {

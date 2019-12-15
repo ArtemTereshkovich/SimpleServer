@@ -2,6 +2,6 @@
 {
     public interface IRequestHandlerFactory
     {
-        IRequestHandler CreateRequestHandler();
+        IRequestHandler CreateRequestHandler(int serviceId);
     }
 }

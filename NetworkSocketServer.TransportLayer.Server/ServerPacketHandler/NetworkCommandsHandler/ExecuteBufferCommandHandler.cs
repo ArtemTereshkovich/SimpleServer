@@ -2,6 +2,7 @@
 using NetworkSimpleServer.NetworkLayer.Core.Packets;
 using NetworkSimpleServer.NetworkLayer.Core.TransportHandler;
 using NetworkSocketServer.DTO.Requests;
+using NetworkSocketServer.NetworkLayer.Core.TransportHandler;
 using NetworkSocketServer.TransportLayer.Core.Packets.Factory;
 using NetworkSocketServer.TransportLayer.Core.Serializer;
 using NetworkSocketServer.TransportLayer.Server.IRequestHandler;
@@ -36,7 +37,7 @@ namespace NetworkSocketServer.TransportLayer.Server.ServerPacketHandler.NetworkC
             var request = _bytesSerializer.Deserialize<Request>(requestBytes);
 
             var response = await _requestHandlerFactory
-                .CreateRequestHandler()
+                .CreateRequestHandler(TransportHandler.ServiceId)
                 .HandleRequest(request);
             
             return _bytesSerializer.Serialize(response);
